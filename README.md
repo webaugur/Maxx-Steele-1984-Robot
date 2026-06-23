@@ -1,18 +1,46 @@
 # Maxx-Steele-1984-Robot
-Information, code, and modifications for the 1984 Maxx Steele robot from Ideal.  This is to replace the repository of the now closed Yahoo Groups
 
-The Intent is to allow people who own, repair, or modify their robots to share information.  The repository will remain open for others to see and clone and fork for thier own modifications.  FGeel free to request to fold your own additions back into the repository, but be aware that we will have some people review those requests.
+Information, code, and modifications for the 1984 Maxx Steele robot from Ideal (CBS Toys). This repository replaces the archive from the now-closed Yahoo Groups.
 
-Information will be first sorted into these catagories:
+The intent is to allow people who own, repair, or modify their robots to share information. Feel free to request to fold your own additions back into the repository.
 
-#Robot - This will contain information specific to the robot body including electronics, code, photos and (hopefully) 3D models
+Much of the information in this archive has unknown ownership or uses licensed names and artwork. Everything here is believed to be appropriately used under Fair Use. If you are a copyright or trademark owner, please contact the maintainer so that appropriate use may be agreed upon.
 
-#Transmitter - This will contain information specific to the radio based remote control including electronics, (Hopefully) code, photos and (hopefully) 3D models
+## Repository layout
 
-#Accessories - This will focus on accessories that were made for Maxx, including home brew options
+### Original archive
 
-#Manuals - These are the original manuals included with the robot
+| Path | Description |
+|------|-------------|
+| [`Robot/`](Robot/) | Robot body — electronics, firmware, photos, schematics |
+| [`Transmitter/`](Transmitter/) | 27 MHz remote — photos, RE notes, datasheets |
+| [`Accessories/`](Accessories/) | Demo cartridge and other accessories |
+| [`Manual/`](Manual/) | Original manuals |
+| [`References/`](References/) | Third-party articles and workshop notes |
+| [`Artwork/`](Artwork/) | Logos and artwork |
 
-#Tools and Reference - These are copies of reference sites, software tools, and other information that may prove useful to repair, modify, or maintain your robot.
+### Reverse-engineering additions
 
-Much of the information on this site repository has unknown ownership or uses licenses names and artwork.  As such everything in this archive is believed to be appropriately used under Fair Use.  If you are a copyright or trademark owner, please contact me so that an appropriate use may be agreed upon.
+| Path | Description |
+|------|-------------|
+| [`KiCAD/`](KiCAD/) | Transmitter schematic/PCB + [cop41xl](https://github.com/webaugur/cop41xl-kicad-library) MCU library |
+| [`firmware/`](firmware/) | Curated ROM binaries + disassembly listings |
+| [`docs/`](docs/) | [Cartridge programming manual](docs/PROGRAMMING.md), [transmitter BOM](docs/transmitter-bom.md) |
+| [`tools/`](tools/) | Cartridge ROM disassembler / validator |
+| [`sch/`](sch/) | Schematic photos, PCB images, handwritten BOM |
+| [`rfcap/`](rfcap/) | GNU Radio 27 MHz OOK captures |
+| [`references/`](references/) | Local PDF copies of key datasheets and RE notes |
+
+## Quick commands
+
+```bash
+# Disassemble demo cartridge
+python3 tools/maxx_rom.py disasm firmware/demo-cart/MAXXCART.532
+
+# Open KiCad transmitter project
+# KiCAD/Receiver-27MHz/Transmitter-27MHz.pro
+```
+
+## Related repositories
+
+- [cop41xl-kicad-library](https://github.com/webaugur/cop41xl-kicad-library) — COP400-series KiCad symbols

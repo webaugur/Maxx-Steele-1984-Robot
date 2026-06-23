@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+.Python
+*.egg-info/
+.venv/
+venv/
+
+# KiCad generated / cache
+*-cache.lib
+fp-info-cache
+*.kicad_pcb-bak
+*.sch-bak
+*.bak
+*-bak
+
+# Editor / OS
+*~
+.DS_Store
+Thumbs.db
+
+# Large GNU Radio IQ captures (keep .grc, .py, .txt locally)
+rfcap/*.dat
