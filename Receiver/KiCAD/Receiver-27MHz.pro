@@ -32,4 +32,4 @@ version=1
 LibDir=
 [eeschema/libraries]
 LibName1=cop41xl
-LibDir1=${KIPRJMOD}
+LibDir1=${KIPRJMOD}/../../libraries/cop41xl-kicad-library
