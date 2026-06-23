@@ -19,5 +19,6 @@ fp-info-cache
 .DS_Store
 Thumbs.db
 
-# Large GNU Radio IQ captures (keep .grc, .py, .txt locally)
+# Large GNU Radio IQ captures (documented in rfcap/README.md; keep locally)
 rfcap/*.dat
+

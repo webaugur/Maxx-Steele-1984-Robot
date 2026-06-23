@@ -16,7 +16,7 @@ Authoritative bill of materials for the COP411-based remote transmitter, merged 
 | Q701 | 2N3904 (NPN) | TO-92 | Regulator / keying stage |
 | Q702 | 2N3904 (NPN) | TO-92 | RF output |
 | Q703 | 2N3904 (NPN) | TO-92 | Data output buffer |
-| Y700 | 455 kHz ceramic resonator | 2-pin | Clock source |
+| Y700 | 455 kHz ceramic resonator | 2-pin | MCU clock (IF reference — see [transmitter architecture](transmitter-architecture.md)) |
 | D1 | 1N5232B (5.6 V zener) | DO-35 | Regulates 9 V down to ~5.6 V rail |
 | CR701 | Red LED 3/4 size | 5 mm | TX activity indicator |
 
