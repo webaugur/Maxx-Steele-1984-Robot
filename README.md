@@ -13,7 +13,8 @@ Much of the information in this archive has unknown ownership or uses licensed n
 | Path | Description |
 |------|-------------|
 | [`Robot/`](Robot/) | Robot body — electronics, firmware, photos, schematics |
-| [`Transmitter/`](Transmitter/) | 27 MHz remote — photos, RE notes, datasheets |
+| [`Receiver/`](Receiver/) | Robot 27 MHz receiver module — KiCad project |
+| [`Transmitter/`](Transmitter/) | 27 MHz remote — photos, RE notes, datasheets, KiCad project |
 | [`Accessories/`](Accessories/) | Demo cartridge and other accessories |
 | [`Manual/`](Manual/) | Original manuals |
 | [`References/`](References/) | Third-party articles and workshop notes |
@@ -23,7 +24,7 @@ Much of the information in this archive has unknown ownership or uses licensed n
 
 | Path | Description |
 |------|-------------|
-| [`KiCAD/`](KiCAD/) | Transmitter schematic/PCB + [cop41xl](https://github.com/webaugur/cop41xl-kicad-library) MCU library |
+| [`libraries/`](libraries/) | Shared [cop41xl](https://github.com/webaugur/cop41xl-kicad-library) KiCad MCU library |
 | [`firmware/`](firmware/) | Curated ROM binaries + disassembly listings |
 | [`docs/`](docs/) | [Cartridge programming manual](docs/PROGRAMMING.md), [transmitter BOM](docs/transmitter-bom.md), [transmitter architecture / 455 kHz IF clock](docs/transmitter-architecture.md) |
 | [`tools/`](tools/) | Cartridge ROM disassembler / validator |
@@ -38,7 +39,7 @@ Much of the information in this archive has unknown ownership or uses licensed n
 python3 tools/maxx_rom.py disasm firmware/demo-cart/MAXXCART.532
 
 # Open KiCad transmitter project
-# KiCAD/Receiver-27MHz/Transmitter-27MHz.pro
+# Transmitter/KiCAD/Transmitter-27MHz.pro
 ```
 
 ## Related repositories

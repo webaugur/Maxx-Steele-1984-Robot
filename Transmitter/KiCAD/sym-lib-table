@@ -1,0 +1,4 @@
+(sym_lib_table
+	(version 7)
+	(lib (name "cop41xl") (type "Legacy") (uri "${KIPRJMOD}/../../libraries/cop41xl-kicad-library/cop41xl.lib") (options "") (descr "COP400-series MCU symbols"))
+)

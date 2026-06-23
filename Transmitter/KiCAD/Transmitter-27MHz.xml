@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <export version="D">
   <design>
-    <source>/home/user/Documents/MaxxSteele/KiCAD/Receiver-27MHz/Transmitter-27MHz.sch</source>
+    <source>Transmitter-27MHz.sch</source>
     <date>Mon 22 Feb 2021 03:06:20 EST</date>
     <tool>Eeschema 5.1.5+dfsg1-2build2</tool>
     <sheet number="1" name="/" tstamps="/">
@@ -446,7 +446,7 @@
       <uri>/usr/share/kicad/library/Transistor_BJT.lib</uri>
     </library>
     <library logical="cop41xl">
-      <uri>/home/user/Documents/KiCAD/Libraries/cop41xl-kicad-library/cop41xl.lib</uri>
+      <uri>${KIPRJMOD}/../../libraries/cop41xl-kicad-library/cop41xl.lib</uri>
     </library>
   </libraries>
   <nets>
