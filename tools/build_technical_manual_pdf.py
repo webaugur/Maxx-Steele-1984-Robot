@@ -59,7 +59,7 @@ def require_tool(name: str) -> str:
 
 
 def chapter_anchor_map(manual_dir: Path, pandoc: str) -> dict[str, str]:
-    """Map each chapter filename to the LaTeX label Pandoc assigns its top heading."""
+    """Map each chapter filename to the LaTeX \\label Pandoc assigns its top heading."""
     mapping: dict[str, str] = {}
     for name in CHAPTERS:
         path = manual_dir / name
@@ -74,6 +74,42 @@ def chapter_anchor_map(manual_dir: Path, pandoc: str) -> dict[str, str]:
             raise RuntimeError(f"could not find top-level label for {path}")
         mapping[name] = match.group(1)
     return mapping
+
+
+def latex_path(path: Path) -> str:
+    """Escape a filesystem path for use inside LaTeX \\includegraphics."""
+    return str(path.resolve()).replace("\\", "/")
+
+
+def cover_latex_block(*, image: Path) -> str:
+    """Return a Pandoc raw-LaTeX block for the rear cover page."""
+    graphic = latex_path(image)
+    body = (
+        "\\clearpage\n"
+        "\\begin{titlepage}\n"
+        "\\centering\n"
+        f"\\includegraphics[width=\\paperwidth,height=\\paperheight]{{{graphic}}}\n"
+        "\\end{titlepage}\n"
+    )
+    return f"```{{=latex}}\n{body}```\n\n"
+
+
+def wrap_with_rear_cover(*, merged: str, rear_image: Path) -> str:
+    return merged + cover_latex_block(image=rear_image)
+
+
+def front_cover_header_includes(front_image: Path) -> list[str]:
+    """Inject the front cover before the title page without a post-build PDF merge."""
+    graphic = latex_path(front_image)
+    cover = (
+        f"\\begin{{titlepage}}\\centering"
+        f"\\includegraphics[width=\\paperwidth,height=\\paperheight]{{{graphic}}}"
+        "\\end{titlepage}\\clearpage"
+    )
+    return [
+        "\\usepackage{graphicx}",
+        f"\\pretocmd{{\\maketitle}}{{{cover}}}{{}}{{}}",
+    ]
 
 
 def preprocess_markdown(text: str, anchor_map: dict[str, str]) -> str:
@@ -125,16 +161,24 @@ def merge_chapters(manual_dir: Path, *, pandoc: str) -> str:
     return "\n\n".join(parts) + "\n"
 
 
-def build_body_pdf(
+def build_manual_pdf(
     *,
     manual_dir: Path,
     output: Path,
+    front_cover_image: Path,
+    rear_cover_image: Path,
     pandoc: str,
     pdf_engine: str,
     check_only: bool,
 ) -> list[str]:
-    merged = merge_chapters(manual_dir, pandoc=pandoc)
+    merged = wrap_with_rear_cover(
+        merged=merge_chapters(manual_dir, pandoc=pandoc),
+        rear_image=rear_cover_image,
+    )
     today = date.today().isoformat()
+    cover_lines = "\n".join(
+        f"  - {line}" for line in front_cover_header_includes(front_cover_image)
+    )
     metadata = f"""---
 title: "Maxx Steele Technical Manual"
 author: "Maxx-Steele-1984-Robot contributors"
@@ -154,10 +198,9 @@ classoption:
   - 9pt
 linestretch: 0.92
 header-includes:
+{cover_lines}
   - \\usepackage{{xcolor}}
   - \\definecolor{{maxxnavy}}{{RGB}}{{0,35,102}}
-  - \\usepackage{{hyperref}}
-  - \\hypersetup{{colorlinks=true,linkcolor=maxxnavy,urlcolor=maxxnavy,bookmarks=true,bookmarksopen=true}}
   - \\usepackage{{titlesec}}
   - \\usepackage{{needspace}}
   - \\usepackage{{etoolbox}}
@@ -182,6 +225,7 @@ header-includes:
   - \\floatplacement{{figure}}{{H}}
   - \\usepackage{{caption}}
   - \\captionsetup{{skip=4pt}}
+  - \\AtBeginDocument{{\\hypersetup{{colorlinks=true,linkcolor=maxxnavy,urlcolor=maxxnavy,hidelinks=false,bookmarks=true,bookmarksopen=true,bookmarksnumbered=true}}}}
 ---
 
 """
@@ -281,37 +325,6 @@ def prepare_cover_image(*, source: Path, output: Path) -> None:
     page.save(output, format="JPEG", quality=95, dpi=(BOOKLET_DPI, BOOKLET_DPI))
 
 
-def build_cover_pdf(*, image: Path, output: Path, img2pdf: str) -> None:
-    """Render a booklet cover: shrink-fit center, edge columns extended sideways."""
-    with tempfile.NamedTemporaryFile(suffix=".jpg", delete=False) as handle:
-        prepared = Path(handle.name)
-
-    try:
-        prepare_cover_image(source=image, output=prepared)
-        subprocess.run(
-            [
-                img2pdf,
-                "--pagesize",
-                BOOKLET_PAGESIZE,
-                "--fit",
-                "shrink",
-                str(prepared),
-                "-o",
-                str(output),
-            ],
-            check=True,
-        )
-    finally:
-        prepared.unlink(missing_ok=True)
-
-
-def merge_pdfs(*, parts: list[Path], output: Path, qpdf: str) -> None:
-    subprocess.run(
-        [qpdf, "--empty", "--pages", *[str(part) for part in parts], "--", str(output)],
-        check=True,
-    )
-
-
 def build_pdf(
     *,
     output: Path,
@@ -321,6 +334,7 @@ def build_pdf(
     qpdf: str = "qpdf",
     check_only: bool = False,
 ) -> None:
+    del img2pdf, qpdf  # covers are embedded in the LaTeX build (no post-merge).
     root = project_root()
     manual_dir = resolve_from_root(MANUAL_DIR, must_exist=True)
     output_path = output if output.is_absolute() else root / output
@@ -336,19 +350,23 @@ def build_pdf(
             f"{pandoc} not found. Install pandoc and a LaTeX engine "
             "(e.g. texlive-xetex) to build the technical manual PDF."
         )
-    if not check_only:
-        require_tool(img2pdf)
-        require_tool(qpdf)
 
     with tempfile.TemporaryDirectory(prefix="maxx-manual-") as tmp:
         tmp_dir = Path(tmp)
-        body_pdf = tmp_dir / "body.pdf"
-        front_pdf = tmp_dir / "front.pdf"
-        rear_pdf = tmp_dir / "rear.pdf"
+        front_image = tmp_dir / "cover-front-prepared.jpg"
+        rear_image = tmp_dir / "cover-rear-prepared.jpg"
+        if check_only:
+            front_image.write_bytes(b"")
+            rear_image.write_bytes(b"")
+        else:
+            prepare_cover_image(source=front_cover, output=front_image)
+            prepare_cover_image(source=rear_cover, output=rear_image)
 
-        build_body_pdf(
+        build_manual_pdf(
             manual_dir=manual_dir,
-            output=body_pdf,
+            output=output_path,
+            front_cover_image=front_image,
+            rear_cover_image=rear_image,
             pandoc=pandoc,
             pdf_engine=pdf_engine,
             check_only=check_only,
@@ -356,14 +374,7 @@ def build_pdf(
         if check_only:
             return
 
-        build_cover_pdf(image=front_cover, output=front_pdf, img2pdf=img2pdf)
-        build_cover_pdf(image=rear_cover, output=rear_pdf, img2pdf=img2pdf)
         output_path.parent.mkdir(parents=True, exist_ok=True)
-        merge_pdfs(
-            parts=[front_pdf, body_pdf, rear_pdf],
-            output=output_path,
-            qpdf=qpdf,
-        )
         print(output_path)
 
 
