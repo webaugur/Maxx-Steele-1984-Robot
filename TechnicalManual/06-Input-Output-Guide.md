@@ -96,4 +96,4 @@ See [Schematic diagram index](Schematics.md) for board-level drawings.
 
 ---
 
-**Previous:** [Chapter 5](05-Cartridge-Bootstrap-and-Internal-ROM.md) · **Next:** [Appendices](Appendices.md)
+**Previous:** [Chapter 5](05-Cartridge-Bootstrap-and-Internal-ROM.md) · **Next:** [Chapter 7 — UltraMaxx BASIC](07-UltraMaxx-BASIC-Language.md)

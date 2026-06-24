@@ -38,6 +38,7 @@ CHAPTERS = (
     "04-Programming-Speech-and-Music.md",
     "05-Cartridge-Bootstrap-and-Internal-ROM.md",
     "06-Input-Output-Guide.md",
+    "07-UltraMaxx-BASIC-Language.md",
     "Appendices.md",
     "Quick-Reference.md",
     "Schematics.md",

@@ -1,6 +1,6 @@
 # Maxx Steele Quick Reference Card
 
-Single-page summary. Full detail in chapters 1–6 and [Appendices](Appendices.md).
+Single-page summary. Full detail in chapters 1–7 and [Appendices](Appendices.md).
 
 ---
 
@@ -90,9 +90,32 @@ FF FF    end program
 
 ---
 
+## UltraMaxx BASIC (Ch 7)
+
+| Statement | Example |
+|-----------|---------|
+| Delay | `DELAY 2` |
+| Drive | `FORWARD 20` `BACK 20` `LEFT 5` `RIGHT 6` |
+| Joints | `ARMS UP 40` `WRIST DOWN 35` `CLAW ROTATE 21` `CLAW OPEN` |
+| Lamp | `LAMP ON` / `LAMP OFF` |
+| Home | `HOME` |
+| Music | `PLAY 6` |
+| Speech | `SPEAK 63` (ROM) · `SAY 0` (RAM slot) |
+| End | `END` |
+
+**Cart limit:** 38 steps max. **Not supported:** variables, `IF`, `GOTO`.
+
+```bash
+maxx compile FILE.bas -o FILE.532
+maxx upload FILE.bas --device maxx_cart
+```
+
+---
+
 ## Tools
 
 ```bash
-python3 tools/maxx_rom.py validate FILE.532
-python3 tools/maxx_rom.py template FILE.532
+maxx compile FILE.bas -o FILE.532
+maxx-rom validate FILE.532
+maxx-rom template FILE.532
 ```

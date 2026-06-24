@@ -30,7 +30,8 @@ Primary sources: R. Wind disassemblies ([`maxx_internal_ROM.dsm`](../Chassis/Fir
 **If you are writing cartridges**, add:
 
 5. [Chapter 5 — Cartridge bootstrap and internal ROM](05-Cartridge-Bootstrap-and-Internal-ROM.md)
-6. [`Cartridge/PROGRAMMING.md`](../Cartridge/PROGRAMMING.md) §9 (authoring workflow)
+6. [Chapter 7 — UltraMaxx BASIC language](07-UltraMaxx-BASIC-Language.md)
+7. [`Cartridge/PROGRAMMING.md`](../Cartridge/PROGRAMMING.md) §9 (authoring workflow)
 
 **If you are reverse engineering hardware**, use:
 
@@ -51,7 +52,8 @@ Keep [Quick reference](Quick-Reference.md) and [Appendices](Appendices.md) open 
 | Enter program steps | 2 | Keypad maps to opcodes via `$E6B5` table |
 | Run stored program | 3 | Bytecode at `$0200`, terminator `FF FF` |
 | Factory demo | 3 + cart | [`CBSDemo.532`](../Cartridge/Examples/CBSDemo/Firmware/Binary/CBSDemo.532) bootstrap |
-| Custom cartridge | 3 + cart | 4 KB EPROM image; see Ch 5 + cartridge manual |
+| Custom cartridge | 3 + cart | 4 KB EPROM image; see Ch 5–7 + cartridge manual |
+| UltraMaxx BASIC authoring | 3 + cart | Ch 7; `maxx compile` → `.532` |
 | Speech / music authoring | any | Ch 4; phrase tables in cart or RAM |
 | Repair / RE | — | Ch 6, Schematics, [`DataSheets/`](../DataSheets/) |
 
@@ -68,6 +70,7 @@ Keep [Quick reference](Quick-Reference.md) and [Appendices](Appendices.md) open 
 | 4 | [Programming speech and music](04-Programming-Speech-and-Music.md) |
 | 5 | [Cartridge bootstrap and internal ROM](05-Cartridge-Bootstrap-and-Internal-ROM.md) |
 | 6 | [Input/output guide](06-Input-Output-Guide.md) |
+| 7 | [UltraMaxx BASIC language](07-UltraMaxx-BASIC-Language.md) |
 | A–L | [Appendices](Appendices.md) |
 | — | [Quick reference card](Quick-Reference.md) |
 | — | [Schematic diagram index](Schematics.md) |
@@ -82,4 +85,4 @@ Keep [Quick reference](Quick-Reference.md) and [Appendices](Appendices.md) open 
 | Demo cartridge (4 KB) | [`Cartridge/Examples/CBSDemo/Firmware/Binary/CBSDemo.532`](../Cartridge/Examples/CBSDemo/Firmware/Binary/CBSDemo.532) |
 | UltraMaxx cartridge (4 KB) | [`Cartridge/Examples/UltraMaxx/Firmware/Binary/UltraMaxx.532`](../Cartridge/Examples/UltraMaxx/Firmware/Binary/UltraMaxx.532) |
 
-Tools: [`tools/maxx_rom.py`](../tools/maxx_rom.py) — disassemble, validate, template, opcode export.
+Tools: [`tools/maxx`](../tools/maxx) — compile UltraMaxx BASIC, validate, list, upload; [`tools/maxx_rom.py`](../tools/maxx_rom.py) — disassemble, template, opcode export.
