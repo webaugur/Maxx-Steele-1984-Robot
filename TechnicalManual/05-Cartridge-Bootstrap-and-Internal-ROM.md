@@ -51,7 +51,7 @@ Cartridge detection scans 4 KB boundaries from `$2000` upward, comparing the cop
 
 ## Bootstrap stub (demo cart)
 
-Entry at **`$A013`** ([`maxx_demo_ROM_532.dsm`](../Cartridge/Firmware/Assembly/maxx_demo_ROM_532.dsm)):
+Entry at **`$A013`** ([`maxx_demo_ROM_532.dsm`](../Cartridge/Examples/CBSDemo/Firmware/Assembly/maxx_demo_ROM_532.dsm)):
 
 1. `STA $02` / `STA $03` — initialize status flags
 2. Copy program from **`$A035`** → **`$0200`**
@@ -98,7 +98,7 @@ Step-by-step cartridge creation: [`Cartridge/PROGRAMMING.md`](../Cartridge/PROGR
 ```bash
 python3 tools/maxx_rom.py template mycart.532
 python3 tools/maxx_rom.py validate mycart.532
-python3 tools/maxx_rom.py disasm mycart.532 --compare-dsm Cartridge/Firmware/Assembly/maxx_demo_ROM_532.dsm
+python3 tools/maxx_rom.py disasm mycart.532 --compare-dsm Cartridge/Examples/CBSDemo/Firmware/Assembly/maxx_demo_ROM_532.dsm
 ```
 
 EPROM type: Mitsubishi KM2365 family — [`DataSheets/Mitsubishi-KM2365.pdf`](../DataSheets/Mitsubishi-KM2365.pdf).

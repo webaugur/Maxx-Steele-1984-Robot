@@ -38,7 +38,7 @@ Cartridges embed phrase data at offset **`$81`** (address **`$A081`** for demo c
 
 Each phrase is a sequence of **16-bit phoneme tokens**; **`$FF`** pads unused slots.
 
-Demo cart phrase table (from [`maxx_demo_ROM_532.dsm`](../Cartridge/Firmware/Assembly/maxx_demo_ROM_532.dsm)):
+Demo cart phrase table (from [`maxx_demo_ROM_532.dsm`](../Cartridge/Examples/CBSDemo/Firmware/Assembly/maxx_demo_ROM_532.dsm)):
 
 | Slot | Content (abbrev.) |
 |------|-------------------|

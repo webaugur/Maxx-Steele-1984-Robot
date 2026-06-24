@@ -23,7 +23,7 @@ The executor runs each step to completion (or until interrupted) before advancin
 | `$02` | Reverse | `02 14` |
 | `$03` | Turn right | `03 06` |
 
-Operands control how long or how far the drive system runs. Compare steps in [`maxx_demo_ROM_532.dsm`](../Cartridge/Firmware/Assembly/maxx_demo_ROM_532.dsm) with on-robot behavior when calibrating new values.
+Operands control how long or how far the drive system runs. Compare steps in [`maxx_demo_ROM_532.dsm`](../Cartridge/Examples/CBSDemo/Firmware/Assembly/maxx_demo_ROM_532.dsm) with on-robot behavior when calibrating new values.
 
 ---
 

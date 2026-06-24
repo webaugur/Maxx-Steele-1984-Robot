@@ -4,9 +4,8 @@
 
 | Path | Description |
 |------|-------------|
+| [`Examples/`](Examples/) | Example cartridge ROMs ([`CBSDemo`](Examples/CBSDemo/), [`UltraMaxx`](Examples/UltraMaxx/)) |
 | [`KiCAD/`](KiCAD/) | KiCad project (placeholder) |
-| [`Firmware/Binary/MAXXCART.532`](Firmware/Binary/MAXXCART.532) | 4 KB cartridge ROM |
-| [`Firmware/Assembly/maxx_demo_ROM_532.dsm`](Firmware/Assembly/maxx_demo_ROM_532.dsm) | Annotated disassembly (R. Wind) |
 | [`Schematic/`](Schematic/) | Cartridge schematic |
 | [`PCBoard/`](PCBoard/) | PCB layout |
 | [`Model3D/`](Model3D/) | Mechanical model |
@@ -20,7 +19,7 @@ Shared KiCad symbols: [`libraries/`](../libraries/).
 
 Status: **Partial** — firmware done; no hardware CAD. Full backlog: [`TODO.md`](../TODO.md#cartridge). GitHub: [open issues](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues?q=is%3Aissue+is%3Aopen+label%3Acartridge+label%3Abacklog).
 
-Firmware is complete ([`Firmware/`](Firmware/)).
+Example firmware is complete ([`Examples/`](Examples/)).
 
 **Missing** `[empty]`
 

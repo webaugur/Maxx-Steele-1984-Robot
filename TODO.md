@@ -104,7 +104,7 @@ KiCad project: [`Receiver/KiCAD/Receiver-27MHz.pro`](Receiver/KiCAD/Receiver-27M
 
 ### Cartridge
 
-Firmware is complete ([`Cartridge/Firmware/`](Cartridge/Firmware/)).
+Example firmware is complete ([`Cartridge/Examples/`](Cartridge/Examples/)).
 
 **Completely missing** `[empty]`
 

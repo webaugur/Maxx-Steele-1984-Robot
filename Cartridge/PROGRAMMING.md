@@ -4,9 +4,10 @@
 
 This document describes how to write programs for the 1984 CBS Toys / Ideal **Maxx Steele** robot using plug-in ROM cartridges. It is derived from:
 
-- [`Firmware/Assembly/maxx_demo_ROM_532.dsm`](Firmware/Assembly/maxx_demo_ROM_532.dsm) — annotated demo cartridge (R. Wind)
+- [`Examples/CBSDemo/Firmware/Assembly/maxx_demo_ROM_532.dsm`](Examples/CBSDemo/Firmware/Assembly/maxx_demo_ROM_532.dsm) — annotated factory demo (R. Wind)
+- [`Examples/CBSDemo/Firmware/Binary/CBSDemo.532`](Examples/CBSDemo/Firmware/Binary/CBSDemo.532) — 4 KB factory demo binary
+- [`Examples/UltraMaxx/Firmware/Binary/UltraMaxx.532`](Examples/UltraMaxx/Firmware/Binary/UltraMaxx.532) — community branding fork (same program)
 - [`Chassis/Firmware/Assembly/maxx_internal_ROM.dsm`](../Chassis/Firmware/Assembly/maxx_internal_ROM.dsm) — internal 6502 interpreter (R. Wind)
-- [`Firmware/Binary/MAXXCART.532`](Firmware/Binary/MAXXCART.532) — 4 KB demo cartridge binary
 - Original reference guide: [`Chassis/Manual/MaxxSteeleReferenceGuide.pdf`](../Chassis/Manual/MaxxSteeleReferenceGuide.pdf)
 
 Tools live in [`tools/maxx_rom.py`](../tools/maxx_rom.py).
@@ -165,7 +166,7 @@ Internal ROM keycode table at `$E6B5` maps keypad scan codes to opcodes:
 
 ## 5. Demo cartridge walkthrough
 
-Source: [`Firmware/Assembly/maxx_demo_ROM_532.dsm`](Firmware/Assembly/maxx_demo_ROM_532.dsm)
+Source: [`Examples/CBSDemo/Firmware/Assembly/maxx_demo_ROM_532.dsm`](Examples/CBSDemo/Firmware/Assembly/maxx_demo_ROM_532.dsm)
 
 | Step | Bytes | Action |
 |------|-------|--------|
@@ -211,14 +212,14 @@ Source: [`Firmware/Assembly/maxx_demo_ROM_532.dsm`](Firmware/Assembly/maxx_demo_
 Disassemble any cart image:
 
 ```bash
-python3 tools/maxx_rom.py disasm "Cartridge/Firmware/Binary/MAXXCART.532" \
-  --compare-dsm "Cartridge/Firmware/Assembly/maxx_demo_ROM_532.dsm"
+python3 tools/maxx_rom.py disasm "Cartridge/Examples/CBSDemo/Firmware/Binary/CBSDemo.532" \
+  --compare-dsm "Cartridge/Examples/CBSDemo/Firmware/Assembly/maxx_demo_ROM_532.dsm"
 ```
 
 Validate structure:
 
 ```bash
-python3 tools/maxx_rom.py validate "Cartridge/Firmware/Binary/MAXXCART.532"
+python3 tools/maxx_rom.py validate "Cartridge/Examples/CBSDemo/Firmware/Binary/CBSDemo.532"
 ```
 
 Generate a blank template:

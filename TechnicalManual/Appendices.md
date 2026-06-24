@@ -146,7 +146,7 @@ Partial list from [`maxx_internal_ROM.dsm`](../Chassis/Firmware/Assembly/maxx_in
 
 ## K — Bibliography
 
-- R. Wind — [`maxx_internal_ROM.dsm`](../Chassis/Firmware/Assembly/maxx_internal_ROM.dsm), [`maxx_demo_ROM_532.dsm`](../Cartridge/Firmware/Assembly/maxx_demo_ROM_532.dsm) (2002–2006)
+- R. Wind — [`maxx_internal_ROM.dsm`](../Chassis/Firmware/Assembly/maxx_internal_ROM.dsm), [`maxx_demo_ROM_532.dsm`](../Cartridge/Examples/CBSDemo/Firmware/Assembly/maxx_demo_ROM_532.dsm) (2002–2006)
 - Factory manual — [`Chassis/Manual/MaxxSteeleReferenceGuide.pdf`](../Chassis/Manual/MaxxSteeleReferenceGuide.pdf)
 - This repository — https://github.com/webaugur/Maxx-Steele-1984-Robot
 - C64 Programmer's Reference Guide — structural inspiration (Commodore, 1982)

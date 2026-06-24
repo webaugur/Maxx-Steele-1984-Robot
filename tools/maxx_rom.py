@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Maxx Steele cartridge ROM utilities.
 
-Decode 4KB cartridge images (e.g. MAXXCART.532), validate structure, and
+Decode 4KB cartridge images (e.g. CBSDemo.532, UltraMaxx.532), validate structure, and
 emit human-readable program listings compatible with the R. Wind .dsm format.
 """
 
@@ -18,7 +18,9 @@ from typing import Iterable
 
 from project_paths import resolve_from_root
 
-COPYRIGHT = b"(c) 1985 CBS Toys"
+COPYRIGHT_CBS = b"(c) 1985 CBS Toys"
+COPYRIGHT_ULTRAMAXX = b"(c) UltraMaxx    "
+COPYRIGHTS = (COPYRIGHT_CBS, COPYRIGHT_ULTRAMAXX)
 CART_SIZE = 4096
 PROG_RAM = 0x0200
 PHRASE_RAM = 0x0500
@@ -173,7 +175,7 @@ def parse_dsm_program_comments(path: Path) -> dict[tuple[int, int], str]:
 
 def validate_cart(cart: CartImage) -> list[str]:
     issues: list[str] = []
-    if cart.copyright != COPYRIGHT:
+    if cart.copyright not in COPYRIGHTS:
         issues.append(f"copyright mismatch: {cart.copyright!r}")
     entry_off = cart.offset(cart.entry_vector)
     if entry_off < 0 or entry_off >= CART_SIZE:
@@ -226,7 +228,7 @@ def emit_template(path: Path, base_addr: int = 0xA000) -> None:
     # Header
     entry = 0x0013  # offset from base
     struct.pack_into("<H", img, 0, entry)
-    img[2 : 2 + len(COPYRIGHT)] = COPYRIGHT
+    img[2 : 2 + len(COPYRIGHT_CBS)] = COPYRIGHT_CBS
 
     # Entry stub (matches demo cart)
     off = entry

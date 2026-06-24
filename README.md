@@ -60,7 +60,7 @@ Scripts resolve **project-relative** paths from the repository root (`tools/proj
 ## Quick commands
 
 ```bash
-python3 tools/maxx_rom.py disasm "Cartridge/Firmware/Binary/MAXXCART.532"
+python3 tools/maxx_rom.py disasm "Cartridge/Examples/CBSDemo/Firmware/Binary/CBSDemo.532"
 
 # KiCad: Transmitter/KiCAD/Transmitter-27MHz.pro
 ```

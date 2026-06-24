@@ -14,7 +14,7 @@ It is modeled on the structure of the [Commodore 64 Programmer's Reference Guide
 | [`Cartridge/PROGRAMMING.md`](../Cartridge/PROGRAMMING.md) | Cartridge authors | Step-by-step cart layout, tools, demo walkthrough |
 | [`Chassis/Manual/`](../Chassis/Manual/) | Owners | Factory user / reference manuals (operation, not ROM layout) |
 
-Primary sources: R. Wind disassemblies ([`maxx_internal_ROM.dsm`](../Chassis/Firmware/Assembly/maxx_internal_ROM.dsm), [`maxx_demo_ROM_532.dsm`](../Cartridge/Firmware/Assembly/maxx_demo_ROM_532.dsm)), [`tools/maxx_rom.py`](../tools/maxx_rom.py).
+Primary sources: R. Wind disassemblies ([`maxx_internal_ROM.dsm`](../Chassis/Firmware/Assembly/maxx_internal_ROM.dsm), [`maxx_demo_ROM_532.dsm`](../Cartridge/Examples/CBSDemo/Firmware/Assembly/maxx_demo_ROM_532.dsm)), [`tools/maxx_rom.py`](../tools/maxx_rom.py).
 
 ---
 
@@ -36,7 +36,7 @@ Primary sources: R. Wind disassemblies ([`maxx_internal_ROM.dsm`](../Chassis/Fir
 
 - [Chapter 6 — Input/output guide](06-Input-Output-Guide.md)
 - [Schematics](Schematics.md)
-- Annotated `.dsm` listings under [`Chassis/Firmware/`](../Chassis/Firmware/) and [`Cartridge/Firmware/`](../Cartridge/Firmware/)
+- Annotated `.dsm` listings under [`Chassis/Firmware/`](../Chassis/Firmware/) and [`Cartridge/Examples/`](../Cartridge/Examples/)
 
 Keep [Quick reference](Quick-Reference.md) and [Appendices](Appendices.md) open while coding.
 
@@ -50,7 +50,7 @@ Keep [Quick reference](Quick-Reference.md) and [Appendices](Appendices.md) open 
 | Learn key sequences | 1 | Records into program RAM |
 | Enter program steps | 2 | Keypad maps to opcodes via `$E6B5` table |
 | Run stored program | 3 | Bytecode at `$0200`, terminator `FF FF` |
-| Factory demo | 3 + cart | [`MAXXCART.532`](../Cartridge/Firmware/Binary/MAXXCART.532) bootstrap |
+| Factory demo | 3 + cart | [`CBSDemo.532`](../Cartridge/Examples/CBSDemo/Firmware/Binary/CBSDemo.532) bootstrap |
 | Custom cartridge | 3 + cart | 4 KB EPROM image; see Ch 5 + cartridge manual |
 | Speech / music authoring | any | Ch 4; phrase tables in cart or RAM |
 | Repair / RE | — | Ch 6, Schematics, [`DataSheets/`](../DataSheets/) |
@@ -79,6 +79,7 @@ Keep [Quick reference](Quick-Reference.md) and [Appendices](Appendices.md) open 
 | Image | Path |
 |-------|------|
 | Internal 8 KB ROM | [`Chassis/Firmware/Binary/Maxxrom.64`](../Chassis/Firmware/Binary/Maxxrom.64) |
-| Demo cartridge (4 KB) | [`Cartridge/Firmware/Binary/MAXXCART.532`](../Cartridge/Firmware/Binary/MAXXCART.532) |
+| Demo cartridge (4 KB) | [`Cartridge/Examples/CBSDemo/Firmware/Binary/CBSDemo.532`](../Cartridge/Examples/CBSDemo/Firmware/Binary/CBSDemo.532) |
+| UltraMaxx cartridge (4 KB) | [`Cartridge/Examples/UltraMaxx/Firmware/Binary/UltraMaxx.532`](../Cartridge/Examples/UltraMaxx/Firmware/Binary/UltraMaxx.532) |
 
 Tools: [`tools/maxx_rom.py`](../tools/maxx_rom.py) — disassemble, validate, template, opcode export.
