@@ -69,19 +69,22 @@ def preprocess_markdown(text: str) -> str:
 
     text = SAME_GUIDE_LINK.sub(_same_guide_link, text)
     text = REPO_LINK.sub(_repo_link, text)
+    # Thematic breaks render as large vertical gaps in LaTeX PDF output.
+    text = re.sub(r"\n---\n", "\n\n", text)
     return text
 
 
 def merge_chapters(manual_dir: Path) -> str:
-    """Concatenate manual chapters with page breaks between files."""
+    """Concatenate manual chapters; page break only before major sections."""
     parts: list[str] = []
     for index, name in enumerate(CHAPTERS):
         path = manual_dir / name
         if not path.is_file():
             raise FileNotFoundError(path)
         body = preprocess_markdown(path.read_text(encoding="utf-8").strip())
-        if index:
-            parts.append(r"\newpage")
+        # README flows into the TOC; later files start on a fresh page.
+        if index == 1:
+            parts.append(r"\clearpage")
         parts.append(body)
     return "\n\n".join(parts) + "\n"
 
@@ -107,9 +110,28 @@ numbersections: true
 geometry:
   - paperwidth=6.5in
   - paperheight=8.5in
-  - margin=0.5in
-fontsize: 10pt
-documentclass: report
+  - margin=0.4in
+  - top=0.45in
+  - bottom=0.45in
+documentclass: extarticle
+classoption:
+  - 9pt
+linestretch: 0.92
+header-includes:
+  - \\usepackage{{titlesec}}
+  - \\usepackage{{enumitem}}
+  - \\usepackage{{setspace}}
+  - \\titlespacing*{{\\section}}{{0pt}}{{1.1ex plus .15ex}}{{0.55ex plus .1ex}}
+  - \\titlespacing*{{\\subsection}}{{0pt}}{{0.9ex plus .15ex}}{{0.4ex plus .1ex}}
+  - \\titlespacing*{{\\subsubsection}}{{0pt}}{{0.75ex plus .1ex}}{{0.3ex plus .1ex}}
+  - \\setlist{{nosep,leftmargin=*,topsep=0.25ex,parsep=0pt,itemsep=0.15ex}}
+  - \\setlength{{\\parskip}}{{0.3em}}
+  - \\setlength{{\\parindent}}{{0pt}}
+  - \\setlength{{\\emergencystretch}}{{2em}}
+  - \\usepackage{{float}}
+  - \\floatplacement{{figure}}{{H}}
+  - \\usepackage{{caption}}
+  - \\captionsetup{{skip=4pt}}
 ---
 
 """
@@ -125,6 +147,8 @@ documentclass: report
         "mainfont=DejaVu Serif",
         "-V",
         "monofont=DejaVu Sans Mono",
+        "-V",
+        "monofontsize=\\footnotesize",
     ]
 
     if check_only:
