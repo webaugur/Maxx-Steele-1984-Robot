@@ -1,8 +1,8 @@
 # TODO — Missing and incomplete archive content
 
-Generated from an audit of `null.txt` placeholders, empty directories, module READMEs, and KiCad project status (2026-06-23).
+Generated from an audit of empty directories, module READMEs, and KiCad project status (2026-06-23).
 
-**Legend:** `[empty]` = directory exists but has no real assets (only `null.txt` or nothing tracked). `[partial]` = work started but not finished. `[planned]` = README marks module as not yet started.
+**Legend:** `[empty]` = directory has a README placeholder only (no real assets yet). `[partial]` = work started but not finished. `[planned]` = README marks module as not yet started.
 
 ---
 
