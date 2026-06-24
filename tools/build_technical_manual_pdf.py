@@ -128,13 +128,15 @@ documentclass: report
 
 
 def build_cover_pdf(*, image: Path, output: Path, img2pdf: str) -> None:
+    """Render a full-bleed cover page (scale to fill, crop overflow)."""
     subprocess.run(
         [
             img2pdf,
             "--pagesize",
             "Letter",
             "--fit",
-            "shrink",
+            "fill",
+            "--auto-orient",
             str(image),
             "-o",
             str(output),
