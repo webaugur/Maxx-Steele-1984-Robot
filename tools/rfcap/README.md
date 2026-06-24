@@ -58,3 +58,13 @@ The four `.dat.txt` sidecars are annotation placeholders for the 06:50–06:54 p
 4. Tune for **27 MHz** RF and inspect OOK timing (~1.55 ms/bit, ~29 ms packet repeat).
 
 See [`docs/transmitter-architecture.md`](../../docs/transmitter-architecture.md) for how the transmitter MCU is clocked at the **455 kHz IF** reference so OOK serial data stays coherent with the RF envelope the receiver demodulates.
+
+## TODO
+
+Full backlog: [`TODO.md`](../../TODO.md#tools-and-captures).
+
+- [ ] Annotate four empty per-button capture sidecars in [`captures/`](captures/):
+  - `2021.02.14.06.50.10.dat.txt`
+  - `2021.02.14.06.51.12.dat.txt`
+  - `2021.02.14.06.52.42.dat.txt`
+  - `2021.02.14.06.54.21.dat.txt`

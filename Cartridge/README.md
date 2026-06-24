@@ -15,3 +15,17 @@
 Programming manual: [`docs/PROGRAMMING.md`](../docs/PROGRAMMING.md).
 
 Shared KiCad symbols: [`libraries/`](../libraries/).
+
+## TODO
+
+Status: **Partial** — firmware done; no hardware CAD. Full backlog: [`TODO.md`](../TODO.md#cartridge).
+
+Firmware is complete ([`Firmware/`](Firmware/)).
+
+**Missing** `[empty]`
+
+- [ ] [`KiCAD/`](KiCAD/) — cartridge PCB KiCad project
+- [ ] [`Schematic/`](Schematic/) — schematic scan or source
+- [ ] [`PC-Board/`](PC-Board/) — PCB layout / photos
+- [ ] [`3D-Model/`](3D-Model/) — mechanical model
+- [x] [`Photos/`](Photos/) — cartridge card photo

@@ -2,6 +2,8 @@
 
 Generated from an audit of empty directories, module READMEs, and KiCad project status (2026-06-23).
 
+Each module [`README.md`](Transmitter/README.md) (and [`tools/rfcap/README.md`](tools/rfcap/README.md)) includes a **TODO** section mirrored from this file. When you check an item off, update **both** the local README and this file.
+
 **Legend:** `[empty]` = directory has a README placeholder only (no real assets yet). `[partial]` = work started but not finished. `[planned]` = README marks module as not yet started.
 
 ---

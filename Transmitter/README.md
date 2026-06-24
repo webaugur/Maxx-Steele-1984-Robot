@@ -12,3 +12,23 @@
 
 Shared symbols: [`libraries/`](../libraries/).  
 RE docs: [`docs/transmitter-architecture.md`](../docs/transmitter-architecture.md), [`docs/transmitter-bom.md`](../docs/transmitter-bom.md).
+
+## TODO
+
+Status: **Active** — KiCad repair/fab; empty schematic/PCB/3D folders. Full backlog: [`TODO.md`](../TODO.md#transmitter).
+
+**KiCad / RE (in progress)**
+
+- [ ] Run ERC; resolve outstanding errors/warnings
+- [ ] Confirm COP411L-PAC/N **DIP-20** footprint matches physical package
+- [ ] Sync schematic ↔ PCB (31 nets per current `.net`)
+- [ ] Run DRC on layout
+- [ ] Export Gerbers / drill files for fab review
+- [ ] Align [`docs/transmitter-bom.md`](../docs/transmitter-bom.md) with final schematic refs
+
+**Missing artifact folders** `[empty]`
+
+- [ ] [`Schematic/`](Schematic/) — dedicated schematic scan or vector export (separate from KiCad)
+- [ ] [`PC-Board/`](PC-Board/) — PCB photos, fab drawings, or layout exports
+- [ ] [`3D-Model/`](3D-Model/) — enclosure / remote mechanical CAD
+- [x] [`Photos/`](Photos/) — product and reverse-engineering images

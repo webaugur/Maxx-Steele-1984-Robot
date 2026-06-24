@@ -15,4 +15,13 @@ Robot body, packaging, manuals, and material not tied to a single PCB module.
 | [`3D-Model/`](3D-Model/) | Mechanical CAD (placeholder) |
 | [`KiCAD/`](KiCAD/) | Mechanical / enclosure CAD (placeholder) |
 
-Module-specific hardware lives in [`Transmitter/`](../Transmitter/), [`Receiver/`](../Receiver/), [`Mainboard/`](../Mainboard/), [`Face/`](../Face/), [`Power/`](../Power/), and accessories.
+Module-specific hardware lives in [`Transmitter/`](../Transmitter/), [`Receiver/`](../Receiver/), [`Mainboard/`](../Mainboard/), [`Face/`](../Face/), [`Power/`](../Power/), [`Cartridge/`](../Cartridge/), and [`Paddle Mirror/`](../Paddle%20Mirror/).
+
+## TODO
+
+Status: **Mostly complete** — no 3D body model or mechanical KiCad. Full backlog: [`TODO.md`](../TODO.md#chassis).
+
+**Missing** `[empty]`
+
+- [ ] [`3D-Model/`](3D-Model/) — full robot body mechanical CAD
+- [ ] [`KiCAD/`](KiCAD/) — enclosure / mechanism drawings (README placeholder only)

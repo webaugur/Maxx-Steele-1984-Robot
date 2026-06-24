@@ -11,3 +11,11 @@ Internal 6502 ROM: [`Chassis/Firmware/`](../Chassis/Firmware/).
 Chassis photos: [`Chassis/Photos/`](../Chassis/Photos/).
 
 Shared KiCad symbols: [`libraries/`](../libraries/).
+
+## TODO
+
+Status: **Partial** — raster schematics; no KiCad project. Full backlog: [`TODO.md`](../TODO.md#mainboard).
+
+- [ ] Digitize [`Schematic/`](Schematic/) raster/SVG into KiCad — [`KiCAD/`](KiCAD/) is `[planned]` (README + `sym-lib-table` only)
+- [ ] PCB layout project and fabrication artifacts
+- [ ] Module-specific photos (robot photos: [`Chassis/Photos/`](../Chassis/Photos/))
