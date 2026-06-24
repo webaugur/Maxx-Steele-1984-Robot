@@ -4,7 +4,7 @@
 
 | Path | Description |
 |------|-------------|
-| [`KiCAD/`](KiCAD/) | KiCad schematic — [`Receiver-27MHz.pro`](KiCAD/Receiver-27MHz.pro) |
+| [`KiCAD/`](KiCAD/) | KiCad 10 schematic — open [`Receiver-27MHz.kicad_pro`](KiCAD/Receiver-27MHz.kicad_pro) |
 
 Shared symbols: [`libraries/`](../libraries/).
 
