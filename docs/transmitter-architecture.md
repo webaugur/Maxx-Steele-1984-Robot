@@ -16,7 +16,7 @@ This frequency is deliberate: **455 kHz is the standard AM intermediate-frequenc
 
 ### Why clock the MCU from the IF frequency?
 
-Commands are sent as **OOK** — the 27 MHz carrier is keyed on and off in a fixed bit pattern ([`references/Maxx Steele Transmitter Reverse Engineered Notes.pdf`](../references/Maxx%20Steele%20Transmitter%20Reverse%20Engineered%20Notes.pdf)). Measured on-air:
+Commands are sent as **OOK** — the 27 MHz carrier is keyed on and off in a fixed bit pattern ([`Maxx Steele Transmitter Reverse Engineered Notes.pdf`](references/Maxx%20Steele%20Transmitter%20Reverse%20Engineered%20Notes.pdf)). Measured on-air:
 
 - Each bit is approximately **1.55 ms** (carrier present = `1`, absent = `0`)
 - While a button is held, the same packet repeats every **~29 ms** (Power/Stop repeats every **~21 ms**)
@@ -55,10 +55,10 @@ That keeps the transmitted envelope **phase-coherent** with the demodulated IF w
 
 | Path | Contents |
 |------|----------|
-| [`Transmitter/KiCAD/Transmitter-27MHz.sch`](../Transmitter/KiCAD/Transmitter-27MHz.sch) | KiCad schematic (Y700 → CKI, RF chain) |
-| [`docs/transmitter-bom.md`](transmitter-bom.md) | Bill of materials |
+| [`kicad/transmitter/Transmitter-27MHz.sch`](../kicad/transmitter/Transmitter-27MHz.sch) | KiCad schematic (Y700 → CKI, RF chain) |
+| [`transmitter-bom.md`](transmitter-bom.md) | Bill of materials |
 | [`rfcap/README.md`](../rfcap/README.md) | GNU Radio IQ captures of live OOK packets |
-| [`references/COP411L.pdf`](../references/COP411L.pdf) | COP411L datasheet |
+| [`references/COP411L.pdf`](references/COP411L.pdf) | COP411L datasheet |
 
 ## COP411L clock notes
 

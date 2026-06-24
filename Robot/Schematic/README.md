@@ -1,1 +1,0 @@
-Raster schematic photos moved to [`docs/Photos/robot/schematics/`](../../docs/Photos/robot/schematics/). Vector source (`.svg`) and working files remain here.

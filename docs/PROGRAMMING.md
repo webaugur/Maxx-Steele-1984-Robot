@@ -297,7 +297,7 @@ Physical button names (remote faceplate):
 - **GAME, PROGRAM, LEARN, EXECUTE**
 - **POWER/STOP** (Y)
 
-Reference images: [`keyboard-matrix-reference-1.png`](Photos/transmitter/reverse-engineering/keyboard-matrix-reference-1.png), [`keyboard-matrix-reference-2.png`](Photos/transmitter/reverse-engineering/keyboard-matrix-reference-2.png)
+Reference images: [`keyboard-matrix-reference-1.png`](photos/transmitter/reverse-engineering/keyboard-matrix-reference-1.png), [`keyboard-matrix-reference-2.png`](photos/transmitter/reverse-engineering/keyboard-matrix-reference-2.png)
 
 ---
 
@@ -327,7 +327,7 @@ FF FF    ; end
 - **Phoneme token table**: Full `$F4DB` / `$F567` transcription would enable authoring custom speech without copying demo tokens
 - **Operand scaling**: Distance/angle units for motion opcodes are empirical (demo uses values like `$14`, `$06`, `$28`)
 - **8080 code at `$A0C7+`** in the demo image is marked "not Maxx-related" in the `.dsm` listing — treat as padding
-- **Robot main board KiCad**: cleaned schematic exists upstream (`Robot/Schematic/v1.1/`; raster reference in [`docs/Photos/robot/schematics/`](Photos/robot/schematics/)) but is out of scope for this transmitter-first pass
+- **Robot main board KiCad**: cleaned schematic exists upstream (`Robot/Schematic/v1.1/`; raster reference in [`docs/photos/robot/schematics/`](photos/robot/schematics/)) but is out of scope for this transmitter-first pass
 
 ---
 

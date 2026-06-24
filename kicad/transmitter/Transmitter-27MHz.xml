@@ -446,7 +446,7 @@
       <uri>/usr/share/kicad/library/Transistor_BJT.lib</uri>
     </library>
     <library logical="cop41xl">
-      <uri>${KIPRJMOD}/../../libraries/cop41xl-kicad-library/cop41xl.lib</uri>
+      <uri>${KIPRJMOD}/../libraries/cop41xl.lib</uri>
     </library>
   </libraries>
   <nets>

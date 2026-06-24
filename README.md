@@ -8,44 +8,36 @@ Much of the information in this archive has unknown ownership or uses licensed n
 
 ## Repository layout
 
-### Original archive
-
 | Path | Description |
 |------|-------------|
+| **Archive** | |
 | [`Robot/`](Robot/) | Robot body — electronics, firmware, schematics |
-| [`Receiver/`](Receiver/) | Robot 27 MHz receiver module — KiCad project |
-| [`Transmitter/`](Transmitter/) | 27 MHz remote — RE notes, datasheets, KiCad project |
-| [`Accessories/`](Accessories/) | Demo cartridge and other accessories |
+| [`Transmitter/`](Transmitter/) | Remote — stickers, RE notes, datasheets |
+| [`Accessories/`](Accessories/) | Demo cartridge, paddle mirror |
 | [`Manual/`](Manual/) | Original manuals |
 | [`References/`](References/) | Third-party articles and workshop notes |
 | [`Artwork/`](Artwork/) | Logos and artwork |
-
-### Reverse-engineering additions
-
-| Path | Description |
-|------|-------------|
-| [`libraries/`](libraries/) | Shared [cop41xl](https://github.com/webaugur/cop41xl-kicad-library) KiCad MCU library |
+| **Active work** | |
+| [`kicad/`](kicad/) | KiCad projects (transmitter, receiver) + symbol libraries |
+| [`docs/`](docs/) | RE manuals, BOM, architecture notes, [photos](docs/photos/), [reference PDFs](docs/references/) |
 | [`firmware/`](firmware/) | Curated ROM binaries + disassembly listings |
-| [`docs/`](docs/) | [Cartridge programming manual](docs/PROGRAMMING.md), [transmitter BOM](docs/transmitter-bom.md), [transmitter architecture / 455 kHz IF clock](docs/transmitter-architecture.md) |
 | [`tools/`](tools/) | Cartridge ROM disassembler / validator |
-| [`docs/Photos/`](docs/Photos/) | All physical artifact photos (robot, transmitter, accessories, RE reference) |
-| [`rfcap/`](rfcap/) | GNU Radio 27 MHz OOK flowgraphs; IQ data in [`rfcap/captures/`](rfcap/captures/) ([catalog](rfcap/README.md), local-only) |
-| [`references/`](references/) | Local PDF copies of key datasheets and RE notes |
+| [`rfcap/`](rfcap/) | GNU Radio OOK flowgraphs; IQ data in [`rfcap/captures/`](rfcap/captures/) |
 
 ## Paths
 
-Scripts resolve **project-relative** paths from the repository root (via `tools/project_paths.py`), so commands work regardless of the current working directory. KiCad projects use `${KIPRJMOD}/../../libraries/...` for the shared symbol library.
+Scripts resolve **project-relative** paths from the repository root (`tools/project_paths.py`). KiCad projects use `${KIPRJMOD}/../libraries/` for shared symbols.
 
 ## Quick commands
 
 ```bash
-# Disassemble demo cartridge (path is relative to repo root)
+# Disassemble demo cartridge
 python3 tools/maxx_rom.py disasm firmware/demo-cart/MAXXCART.532
 
 # Open KiCad transmitter project
-# Transmitter/KiCAD/Transmitter-27MHz.pro
+# kicad/transmitter/Transmitter-27MHz.pro
 ```
 
 ## Related repositories
 
-- [cop41xl-kicad-library](https://github.com/webaugur/cop41xl-kicad-library) — COP400-series KiCad symbols
+- [cop41xl-kicad-library](https://github.com/webaugur/cop41xl-kicad-library) — upstream COP400 KiCad symbols
