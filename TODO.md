@@ -4,7 +4,7 @@ Generated from an audit of empty directories, module READMEs, and KiCad project 
 
 Each module [`README.md`](Transmitter/README.md) (and [`tools/rfcap/README.md`](tools/rfcap/README.md)) includes a **TODO** section mirrored from this file. When you check an item off, update **both** the local README and this file.
 
-Folder naming: see [Naming conventions](README.md#naming-conventions) in the root README.
+Folder and filename naming: see [Naming conventions](README.md#naming-conventions) in the root README.
 
 ## GitHub issues
 

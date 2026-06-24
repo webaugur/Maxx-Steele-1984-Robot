@@ -14,8 +14,16 @@ Much of the information in this archive has unknown ownership or uses licensed n
 | **Top-level shared folders** | `lowercase` | `docs/`, `tools/`, `libraries/` |
 | **Subfolders inside modules** | `CamelCase` | `Photos/`, `Firmware/`, `KiCAD/`, `PCBoard/`, `Model3D/`, `Photos/Product/`, `Photos/ReverseEngineering/` |
 | **Subfolders inside shared folders** | `lowercase` | `docs/references/`, `tools/rfcap/`, `tools/rfcap/captures/` |
+| **All filenames** | shell-safe: `[A-Za-z0-9._-]` only | `Remote-Front.jpg`, `maxx-song-1.wma`, `Maxx-Steele-Transmitter-Reverse-Engineered-Notes.pdf` |
 
 Multi-word module or folder names run together (`PaddleMirror`, not `Paddle Mirror`). Acronyms keep familiar casing inside CamelCase (`KiCAD`, `PCBoard`).
+
+**Filenames** must be shell-safe: only ASCII letters, digits, dot (`.`), underscore (`_`), and hyphen (`-`). No spaces or other punctuation. Use hyphens between words (`Remote-Front.jpg`, `maxx-song-1.wma`). Check or fix names with:
+
+```bash
+python3 tools/sanitize_filenames.py          # dry-run
+python3 tools/sanitize_filenames.py --apply  # git mv fixes
+```
 
 ## Repository layout
 
@@ -40,7 +48,7 @@ Each module has a [`KiCAD/`](Transmitter/KiCAD/) subfolder for schematic/PCB wor
 |------|-------------|
 | [`docs/`](docs/) | RE manuals, architecture notes, [reference PDFs](docs/references/) |
 
-| [`tools/`](tools/) | Cartridge ROM tools, [`rfcap/`](tools/rfcap/) GNU Radio OOK flowgraphs |
+| [`tools/`](tools/) | Cartridge ROM tools, [`rfcap/`](tools/rfcap/) GNU Radio OOK flowgraphs, [`sanitize_filenames.py`](tools/sanitize_filenames.py) |
 | [`libraries/`](libraries/) | Shared KiCad symbol libraries |
 
 ## Paths
