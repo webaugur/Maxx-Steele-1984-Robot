@@ -1,0 +1,40 @@
+name: Technical Manual PDF
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "TechnicalManual/*.md"
+      - "TechnicalManual/cover-*.jpg"
+      - "tools/build_technical_manual_pdf.py"
+      - ".github/workflows/technical-manual-pdf.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-pdf:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pandoc texlive-xetex texlive-fonts-recommended img2pdf qpdf
+
+      - name: Build technical manual PDF
+        run: python3 tools/build_technical_manual_pdf.py
+
+      - name: Commit updated PDF
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add TechnicalManual/Maxx-Steele-Technical-Manual.pdf
+          if git diff --staged --quiet; then
+            echo "PDF is already up to date."
+            exit 0
+          fi
+          git commit -m "Update Technical Manual PDF [skip ci]"
+          git push
