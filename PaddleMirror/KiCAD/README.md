@@ -1,4 +1,4 @@
-# Paddle Mirror — KiCad
+# PaddleMirror — KiCad
 
 Placeholder for the paddle mirror schematic and PCB.
 

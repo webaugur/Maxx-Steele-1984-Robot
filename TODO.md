@@ -4,6 +4,8 @@ Generated from an audit of empty directories, module READMEs, and KiCad project 
 
 Each module [`README.md`](Transmitter/README.md) (and [`tools/rfcap/README.md`](tools/rfcap/README.md)) includes a **TODO** section mirrored from this file. When you check an item off, update **both** the local README and this file.
 
+Folder naming: see [Naming conventions](README.md#naming-conventions) in the root README.
+
 ## GitHub issues
 
 Yes — these items can be tracked as [GitHub Issues](https://docs.github.com/en/issues). **Issues are currently disabled** on [`webaugur/Maxx-Steele-1984-Robot`](https://github.com/webaugur/Maxx-Steele-1984-Robot); enable them under **Settings → General → Features → Issues**, then create backlog issues.
@@ -19,7 +21,7 @@ Yes — these items can be tracked as [GitHub Issues](https://docs.github.com/en
 | Chassis | `Chassis backlog` | `backlog`, `chassis` |
 | Power | `Power backlog` | `backlog`, `power` |
 | Face | `Face backlog` | `backlog`, `face` |
-| Paddle Mirror | `Paddle Mirror backlog` | `backlog`, `paddle-mirror` |
+| PaddleMirror | `PaddleMirror backlog` | `backlog`, `paddlemirror` |
 | RFCAP captures | `RFCAP capture annotations` | `backlog`, `tools` |
 
 Copy the open checklist from each module README into the matching issue. When an item is done, check it off in **three places**: the GitHub issue, this file, and the module README. Add the issue link to the module README `## TODO` section once created.
@@ -39,7 +41,7 @@ Copy the open checklist from each module README into the matching issue. When an
 | Chassis | Mostly complete | No 3D body model or mechanical KiCad |
 | Power | Planned | No KiCad project |
 | Face | Planned | No KiCad project |
-| Paddle Mirror | Archive | No KiCad or 3D model |
+| PaddleMirror | Archive | No KiCad or 3D model |
 
 ---
 
@@ -61,15 +63,15 @@ KiCad project: [`Transmitter/KiCAD/Transmitter-27MHz.pro`](Transmitter/KiCAD/Tra
 **Completely missing artifact folders** `[empty]`
 
 - [ ] [`Transmitter/Schematic/`](Transmitter/Schematic/) — dedicated schematic scan or vector export (separate from KiCad sources)
-- [ ] [`Transmitter/PC-Board/`](Transmitter/PC-Board/) — PCB photos, fab drawings, or layout exports
-- [ ] [`Transmitter/3D-Model/`](Transmitter/3D-Model/) — enclosure / remote mechanical CAD
+- [ ] [`Transmitter/PCBoard/`](Transmitter/PCBoard/) — PCB photos, fab drawings, or layout exports
+- [ ] [`Transmitter/Model3D/`](Transmitter/Model3D/) — enclosure / remote mechanical CAD
 - [x] [`Transmitter/Photos/`](Transmitter/Photos/) — product and reverse-engineering images
 
 **Housekeeping** (dirs have content; `null.txt` is stale)
 
 - [x] Remove [`Transmitter/Datasheets/null.txt`](Transmitter/Datasheets/null.txt) (`COP411L.pdf` present)
 - [x] Remove [`Transmitter/Stickers/null.txt`](Transmitter/Stickers/null.txt) (SVG/PDF artwork present)
-- [x] Remove [`Transmitter/Reverse-Engineering/null.txt`](Transmitter/Reverse-Engineering/null.txt) (ODT/DOCX/PDF notes present)
+- [x] Remove [`Transmitter/ReverseEngineering/null.txt`](Transmitter/ReverseEngineering/null.txt) (ODT/DOCX/PDF notes present)
 
 ### Receiver
 
@@ -110,8 +112,8 @@ Firmware is complete ([`Cartridge/Firmware/`](Cartridge/Firmware/)).
 
 - [ ] [`Cartridge/KiCAD/`](Cartridge/KiCAD/) — cartridge PCB KiCad project
 - [ ] [`Cartridge/Schematic/`](Cartridge/Schematic/) — schematic scan or source
-- [ ] [`Cartridge/PC-Board/`](Cartridge/PC-Board/) — PCB layout / photos
-- [ ] [`Cartridge/3D-Model/`](Cartridge/3D-Model/) — cartridge mechanical model
+- [ ] [`Cartridge/PCBoard/`](Cartridge/PCBoard/) — PCB layout / photos
+- [ ] [`Cartridge/Model3D/`](Cartridge/Model3D/) — cartridge mechanical model
 - [x] [`Cartridge/Photos/`](Cartridge/Photos/) — cartridge card photo
 
 ### Chassis
@@ -120,7 +122,7 @@ Most content present (manuals, photos, firmware, datasheets, sounds, disassembly
 
 **Completely missing** `[empty]`
 
-- [ ] [`Chassis/3D-Model/`](Chassis/3D-Model/) — full robot body mechanical CAD
+- [ ] [`Chassis/Model3D/`](Chassis/Model3D/) — full robot body mechanical CAD
 - [ ] [`Chassis/KiCAD/`](Chassis/KiCAD/) — enclosure / mechanism drawings (README placeholder only)
 
 **Housekeeping**
@@ -145,19 +147,19 @@ Most content present (manuals, photos, firmware, datasheets, sounds, disassembly
 - [ ] Display / speech subsystem schematic
 - [ ] PCB layout, photos, datasheets
 
-### Paddle Mirror `[archive]`
+### PaddleMirror `[archive]`
 
 **Completely missing** `[empty]`
 
-- [ ] [`Paddle Mirror/KiCAD/`](Paddle Mirror/KiCAD/) — KiCad project
-- [ ] [`Paddle Mirror/3D-Model/`](Paddle Mirror/3D-Model/) — mechanical CAD
-- [x] [`Paddle Mirror/Photos/`](Paddle Mirror/Photos/) — accessory photo
+- [ ] [`PaddleMirror/KiCAD/`](PaddleMirror/KiCAD/) — KiCad project
+- [ ] [`PaddleMirror/Model3D/`](PaddleMirror/Model3D/) — mechanical CAD
+- [x] [`PaddleMirror/Photos/`](PaddleMirror/Photos/) — accessory photo
 
 ---
 
 ## Repository hygiene
 
-- [x] Remove orphan empty [`Accessories/`](Accessories/) (leftover after promoting Cartridge and Paddle Mirror to top-level modules)
+- [x] Remove orphan empty [`Accessories/`](Accessories/) (leftover after promoting Cartridge and PaddleMirror to top-level modules)
 - [x] Photo policy: module photos live under each module's `Photos/` folder (removed `docs/photos/`)
 
 ---

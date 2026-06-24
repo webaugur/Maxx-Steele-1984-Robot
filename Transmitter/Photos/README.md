@@ -2,8 +2,8 @@
 
 | Folder | Contents |
 |--------|----------|
-| [`product/`](product/) | Remote control product and FCC sticker photos |
-| [`reverse-engineering/`](reverse-engineering/) | MCU board PCB, trace overlays, handwritten BOM, keyboard matrix refs |
+| [`Product/`](Product/) | Remote control product and FCC sticker photos |
+| [`ReverseEngineering/`](ReverseEngineering/) | MCU board PCB, trace overlays, handwritten BOM, keyboard matrix refs |
 
 ## Reverse-engineering key files
 

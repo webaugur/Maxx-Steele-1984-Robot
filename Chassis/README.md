@@ -12,10 +12,10 @@ Robot body, packaging, manuals, and material not tied to a single PCB module.
 | [`Sounds/`](Sounds/) | Sample speech and song audio |
 | [`Firmware/`](Firmware/) | Internal 6502 ROM binary and disassembly |
 | [`Datasheets/`](Datasheets/) | Chip and subsystem datasheets (robot-wide) |
-| [`3D-Model/`](3D-Model/) | Mechanical CAD (placeholder) |
+| [`Model3D/`](Model3D/) | Mechanical CAD (placeholder) |
 | [`KiCAD/`](KiCAD/) | Mechanical / enclosure CAD (placeholder) |
 
-Module-specific hardware lives in [`Transmitter/`](../Transmitter/), [`Receiver/`](../Receiver/), [`Mainboard/`](../Mainboard/), [`Face/`](../Face/), [`Power/`](../Power/), [`Cartridge/`](../Cartridge/), and [`Paddle Mirror/`](../Paddle%20Mirror/).
+Module-specific hardware lives in [`Transmitter/`](../Transmitter/), [`Receiver/`](../Receiver/), [`Mainboard/`](../Mainboard/), [`Face/`](../Face/), [`Power/`](../Power/), [`Cartridge/`](../Cartridge/), and [`PaddleMirror/`](../PaddleMirror/).
 
 ## TODO
 
@@ -23,5 +23,5 @@ Status: **Mostly complete** — no 3D body model or mechanical KiCad. Full backl
 
 **Missing** `[empty]`
 
-- [ ] [`3D-Model/`](3D-Model/) — full robot body mechanical CAD
+- [ ] [`Model3D/`](Model3D/) — full robot body mechanical CAD
 - [ ] [`KiCAD/`](KiCAD/) — enclosure / mechanism drawings (README placeholder only)

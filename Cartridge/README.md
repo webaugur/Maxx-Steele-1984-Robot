@@ -8,8 +8,8 @@
 | [`Firmware/Binary/MAXXCART.532`](Firmware/Binary/MAXXCART.532) | 4 KB cartridge ROM |
 | [`Firmware/Assembly/maxx_demo_ROM_532.dsm`](Firmware/Assembly/maxx_demo_ROM_532.dsm) | Annotated disassembly (R. Wind) |
 | [`Schematic/`](Schematic/) | Cartridge schematic |
-| [`PC-Board/`](PC-Board/) | PCB layout |
-| [`3D-Model/`](3D-Model/) | Mechanical model |
+| [`PCBoard/`](PCBoard/) | PCB layout |
+| [`Model3D/`](Model3D/) | Mechanical model |
 | [`Photos/`](Photos/) | Cartridge card photo |
 
 Programming manual: [`docs/PROGRAMMING.md`](../docs/PROGRAMMING.md).
@@ -26,6 +26,6 @@ Firmware is complete ([`Firmware/`](Firmware/)).
 
 - [ ] [`KiCAD/`](KiCAD/) — cartridge PCB KiCad project
 - [ ] [`Schematic/`](Schematic/) — schematic scan or source
-- [ ] [`PC-Board/`](PC-Board/) — PCB layout / photos
-- [ ] [`3D-Model/`](3D-Model/) — mechanical model
+- [ ] [`PCBoard/`](PCBoard/) — PCB layout / photos
+- [ ] [`Model3D/`](Model3D/) — mechanical model
 - [x] [`Photos/`](Photos/) — cartridge card photo

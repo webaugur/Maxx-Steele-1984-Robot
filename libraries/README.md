@@ -12,5 +12,5 @@ All `*/KiCAD/` projects load this directory via `${KIPRJMOD}/../../libraries/`.
 | Mainboard | [`Mainboard/KiCAD/`](../Mainboard/KiCAD/) (planned) |
 | Face | [`Face/KiCAD/`](../Face/KiCAD/) (planned) |
 | Cartridge | [`Cartridge/KiCAD/`](../Cartridge/KiCAD/) (planned) |
-| Paddle Mirror | [`Paddle Mirror/KiCAD/`](../Paddle%20Mirror/KiCAD/) (planned) |
+| PaddleMirror | [`PaddleMirror/KiCAD/`](../PaddleMirror/KiCAD/) (planned) |
 | Chassis | [`Chassis/KiCAD/`](../Chassis/KiCAD/) (mechanical, planned) |

@@ -6,6 +6,17 @@ The intent is to allow people who own, repair, or modify their robots to share i
 
 Much of the information in this archive has unknown ownership or uses licensed names and artwork. Everything here is believed to be appropriately used under Fair Use. If you are a copyright or trademark owner, please contact the maintainer so that appropriate use may be agreed upon.
 
+## Naming conventions
+
+| Scope | Rule | Examples |
+|-------|------|----------|
+| **Top-level hardware modules** | `CamelCase` (no spaces or hyphens) | `Transmitter/`, `Mainboard/`, `PaddleMirror/`, `Cartridge/` |
+| **Top-level shared folders** | `lowercase` | `docs/`, `tools/`, `libraries/` |
+| **Subfolders inside modules** | `CamelCase` | `Photos/`, `Firmware/`, `KiCAD/`, `PCBoard/`, `Model3D/`, `Photos/Product/`, `Photos/ReverseEngineering/` |
+| **Subfolders inside shared folders** | `lowercase` | `docs/references/`, `tools/rfcap/`, `tools/rfcap/captures/` |
+
+Multi-word module or folder names run together (`PaddleMirror`, not `Paddle Mirror`). Acronyms keep familiar casing inside CamelCase (`KiCAD`, `PCBoard`).
+
 ## Repository layout
 
 ### Hardware modules
@@ -20,7 +31,7 @@ Each module has a [`KiCAD/`](Transmitter/KiCAD/) subfolder for schematic/PCB wor
 | [`Mainboard/`](Mainboard/) | Planned | `Mainboard/KiCAD/` |
 | [`Face/`](Face/) | Planned | `Face/KiCAD/` |
 | [`Cartridge/`](Cartridge/) | Cartridge ROM + firmware | `Cartridge/KiCAD/` (planned) |
-| [`Paddle Mirror/`](Paddle%20Mirror/) | Archive | `Paddle Mirror/KiCAD/` (planned) |
+| [`PaddleMirror/`](PaddleMirror/) | Archive | `PaddleMirror/KiCAD/` (planned) |
 | [`Chassis/`](Chassis/) | Body, manuals, photos, internal ROM | `Chassis/KiCAD/` (mechanical, planned) |
 
 ### Tools & documentation

@@ -5,7 +5,7 @@
 | Path | Description |
 |------|-------------|
 | [`KiCAD/`](KiCAD/) | KiCad schematic/PCB — [`Transmitter-27MHz.pro`](KiCAD/Transmitter-27MHz.pro) |
-| [`Reverse-Engineering/`](Reverse-Engineering/) | Protocol and hardware notes |
+| [`ReverseEngineering/`](ReverseEngineering/) | Protocol and hardware notes |
 | [`Stickers/`](Stickers/) | Remote sticker artwork |
 | [`Datasheets/`](Datasheets/) | COP411L datasheet |
 | [`Photos/`](Photos/) | Product shots and reverse-engineering images |
@@ -29,6 +29,6 @@ Status: **Active** — KiCad repair/fab; empty schematic/PCB/3D folders. Full ba
 **Missing artifact folders** `[empty]`
 
 - [ ] [`Schematic/`](Schematic/) — dedicated schematic scan or vector export (separate from KiCad)
-- [ ] [`PC-Board/`](PC-Board/) — PCB photos, fab drawings, or layout exports
-- [ ] [`3D-Model/`](3D-Model/) — enclosure / remote mechanical CAD
+- [ ] [`PCBoard/`](PCBoard/) — PCB photos, fab drawings, or layout exports
+- [ ] [`Model3D/`](Model3D/) — enclosure / remote mechanical CAD
 - [x] [`Photos/`](Photos/) — product and reverse-engineering images
