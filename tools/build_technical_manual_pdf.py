@@ -17,9 +17,9 @@ from PIL import Image
 from project_paths import project_root, resolve_from_root
 
 MANUAL_DIR = Path("TechnicalManual")
-# 8.5 x 6.5 inch booklet trim (landscape page: wide x tall).
-BOOKLET_WIDTH_IN = 8.5
-BOOKLET_HEIGHT_IN = 6.5
+# 6.5 x 8.5 inch booklet trim (portrait page: wide x tall).
+BOOKLET_WIDTH_IN = 6.5
+BOOKLET_HEIGHT_IN = 8.5
 BOOKLET_DPI = 300
 BOOKLET_SIZE_PX = (
     int(BOOKLET_WIDTH_IN * BOOKLET_DPI),
@@ -105,8 +105,8 @@ toc: true
 toc-depth: 2
 numbersections: true
 geometry:
-  - paperwidth=8.5in
-  - paperheight=6.5in
+  - paperwidth=6.5in
+  - paperheight=8.5in
   - margin=0.5in
 fontsize: 10pt
 documentclass: report
