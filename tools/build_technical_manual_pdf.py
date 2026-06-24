@@ -47,6 +47,8 @@ SAME_GUIDE_LINK = re.compile(
     r"\[([^\]]+)\]\((?!https?://)([^)/]+\.md)(#[^)]+)?\)"
 )
 REPO_LINK = re.compile(r"\[([^\]]+)\]\(\.\./([^)]+)\)")
+HTTP_LINK = re.compile(r"\[([^\]]+)\]\(https?://[^)]+\)")
+FILE_LINK = re.compile(r"\[([^\]]+)\]\((?!https?://)([^)]+\.(?:pdf|md|py|532|64|dsm))\)")
 
 
 def require_tool(name: str) -> str:
@@ -56,32 +58,67 @@ def require_tool(name: str) -> str:
     return path
 
 
-def preprocess_markdown(text: str) -> str:
-    """Normalize links for a single-file PDF build."""
+def chapter_anchor_map(manual_dir: Path, pandoc: str) -> dict[str, str]:
+    """Map each chapter filename to the LaTeX label Pandoc assigns its top heading."""
+    mapping: dict[str, str] = {}
+    for name in CHAPTERS:
+        path = manual_dir / name
+        result = subprocess.run(
+            [pandoc, str(path), "-t", "latex"],
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+        match = re.search(r"\\label\{([^}]+)\}", result.stdout)
+        if match is None:
+            raise RuntimeError(f"could not find top-level label for {path}")
+        mapping[name] = match.group(1)
+    return mapping
+
+
+def preprocess_markdown(text: str, anchor_map: dict[str, str]) -> str:
+    """Normalize links for a single-file PDF build with internal PDF navigation."""
 
     def _same_guide_link(match: re.Match[str]) -> str:
-        label, _file, anchor = match.group(1), match.group(2), match.group(3)
-        return f"[{label}]({anchor})" if anchor else label
+        label, file_name, anchor = match.group(1), match.group(2), match.group(3)
+        if anchor:
+            return f"[{label}]({anchor})"
+        chapter_anchor = anchor_map.get(file_name)
+        if chapter_anchor:
+            return f"[{label}](#{chapter_anchor})"
+        return label
 
     def _repo_link(match: re.Match[str]) -> str:
         label, path = match.group(1), match.group(2)
         return f"{label} (`{path}`)"
 
+    def _http_link(match: re.Match[str]) -> str:
+        return match.group(1)
+
+    def _file_link(match: re.Match[str]) -> str:
+        return match.group(1)
+
     text = SAME_GUIDE_LINK.sub(_same_guide_link, text)
     text = REPO_LINK.sub(_repo_link, text)
+    text = HTTP_LINK.sub(_http_link, text)
+    text = FILE_LINK.sub(_file_link, text)
     # Thematic breaks render as large vertical gaps in LaTeX PDF output.
     text = re.sub(r"\n---\n", "\n\n", text)
     return text
 
 
-def merge_chapters(manual_dir: Path) -> str:
+def merge_chapters(manual_dir: Path, *, pandoc: str) -> str:
     """Concatenate manual chapters; each chapter file starts at the top of a page."""
+    anchor_map = chapter_anchor_map(manual_dir, pandoc)
     parts: list[str] = []
     for index, name in enumerate(CHAPTERS):
         path = manual_dir / name
         if not path.is_file():
             raise FileNotFoundError(path)
-        body = preprocess_markdown(path.read_text(encoding="utf-8").strip())
+        body = preprocess_markdown(
+            path.read_text(encoding="utf-8").strip(),
+            anchor_map,
+        )
         if index > 0:
             parts.append(r"\clearpage")
         parts.append(body)
@@ -96,7 +133,7 @@ def build_body_pdf(
     pdf_engine: str,
     check_only: bool,
 ) -> list[str]:
-    merged = merge_chapters(manual_dir)
+    merged = merge_chapters(manual_dir, pandoc=pandoc)
     today = date.today().isoformat()
     metadata = f"""---
 title: "Maxx Steele Technical Manual"
@@ -119,6 +156,8 @@ linestretch: 0.92
 header-includes:
   - \\usepackage{{xcolor}}
   - \\definecolor{{maxxnavy}}{{RGB}}{{0,35,102}}
+  - \\usepackage{{hyperref}}
+  - \\hypersetup{{colorlinks=true,linkcolor=maxxnavy,urlcolor=maxxnavy,bookmarks=true,bookmarksopen=true}}
   - \\usepackage{{titlesec}}
   - \\usepackage{{needspace}}
   - \\usepackage{{etoolbox}}
