@@ -4,14 +4,6 @@ Third-party component datasheets for the Maxx Steele robot. **Overrides** the us
 
 Do not duplicate datasheet PDFs elsewhere in the archive — link here from module READMEs and docs.
 
-## Archival notice
-
-These materials are preserved to support repair, restoration, reverse engineering, and lawful operation of legacy Maxx Steele hardware and its obsolete or difficult-to-obtain components. They are archived on the understanding that documenting how a product you own works — for interoperability, maintenance, and non-commercial study — may qualify as fair use under U.S. copyright law (17 U.S.C. § 107) and analogous doctrines elsewhere. Many of the parts documented here are no longer manufactured or readily sourced; access to original manufacturer documentation is often unavailable through normal commercial channels.
-
-This repository does not assert ownership of these documents. If you are a copyright or trademark holder and believe that inclusion of a specific file is not permitted, please contact the maintainer. Upon notice, we will review the concern promptly and, where appropriate, remove or replace the material with an alternative reference (e.g. a different public datasheet, a summary, or a link to an authorized source).
-
-Nothing in this notice constitutes legal advice.
-
 ## Index
 
 | File | Component / topic | Used by |
@@ -37,3 +29,13 @@ Nothing in this notice constitutes legal advice.
 1. Place new third-party PDFs here (shell-safe filenames — see [naming conventions](../README.md#naming-conventions)).
 2. Add a row to the index table above with links to related modules and docs.
 3. Link from the module README `Datasheets/` pointer (if any), not the other way around.
+
+---
+
+<small>
+
+**Archival notice.** These materials are preserved to support repair, restoration, reverse engineering, and lawful operation of legacy Maxx Steele hardware and its obsolete or difficult-to-obtain components. They are archived on the understanding that documenting how a product you own works — for interoperability, maintenance, and non-commercial study — may qualify as fair use under U.S. copyright law (17 U.S.C. § 107) and analogous doctrines elsewhere. Many of the parts documented here are no longer manufactured or readily sourced; access to original manufacturer documentation is often unavailable through normal commercial channels.
+
+This repository does not assert ownership of these documents. If you are a copyright or trademark holder and believe that inclusion of a specific file is not permitted, please contact the maintainer. Upon notice, we will review the concern promptly and, where appropriate, remove or replace the material with an alternative reference (e.g. a different public datasheet, a summary, or a link to an authorized source). Nothing in this notice constitutes legal advice.
+
+</small>
