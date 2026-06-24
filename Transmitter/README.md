@@ -5,7 +5,7 @@
 | Path | Description |
 |------|-------------|
 | [`KiCAD/`](KiCAD/) | KiCad schematic/PCB — [`Transmitter-27MHz.pro`](KiCAD/Transmitter-27MHz.pro) |
-| [`ReverseEngineering/`](ReverseEngineering/) | Protocol and hardware notes |
+| [`ReverseEngineering/`](ReverseEngineering/) | Protocol and hardware notes ([`Maxx-Steele-Transmitter-Reverse-Engineered-Notes.pdf`](ReverseEngineering/Maxx-Steele-Transmitter-Reverse-Engineered-Notes.pdf), ODT/DOCX sources) |
 | [`Stickers/`](Stickers/) | Remote sticker artwork |
 | [`Datasheets/`](Datasheets/) | Pointer to [`DataSheets/`](../DataSheets/) (e.g. [`National-COP411L.pdf`](../DataSheets/National-COP411L.pdf)) |
 | [`Photos/`](Photos/) | Product shots and reverse-engineering images |

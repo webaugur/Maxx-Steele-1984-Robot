@@ -16,7 +16,7 @@ This frequency is deliberate: **455 kHz is the standard AM intermediate-frequenc
 
 ### Why clock the MCU from the IF frequency?
 
-Commands are sent as **OOK** — the 27 MHz carrier is keyed on and off in a fixed bit pattern ([`Maxx-Steele-Transmitter-Reverse-Engineered-Notes.pdf`](references/Maxx-Steele-Transmitter-Reverse-Engineered-Notes.pdf)). Measured on-air:
+Commands are sent as **OOK** — the 27 MHz carrier is keyed on and off in a fixed bit pattern ([`Maxx-Steele-Transmitter-Reverse-Engineered-Notes.pdf`](../Transmitter/ReverseEngineering/Maxx-Steele-Transmitter-Reverse-Engineered-Notes.pdf)). Measured on-air:
 
 - Each bit is approximately **1.55 ms** (carrier present = `1`, absent = `0`)
 - While a button is held, the same packet repeats every **~29 ms** (Power/Stop repeats every **~21 ms**)

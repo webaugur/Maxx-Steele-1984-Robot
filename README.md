@@ -14,7 +14,7 @@ Much of the information in this archive has unknown ownership or uses licensed n
 | **Top-level shared folders** | `lowercase` | `docs/`, `tools/`, `libraries/` |
 | **Third-party datasheets** | **`DataSheets/`** (overrides lowercase rule) | Vendor PDFs as `OEM-PartNumber.pdf`; see [`DataSheets/README.md`](DataSheets/README.md) |
 | **Subfolders inside modules** | `CamelCase` | `Photos/`, `Firmware/`, `KiCAD/`, `PCBoard/`, `Model3D/`, `Photos/Product/`, `Photos/ReverseEngineering/` |
-| **Subfolders inside shared folders** | `lowercase` | `docs/references/`, `tools/rfcap/`, `tools/rfcap/captures/` |
+| **Subfolders inside shared folders** | `lowercase` | `tools/rfcap/`, `tools/rfcap/captures/` |
 | **All filenames** | shell-safe: `[A-Za-z0-9._-]` only | `Remote-Front.jpg`, `maxx-song-1.wma`, `Maxx-Steele-Transmitter-Reverse-Engineered-Notes.pdf` |
 
 Multi-word module or folder names run together (`PaddleMirror`, not `Paddle Mirror`). Acronyms keep familiar casing inside CamelCase (`KiCAD`, `PCBoard`).
@@ -47,7 +47,7 @@ Each module has a [`KiCAD/`](Transmitter/KiCAD/) subfolder for schematic/PCB wor
 
 | Path | Description |
 |------|-------------|
-| [`docs/`](docs/) | Transmitter architecture/BOM, [reference PDFs](docs/references/) |
+| [`docs/`](docs/) | Transmitter architecture and BOM |
 | [`DataSheets/`](DataSheets/) | Third-party component datasheets (indexed in [`DataSheets/README.md`](DataSheets/README.md)) |
 | [`tools/`](tools/) | Cartridge ROM tools, [`rfcap/`](tools/rfcap/) GNU Radio OOK flowgraphs, [`sanitize_filenames.py`](tools/sanitize_filenames.py) |
 | [`libraries/`](libraries/) | Shared KiCad symbol libraries |
