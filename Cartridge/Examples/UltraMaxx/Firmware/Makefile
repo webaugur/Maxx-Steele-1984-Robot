@@ -9,7 +9,9 @@ ROM       := Cartridge/Examples/UltraMaxx/Firmware/Binary/UltraMaxx.532
 BAS       ?= Basic/hello.bas
 BAS_OUT   ?= Binary/hello.532
 
-.PHONY: validate compile check info upload upload-flash upload-hello
+MAXXBAS   := $(REPO_ROOT)/tools/maxxbas/target/release/maxxbas
+
+.PHONY: validate compile compile-rust check test-rust info upload upload-flash upload-hello
 
 validate:
 	python3 $(REPO_ROOT)/tools/maxx_rom.py validate $(ROM)
@@ -21,8 +23,16 @@ compile:
 	python3 $(REPO_ROOT)/tools/tinybasic_maxx.py compile $(BAS_PATH) -o $(BAS_ROM)
 	python3 $(REPO_ROOT)/tools/maxx_rom.py validate $(BAS_ROM)
 
+compile-rust:
+	cargo build --release --manifest-path $(REPO_ROOT)/tools/maxxbas/Cargo.toml
+	$(MAXXBAS) compile $(REPO_ROOT)/$(BAS_PATH) -o $(REPO_ROOT)/$(BAS_ROM)
+	python3 $(REPO_ROOT)/tools/maxx_rom.py validate $(BAS_ROM)
+
 check:
 	python3 $(REPO_ROOT)/tools/tinybasic_maxx.py check $(BAS_PATH)
+
+test-rust:
+	cargo test --manifest-path $(REPO_ROOT)/tools/maxxbas/Cargo.toml
 
 upload-hello: compile
 	python3 $(REPO_ROOT)/tools/picorom_cart.py upload --device $(DEVICE) --size $(SIZE) --rom $(BAS_ROM)

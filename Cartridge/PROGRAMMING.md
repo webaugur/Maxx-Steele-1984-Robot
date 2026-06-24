@@ -10,7 +10,7 @@ This document describes how to write programs for the 1984 CBS Toys / Ideal **Ma
 - [`Chassis/Firmware/Assembly/maxx_internal_ROM.dsm`](../Chassis/Firmware/Assembly/maxx_internal_ROM.dsm) — internal 6502 interpreter (R. Wind)
 - Original reference guide: [`Chassis/Manual/MaxxSteeleReferenceGuide.pdf`](../Chassis/Manual/MaxxSteeleReferenceGuide.pdf)
 
-Tools live in [`tools/maxx_rom.py`](../tools/maxx_rom.py) and [`tools/tinybasic_maxx.py`](../tools/tinybasic_maxx.py) (MaxxBAS compiler).
+Tools live in [`tools/maxx_rom.py`](../tools/maxx_rom.py), [`tools/tinybasic_maxx.py`](../tools/tinybasic_maxx.py) (MaxxBAS, Python), and [`tools/maxxbas/`](../tools/maxxbas/) (MaxxBAS, Rust).
 
 ---
 

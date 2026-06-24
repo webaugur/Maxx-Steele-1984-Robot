@@ -17,6 +17,8 @@ in v1 — use SPEAK for built-in ROM speech.
 Example:
   python3 tools/tinybasic_maxx.py compile hello.bas -o hello.532
   python3 tools/maxx_rom.py validate hello.532
+
+Rust equivalent: tools/maxxbas/ (cargo build --release; maxxbas compile …).
 """
 
 from __future__ import annotations

@@ -98,12 +98,19 @@ v1 has **no** variables, `GOTO`, or `IF`. Use `SPEAK` for factory speech; custom
 Sample source: [`Firmware/Basic/hello.bas`](Firmware/Basic/hello.bas)
 
 ```bash
-# Compile + validate
+# Compile + validate (Python)
 python3 tools/tinybasic_maxx.py compile Cartridge/Examples/UltraMaxx/Firmware/Basic/hello.bas \
   -o Cartridge/Examples/UltraMaxx/Firmware/Binary/hello.532
 
-# Or via Makefile
-make -C Cartridge/Examples/UltraMaxx/Firmware compile
+# Or Rust crate (Phase 2 — PicoROM-aligned host tool)
+cargo build --release --manifest-path tools/maxxbas/Cargo.toml
+tools/maxxbas/target/release/maxxbas compile Cartridge/Examples/UltraMaxx/Firmware/Basic/hello.bas \
+  -o Cartridge/Examples/UltraMaxx/Firmware/Binary/hello.532
+
+# Makefile shortcuts
+make -C Cartridge/Examples/UltraMaxx/Firmware compile        # Python
+make -C Cartridge/Examples/UltraMaxx/Firmware compile-rust   # Rust
+make -C Cartridge/Examples/UltraMaxx/Firmware test-rust
 
 # Upload compiled image (not the stock UltraMaxx binary)
 python3 tools/picorom_cart.py upload --device maxx_cart \
@@ -112,6 +119,8 @@ python3 tools/picorom_cart.py upload --device maxx_cart \
 # Tests
 python3 tools/test_tinybasic_maxx.py
 ```
+
+Rust library API: [`tools/maxxbas/`](../../../tools/maxxbas/). Intended for future `picorom upload program.maxx` integration.
 
 ## Develop / iterate workflow
 
@@ -143,4 +152,4 @@ python3 tools/picorom_cart.py upload --cart cbsdemo --device maxx_cart --size 4k
 - PicoROM project: https://github.com/wickerwaka/PicoROM
 - CBSDemo schematic: [`../CBSDemo/KiCAD/CBSDemo.kicad_pro`](../CBSDemo/KiCAD/CBSDemo.kicad_pro)
 - Cartridge programming: [`../../PROGRAMMING.md`](../../PROGRAMMING.md)
-- `tools/tinybasic_maxx.py`, `tools/picorom_cart.py`, `tools/maxx_rom.py`
+- `tools/maxxbas/` (Rust), `tools/tinybasic_maxx.py` (Python), `tools/picorom_cart.py`, `tools/maxx_rom.py`
