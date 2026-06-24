@@ -41,9 +41,11 @@ The handheld transmitter uses a **COP411L** MCU scanning a row/column matrix. Ke
 | L3 | U | V | W | X | |
 | Gnd | | | | | Y |
 
-**Y** = Power/Stop. Faceplate groups: DRIVE row, wrist/arms/grip, CLAW, LAMP, MOVE, WAIT, NOTE RESET, SHIFT/DELETE, CLEAR, ENTER, SONGS, CLICK, NOTES, SPEECH, MOTION, GAME, PROGRAM, LEARN, EXECUTE.
+Faceplate labels (from [`Remote-Front.jpg`](../Transmitter/Photos/Product/Remote-Front.jpg)): **U/1/2/3 DRIVE**, **4/5 WRIST**, **6/7 ARMS**, **8/9 CLAW**, **A LAMP**, **B HOME**, **NOTE REST** (WAIT), **SHIFT OCTAVE**, **CLEAR**, **ENTER**, **SONG/NOTES**, **CLOCK/STATUS**, **SPEECH**, **MOTION**, **GAME**, **PROGRAM**, **LEARN**, **EXECUTE**, **POWER/STOP** (**Y**).
 
-Reference photos: [`Transmitter/Photos/ReverseEngineering/keyboard-matrix-reference-1.png`](../Transmitter/Photos/ReverseEngineering/keyboard-matrix-reference-1.png), [`keyboard-matrix-reference-2.png`](../Transmitter/Photos/ReverseEngineering/keyboard-matrix-reference-2.png).
+Full key-to-matrix table: [`Transmitter/remote-keypad.md`](../Transmitter/remote-keypad.md). Diagram: [`Remote-Front.svg`](../Transmitter/Photos/Product/Remote-Front.svg).
+
+Matrix wiring refs: [`keyboard-matrix-reference-1.png`](../Transmitter/Photos/ReverseEngineering/keyboard-matrix-reference-1.png), [`keyboard-matrix-reference-2.png`](../Transmitter/Photos/ReverseEngineering/keyboard-matrix-reference-2.png).
 
 ### RF link (summary)
 

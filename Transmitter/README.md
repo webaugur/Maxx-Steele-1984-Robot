@@ -10,6 +10,7 @@
 | [`Photos/`](Photos/) | Product shots and reverse-engineering images |
 | [`transmitter-architecture.md`](transmitter-architecture.md) | 455 kHz IF clock, OOK protocol, signal path |
 | [`transmitter-bom.md`](transmitter-bom.md) | Bill of materials |
+| [`remote-keypad.md`](remote-keypad.md) | Faceplate button names and matrix map (A–Y) |
 
 Shared symbols: [`libraries/`](../libraries/).
 

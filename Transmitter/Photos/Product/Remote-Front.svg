@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 360" role="img" aria-label="Maxx Steele remote keypad faceplate labels">
+  <title>Maxx Steele remote keypad</title>
+  <desc>Button labels from Remote-Front.jpg; matrix keys A–Y in corners.</desc>
+  <style>
+    .panel { fill: #111; stroke: #333; stroke-width: 1; }
+    .key { fill: #8a8a8a; stroke: #444; stroke-width: 1; rx: 3; }
+    .key-home { fill: #c87800; }
+    .key-wide { fill: #7a7a7a; }
+    .label { font: 600 7px sans-serif; fill: #fff; text-anchor: middle; }
+    .sublabel { font: 400 6px sans-serif; fill: #ddd; text-anchor: middle; }
+    .keynum { font: 700 8px sans-serif; fill: #ff8800; text-anchor: middle; }
+    .matrix { font: 700 6px monospace; fill: #6cf; text-anchor: end; }
+    .power { font: 700 9px sans-serif; fill: #e00; text-anchor: middle; }
+    .dot-blue { fill: #06f; }
+    .dot-orange { fill: #f80; }
+    .dot-yellow { fill: #fc0; }
+  </style>
+
+  <rect class="panel" x="10" y="10" width="200" height="300" rx="6"/>
+
+  <!-- Row 1: DRIVE -->
+  <g id="row-drive">
+    <rect class="key" x="18" y="22" width="42" height="36"/>
+    <text class="keynum" x="39" y="34">U</text>
+    <text class="label" x="39" y="50">DRIVE</text>
+    <text class="matrix" x="56" y="30">A</text>
+
+    <rect class="key" x="64" y="22" width="42" height="36"/>
+    <text class="keynum" x="85" y="34">1</text>
+    <text class="label" x="85" y="50">DRIVE</text>
+    <text class="matrix" x="102" y="30">B</text>
+
+    <rect class="key" x="110" y="22" width="42" height="36"/>
+    <text class="keynum" x="131" y="34">2</text>
+    <text class="label" x="131" y="50">DRIVE</text>
+    <text class="matrix" x="148" y="30">C</text>
+
+    <rect class="key" x="156" y="22" width="42" height="36"/>
+    <text class="keynum" x="177" y="34">3</text>
+    <text class="label" x="177" y="50">DRIVE</text>
+    <text class="matrix" x="194" y="30">D</text>
+  </g>
+
+  <!-- Row 2: WRIST / ARMS -->
+  <g id="row-joints-1">
+    <rect class="key" x="18" y="64" width="42" height="36"/>
+    <text class="keynum" x="39" y="76">4</text>
+    <text class="label" x="39" y="92">WRIST</text>
+    <text class="matrix" x="56" y="72">E</text>
+
+    <rect class="key" x="64" y="64" width="42" height="36"/>
+    <text class="keynum" x="85" y="76">5</text>
+    <text class="label" x="85" y="92">WRIST</text>
+    <text class="matrix" x="102" y="72">F</text>
+
+    <rect class="key" x="110" y="64" width="42" height="36"/>
+    <text class="keynum" x="131" y="76">6</text>
+    <text class="label" x="131" y="92">ARMS</text>
+    <text class="matrix" x="148" y="72">G</text>
+
+    <rect class="key" x="156" y="64" width="42" height="36"/>
+    <text class="keynum" x="177" y="76">7</text>
+    <text class="label" x="177" y="92">ARMS</text>
+    <text class="matrix" x="194" y="72">H</text>
+  </g>
+
+  <!-- Row 3: CLAW / LAMP / HOME -->
+  <g id="row-joints-2">
+    <rect class="key" x="18" y="106" width="42" height="36"/>
+    <text class="keynum" x="39" y="118">8</text>
+    <text class="label" x="39" y="134">CLAW</text>
+    <text class="matrix" x="56" y="114">I</text>
+
+    <rect class="key" x="64" y="106" width="42" height="36"/>
+    <text class="keynum" x="85" y="118">9</text>
+    <text class="label" x="85" y="134">CLAW</text>
+    <text class="matrix" x="102" y="114">J</text>
+
+    <rect class="key" x="110" y="106" width="42" height="36"/>
+    <text class="keynum" x="131" y="118">A</text>
+    <text class="label" x="131" y="134">LAMP</text>
+    <text class="matrix" x="148" y="114">K</text>
+
+    <rect class="key key-home" x="156" y="106" width="42" height="36"/>
+    <text class="keynum" x="177" y="118">B</text>
+    <text class="label" x="177" y="134">HOME</text>
+    <text class="matrix" x="194" y="114">L</text>
+  </g>
+
+  <!-- Row 4: music / edit -->
+  <g id="row-edit">
+    <rect class="key" x="18" y="148" width="42" height="36"/>
+    <text class="sublabel" x="39" y="158">WAIT</text>
+    <text class="label" x="39" y="172">NOTE REST</text>
+    <text class="matrix" x="56" y="156">M</text>
+
+    <rect class="key" x="64" y="148" width="42" height="36"/>
+    <circle class="dot-blue" cx="85" cy="172" r="3"/>
+    <text class="label" x="85" y="166">SHIFT</text>
+    <text class="sublabel" x="85" y="176">OCTAVE</text>
+    <text class="matrix" x="102" y="156">N</text>
+
+    <rect class="key" x="110" y="148" width="42" height="36"/>
+    <circle class="dot-orange" cx="131" cy="172" r="3"/>
+    <text class="label" x="131" y="170">CLEAR</text>
+    <text class="matrix" x="148" y="156">O</text>
+
+    <rect class="key" x="156" y="148" width="42" height="36"/>
+    <circle class="dot-yellow" cx="177" cy="172" r="3"/>
+    <text class="label" x="177" y="170">ENTER</text>
+    <text class="matrix" x="194" y="156">P</text>
+  </g>
+
+  <!-- Row 5: song / clock / speech / motion -->
+  <g id="row-media">
+    <rect class="key" x="18" y="190" width="42" height="36"/>
+    <circle class="dot-blue" cx="39" cy="214" r="3"/>
+    <text class="sublabel" x="39" y="202">SONG</text>
+    <text class="label" x="39" y="214">NOTES</text>
+    <text class="matrix" x="56" y="198">Q</text>
+
+    <rect class="key" x="64" y="190" width="42" height="36"/>
+    <circle class="dot-blue" cx="85" cy="214" r="3"/>
+    <text class="sublabel" x="85" y="202">CLOCK</text>
+    <text class="label" x="85" y="214">STATUS</text>
+    <text class="matrix" x="102" y="198">R</text>
+
+    <rect class="key" x="110" y="190" width="42" height="36"/>
+    <circle class="dot-blue" cx="131" cy="214" r="3"/>
+    <text class="label" x="131" y="208">SPEECH</text>
+    <text class="matrix" x="148" y="198">S</text>
+
+    <rect class="key" x="156" y="190" width="42" height="36"/>
+    <circle class="dot-blue" cx="177" cy="214" r="3"/>
+    <text class="label" x="177" y="208">MOTION</text>
+    <text class="matrix" x="194" y="198">T</text>
+  </g>
+
+  <!-- Row 6: modes -->
+  <g id="row-modes">
+    <rect class="key" x="18" y="232" width="42" height="36"/>
+    <circle class="dot-blue" cx="39" cy="256" r="3"/>
+    <text class="label" x="39" y="252">GAME</text>
+    <text class="matrix" x="56" y="240">U</text>
+
+    <rect class="key" x="64" y="232" width="42" height="36"/>
+    <circle class="dot-blue" cx="85" cy="256" r="3"/>
+    <text class="label" x="85" y="252">PROGRAM</text>
+    <text class="matrix" x="102" y="240">V</text>
+
+    <rect class="key" x="110" y="232" width="42" height="36"/>
+    <circle class="dot-blue" cx="131" cy="256" r="3"/>
+    <text class="label" x="131" y="252">LEARN</text>
+    <text class="matrix" x="148" y="240">W</text>
+
+    <rect class="key" x="156" y="232" width="42" height="36"/>
+    <circle class="dot-blue" cx="177" cy="256" r="3"/>
+    <text class="label" x="177" y="252">EXECUTE</text>
+    <text class="matrix" x="194" y="240">X</text>
+  </g>
+
+  <!-- POWER/STOP -->
+  <rect class="key-wide" x="18" y="276" width="180" height="24" rx="3"/>
+  <text class="power" x="108" y="292">POWER/STOP</text>
+  <text class="matrix" x="194" y="286">Y</text>
+
+  <text class="sublabel" x="110" y="330" fill="#666">Source: Remote-Front.jpg — matrix A–Y</text>
+</svg>

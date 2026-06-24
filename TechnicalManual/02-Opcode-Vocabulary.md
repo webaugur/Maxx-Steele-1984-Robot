@@ -62,7 +62,7 @@ Opcodes with bit 7 set (`$80+`) are remapped through the display table for execu
 
 ## Keypad-mapped opcodes
 
-The internal ROM maps remote key scan codes to opcodes via table **`$E6B5`**. Documented mapping (from [`maxx_internal_ROM.dsm`](../Chassis/Firmware/Assembly/maxx_internal_ROM.dsm)):
+The internal ROM maps remote key scan codes to opcodes via table **`$E6B5`**. Faceplate names: [`Transmitter/remote-keypad.md`](../Transmitter/remote-keypad.md). Documented mapping (from [`maxx_internal_ROM.dsm`](../Chassis/Firmware/Assembly/maxx_internal_ROM.dsm)):
 
 ```
 Key opcodes:  00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F

@@ -2,7 +2,7 @@
 
 | Folder | Contents |
 |--------|----------|
-| [`Product/`](Product/) | Remote control product and FCC sticker photos |
+| [`Product/`](Product/) | Remote control product photos, [`Remote-Front.svg`](Product/Remote-Front.svg) keypad diagram |
 | [`ReverseEngineering/`](ReverseEngineering/) | MCU board PCB, trace overlays, handwritten BOM, keyboard matrix refs |
 
 ## Reverse-engineering key files
@@ -17,4 +17,7 @@
 | `pcb-trace-overlay-1.png` | PCB trace overlay |
 | `pcb-trace-overlay-1-alt.png` | Alternate PCB trace overlay |
 
-Used by [`transmitter-bom.md`](../transmitter-bom.md) and [`transmitter-architecture.md`](../transmitter-architecture.md).
+| [`Product/Remote-Front.jpg`](Product/Remote-Front.jpg) | Front panel product photo (button label source) |
+| [`Product/Remote-Front.svg`](Product/Remote-Front.svg) | Keypad faceplate diagram (matrix keys A–Y) |
+
+Used by [`remote-keypad.md`](../remote-keypad.md), [`transmitter-bom.md`](../transmitter-bom.md), and [`transmitter-architecture.md`](../transmitter-architecture.md).

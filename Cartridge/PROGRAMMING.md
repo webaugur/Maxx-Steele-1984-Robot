@@ -289,17 +289,25 @@ The remote keypad is a row/column matrix. Key labels **A–Y** map to matrix lin
 | L3 | U | V | W | X | |
 | Gnd | | | | | Y |
 
-Physical button names (remote faceplate):
+Physical button names (remote faceplate) — full map in [`Transmitter/remote-keypad.md`](../Transmitter/remote-keypad.md):
 
-- **Drive row**: four DRIVE buttons
-- **Wrist / Arms / Grip row**
-- **CLAW, LAMP, MOVE**
-- **WAIT, NOTE RESET, SHIFT/DELETE, CLEAR, ENTER**
-- **SONGS, CLICK, NOTES, SPEECH, MOTION**
-- **GAME, PROGRAM, LEARN, EXECUTE**
-- **POWER/STOP** (Y)
+| Key | Faceplate | Key | Faceplate |
+|-----|-----------|-----|-----------|
+| A | **U** DRIVE | M | **NOTE REST** (WAIT) |
+| B | **1** DRIVE | N | **SHIFT OCTAVE** |
+| C | **2** DRIVE | O | **CLEAR** |
+| D | **3** DRIVE | P | **ENTER** |
+| E | **4** WRIST | Q | **SONG** / **NOTES** |
+| F | **5** WRIST | R | **CLOCK** / **STATUS** |
+| G | **6** ARMS | S | **SPEECH** |
+| H | **7** ARMS | T | **MOTION** |
+| I | **8** CLAW | U | **GAME** |
+| J | **9** CLAW | V | **PROGRAM** |
+| K | **A** LAMP | W | **LEARN** |
+| L | **B** HOME | X | **EXECUTE** |
+| | | Y | **POWER/STOP** |
 
-Reference images: [`keyboard-matrix-reference-1.png`](../Transmitter/Photos/ReverseEngineering/keyboard-matrix-reference-1.png), [`keyboard-matrix-reference-2.png`](../Transmitter/Photos/ReverseEngineering/keyboard-matrix-reference-2.png)
+Reference images: [`Remote-Front.jpg`](../Transmitter/Photos/Product/Remote-Front.jpg), [`Remote-Front.svg`](../Transmitter/Photos/Product/Remote-Front.svg), [`keyboard-matrix-reference-1.png`](../Transmitter/Photos/ReverseEngineering/keyboard-matrix-reference-1.png), [`keyboard-matrix-reference-2.png`](../Transmitter/Photos/ReverseEngineering/keyboard-matrix-reference-2.png)
 
 ---
 
