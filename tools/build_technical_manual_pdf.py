@@ -12,9 +12,13 @@ import tempfile
 from datetime import date
 from pathlib import Path
 
+from PIL import Image
+
 from project_paths import project_root, resolve_from_root
 
 MANUAL_DIR = Path("TechnicalManual")
+LETTER_DPI = 300
+LETTER_SIZE_PX = (int(8.5 * LETTER_DPI), int(11 * LETTER_DPI))
 OUTPUT_NAME = "Maxx-Steele-Technical-Manual.pdf"
 COVER_FRONT = "cover-front.jpg"
 COVER_REAR = "cover-rear.jpg"
@@ -127,22 +131,94 @@ documentclass: report
     return command
 
 
+def prepare_cover_image(*, source: Path, output: Path) -> None:
+    """Shrink-fit like img2pdf, then stretch edge columns to full page width."""
+    page_w, page_h = LETTER_SIZE_PX
+    image = Image.open(source).convert("RGB")
+
+    scale = min(page_w / image.width, page_h / image.height)
+    scaled_w = max(1, round(image.width * scale))
+    scaled_h = max(1, round(image.height * scale))
+    scaled = image.resize((scaled_w, scaled_h), Image.Resampling.LANCZOS)
+
+    x0 = (page_w - scaled_w) // 2
+    y0 = (page_h - scaled_h) // 2
+    left_gap = x0
+    right_gap = page_w - scaled_w - x0
+
+    page = Image.new("RGB", (page_w, page_h))
+
+    if left_gap > 0:
+        left_col = scaled.crop((0, 0, 1, scaled_h))
+        page.paste(
+            left_col.resize((left_gap, scaled_h), Image.Resampling.NEAREST),
+            (0, y0),
+        )
+
+    page.paste(scaled, (x0, y0))
+
+    if right_gap > 0:
+        right_col = scaled.crop((scaled_w - 1, 0, scaled_w, scaled_h))
+        page.paste(
+            right_col.resize((right_gap, scaled_h), Image.Resampling.NEAREST),
+            (x0 + scaled_w, y0),
+        )
+
+    if y0 > 0:
+        top_row = scaled.crop((0, 0, scaled_w, 1))
+        page.paste(
+            top_row.resize((scaled_w, y0), Image.Resampling.NEAREST),
+            (x0, 0),
+        )
+        if left_gap > 0:
+            corner = scaled.getpixel((0, 0))
+            page.paste(Image.new("RGB", (left_gap, y0), corner), (0, 0))
+        if right_gap > 0:
+            corner = scaled.getpixel((scaled_w - 1, 0))
+            page.paste(Image.new("RGB", (right_gap, y0), corner), (x0 + scaled_w, 0))
+
+    bottom_gap = page_h - scaled_h - y0
+    if bottom_gap > 0:
+        bottom_row = scaled.crop((0, scaled_h - 1, scaled_w, scaled_h))
+        page.paste(
+            bottom_row.resize((scaled_w, bottom_gap), Image.Resampling.NEAREST),
+            (x0, y0 + scaled_h),
+        )
+        if left_gap > 0:
+            corner = scaled.getpixel((0, scaled_h - 1))
+            page.paste(Image.new("RGB", (left_gap, bottom_gap), corner), (0, y0 + scaled_h))
+        if right_gap > 0:
+            corner = scaled.getpixel((scaled_w - 1, scaled_h - 1))
+            page.paste(
+                Image.new("RGB", (right_gap, bottom_gap), corner),
+                (x0 + scaled_w, y0 + scaled_h),
+            )
+
+    page.save(output, format="JPEG", quality=95, dpi=(LETTER_DPI, LETTER_DPI))
+
+
 def build_cover_pdf(*, image: Path, output: Path, img2pdf: str) -> None:
-    """Render a full-bleed cover page (scale to fill, crop overflow)."""
-    subprocess.run(
-        [
-            img2pdf,
-            "--pagesize",
-            "Letter",
-            "--fit",
-            "fill",
-            "--auto-orient",
-            str(image),
-            "-o",
-            str(output),
-        ],
-        check=True,
-    )
+    """Render a Letter cover: shrink-fit center, edge columns extended sideways."""
+    with tempfile.NamedTemporaryFile(suffix=".jpg", delete=False) as handle:
+        prepared = Path(handle.name)
+
+    try:
+        prepare_cover_image(source=image, output=prepared)
+        subprocess.run(
+            [
+                img2pdf,
+                "--pagesize",
+                "Letter",
+                "--fit",
+                "shrink",
+                str(prepared),
+                "-o",
+                str(output),
+            ],
+            check=True,
+        )
+    finally:
+        prepared.unlink(missing_ok=True)
 
 
 def merge_pdfs(*, parts: list[Path], output: Path, qpdf: str) -> None:
