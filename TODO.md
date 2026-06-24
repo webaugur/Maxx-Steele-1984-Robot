@@ -4,6 +4,26 @@ Generated from an audit of empty directories, module READMEs, and KiCad project 
 
 Each module [`README.md`](Transmitter/README.md) (and [`tools/rfcap/README.md`](tools/rfcap/README.md)) includes a **TODO** section mirrored from this file. When you check an item off, update **both** the local README and this file.
 
+## GitHub issues
+
+Yes — these items can be tracked as [GitHub Issues](https://docs.github.com/en/issues). **Issues are currently disabled** on [`webaugur/Maxx-Steele-1984-Robot`](https://github.com/webaugur/Maxx-Steele-1984-Robot); enable them under **Settings → General → Features → Issues**, then create backlog issues.
+
+**Recommended layout** (one tracking issue per module, checklist in the issue body):
+
+| Module | Suggested issue title | Labels |
+|--------|----------------------|--------|
+| Transmitter | `Transmitter backlog` | `backlog`, `transmitter` |
+| Receiver | `Receiver backlog` | `backlog`, `receiver` |
+| Mainboard | `Mainboard backlog` | `backlog`, `mainboard` |
+| Cartridge | `Cartridge backlog` | `backlog`, `cartridge` |
+| Chassis | `Chassis backlog` | `backlog`, `chassis` |
+| Power | `Power backlog` | `backlog`, `power` |
+| Face | `Face backlog` | `backlog`, `face` |
+| Paddle Mirror | `Paddle Mirror backlog` | `backlog`, `paddle-mirror` |
+| RFCAP captures | `RFCAP capture annotations` | `backlog`, `tools` |
+
+Copy the open checklist from each module README into the matching issue. When an item is done, check it off in **three places**: the GitHub issue, this file, and the module README. Add the issue link to the module README `## TODO` section once created.
+
 **Legend:** `[empty]` = directory has a README placeholder only (no real assets yet). `[partial]` = work started but not finished. `[planned]` = README marks module as not yet started.
 
 ---
