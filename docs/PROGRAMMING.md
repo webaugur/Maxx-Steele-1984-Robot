@@ -327,7 +327,7 @@ FF FF    ; end
 - **Phoneme token table**: Full `$F4DB` / `$F567` transcription would enable authoring custom speech without copying demo tokens
 - **Operand scaling**: Distance/angle units for motion opcodes are empirical (demo uses values like `$14`, `$06`, `$28`)
 - **8080 code at `$A0C7+`** in the demo image is marked "not Maxx-related" in the `.dsm` listing — treat as padding
-- **Robot main board KiCad**: cleaned schematic exists upstream (`Robot/Schematic/v1.1/`; raster reference in [`docs/photos/robot/schematics/`](photos/robot/schematics/)) but is out of scope for this transmitter-first pass
+- **Robot main board KiCad**: placeholder at [`Mainboard/KiCAD/`](../Mainboard/KiCAD/); raster reference in [`docs/photos/robot/schematics/`](photos/robot/schematics/); vector sources in `Robot/Schematic/v1.1/`
 
 ---
 

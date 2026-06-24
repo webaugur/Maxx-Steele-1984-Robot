@@ -373,7 +373,7 @@
     (library (logical Transistor_BJT)
       (uri /usr/share/kicad/library/Transistor_BJT.lib))
     (library (logical cop41xl)
-      (uri ${KIPRJMOD}/../libraries/cop41xl.lib)))
+      (uri ${KIPRJMOD}/../../libraries/cop41xl.lib)))
   (nets
     (net (code 1) (name "Net-(Q700-Pad2)")
       (node (ref R5) (pin 1))

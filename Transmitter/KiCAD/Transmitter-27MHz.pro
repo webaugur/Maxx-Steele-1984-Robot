@@ -13,7 +13,7 @@ version=1
 LibDir=
 [eeschema/libraries]
 LibName1=cop41xl
-LibDir1=${KIPRJMOD}/../libraries
+LibDir1=${KIPRJMOD}/../../libraries
 [pcbnew]
 version=1
 PageLayoutDescrFile=

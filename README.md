@@ -8,34 +8,48 @@ Much of the information in this archive has unknown ownership or uses licensed n
 
 ## Repository layout
 
+### Hardware modules
+
+Each module has a [`KiCAD/`](Transmitter/KiCAD/) subfolder for schematic/PCB work and shares [`libraries/`](libraries/) for symbols.
+
+| Module | Status | KiCad project |
+|--------|--------|---------------|
+| [`Transmitter/`](Transmitter/) | Active | [`Transmitter/KiCAD/Transmitter-27MHz.pro`](Transmitter/KiCAD/Transmitter-27MHz.pro) |
+| [`Receiver/`](Receiver/) | Active | [`Receiver/KiCAD/Receiver-27MHz.pro`](Receiver/KiCAD/Receiver-27MHz.pro) |
+| [`Power/`](Power/) | Planned | `Power/KiCAD/` |
+| [`Mainboard/`](Mainboard/) | Planned | `Mainboard/KiCAD/` |
+| [`Face/`](Face/) | Planned | `Face/KiCAD/` |
+
+### Original archive
+
 | Path | Description |
 |------|-------------|
-| **Archive** | |
 | [`Robot/`](Robot/) | Robot body — electronics, firmware, schematics |
-| [`Transmitter/`](Transmitter/) | Remote — stickers, RE notes, datasheets |
 | [`Accessories/`](Accessories/) | Demo cartridge, paddle mirror |
 | [`Manual/`](Manual/) | Original manuals |
 | [`References/`](References/) | Third-party articles and workshop notes |
 | [`Artwork/`](Artwork/) | Logos and artwork |
-| **Active work** | |
-| [`kicad/`](kicad/) | KiCad projects (transmitter, receiver) + symbol libraries |
-| [`docs/`](docs/) | RE manuals, BOM, architecture notes, [photos](docs/photos/), [reference PDFs](docs/references/) |
+
+### Tools & documentation
+
+| Path | Description |
+|------|-------------|
+| [`docs/`](docs/) | RE manuals, [photos](docs/photos/), [reference PDFs](docs/references/) |
 | [`firmware/`](firmware/) | Curated ROM binaries + disassembly listings |
 | [`tools/`](tools/) | Cartridge ROM disassembler / validator |
-| [`rfcap/`](rfcap/) | GNU Radio OOK flowgraphs; IQ data in [`rfcap/captures/`](rfcap/captures/) |
+| [`rfcap/`](rfcap/) | GNU Radio OOK flowgraphs; data in [`rfcap/captures/`](rfcap/captures/) |
+| [`libraries/`](libraries/) | Shared KiCad symbol libraries |
 
 ## Paths
 
-Scripts resolve **project-relative** paths from the repository root (`tools/project_paths.py`). KiCad projects use `${KIPRJMOD}/../libraries/` for shared symbols.
+Scripts resolve **project-relative** paths from the repository root (`tools/project_paths.py`). KiCad modules use `${KIPRJMOD}/../../libraries/` for shared symbols.
 
 ## Quick commands
 
 ```bash
-# Disassemble demo cartridge
 python3 tools/maxx_rom.py disasm firmware/demo-cart/MAXXCART.532
 
-# Open KiCad transmitter project
-# kicad/transmitter/Transmitter-27MHz.pro
+# KiCad: Transmitter/KiCAD/Transmitter-27MHz.pro
 ```
 
 ## Related repositories
