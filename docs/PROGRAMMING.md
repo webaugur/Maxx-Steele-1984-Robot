@@ -308,7 +308,7 @@ Reference images: [`keyboard-matrix-reference-1.png`](../Transmitter/Photos/Reve
 3. Optionally patch phrase/music tables at `$81` / `$BB`
 4. Keep the bootstrap stub and copyright header intact
 5. Validate with `python3 tools/maxx_rom.py validate mycart.532`
-6. Burn to a 4 KB EPROM (e.g. KM2365 family — see [`Chassis/Datasheets/U400 KM2365 (ROM).pdf`](../Chassis/Datasheets/U400%20KM2365%20(ROM).pdf))
+6. Burn to a 4 KB EPROM (e.g. KM2365 family — see [`DataSheets/U400-KM2365-ROM.pdf`](../DataSheets/U400-KM2365-ROM.pdf))
 
 ### Minimal example program
 

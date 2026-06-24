@@ -26,5 +26,5 @@ Status: **Active** — schematic only; no PCB layout or fab outputs. Full backlo
 
 - [ ] Schematic scans / photos (if separate from KiCad)
 - [ ] PCB photos / layout archive
-- [ ] Datasheets folder
+- [ ] Add receiver IC datasheets to [`DataSheets/`](../DataSheets/)
 - [ ] 3D model

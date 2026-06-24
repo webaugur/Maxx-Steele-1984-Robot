@@ -11,7 +11,7 @@ Authoritative bill of materials for the COP411-based remote transmitter, merged 
 
 | Ref | Value | Package | Notes |
 |-----|-------|---------|-------|
-| U1 | COP411L-PAC/N | DIP-20 | National 4-bit MCU; 455 kHz operation |
+| U1 | COP411L-PAC/N | DIP-20 | National 4-bit MCU; 455 kHz operation ([`COP411L.pdf`](../DataSheets/COP411L.pdf)) |
 | Q700 | S8550 (PNP) | TO-92 | RF driver; handwritten notes say "1S02N PNP" — S8550 is the KiCad/RE match |
 | Q701 | 2N3904 (NPN) | TO-92 | Regulator / keying stage |
 | Q702 | 2N3904 (NPN) | TO-92 | RF output |

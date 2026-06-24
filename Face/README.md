@@ -14,4 +14,4 @@ Status: **Planned** — no KiCad project yet. Full backlog: [`TODO.md`](../TODO.
 
 - [ ] KiCad project under [`KiCAD/`](KiCAD/)
 - [ ] Display / speech subsystem schematic
-- [ ] PCB layout, photos, datasheets
+- [ ] PCB layout and photos; add face/speech IC datasheets to [`DataSheets/`](../DataSheets/)

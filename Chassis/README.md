@@ -11,7 +11,7 @@ Robot body, packaging, manuals, and material not tied to a single PCB module.
 | [`Disassembly/`](Disassembly/) | Disassembly guide and photos |
 | [`Sounds/`](Sounds/) | Sample speech and song audio |
 | [`Firmware/`](Firmware/) | Internal 6502 ROM binary and disassembly |
-| [`Datasheets/`](Datasheets/) | Chip and subsystem datasheets (robot-wide) |
+| [`Datasheets/`](Datasheets/) | Pointer to [`DataSheets/`](../DataSheets/) (third-party vendor PDFs) |
 | [`Model3D/`](Model3D/) | Mechanical CAD (placeholder) |
 | [`KiCAD/`](KiCAD/) | Mechanical / enclosure CAD (placeholder) |
 

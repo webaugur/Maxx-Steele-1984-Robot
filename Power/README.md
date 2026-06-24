@@ -15,4 +15,4 @@ Status: **Planned** — no KiCad project yet. Full backlog: [`TODO.md`](../TODO.
 - [ ] KiCad project under [`KiCAD/`](KiCAD/) (currently README + `sym-lib-table` only)
 - [ ] Schematic source or scans
 - [ ] PCB layout and photos
-- [ ] Power-module datasheets
+- [ ] Add power-module datasheets to [`DataSheets/`](../DataSheets/)

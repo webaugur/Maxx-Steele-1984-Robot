@@ -12,6 +12,7 @@ Much of the information in this archive has unknown ownership or uses licensed n
 |-------|------|----------|
 | **Top-level hardware modules** | `CamelCase` (no spaces or hyphens) | `Transmitter/`, `Mainboard/`, `PaddleMirror/`, `Cartridge/` |
 | **Top-level shared folders** | `lowercase` | `docs/`, `tools/`, `libraries/` |
+| **Third-party datasheets** | **`DataSheets/`** (overrides lowercase rule) | All vendor PDFs; see [`DataSheets/README.md`](DataSheets/README.md) |
 | **Subfolders inside modules** | `CamelCase` | `Photos/`, `Firmware/`, `KiCAD/`, `PCBoard/`, `Model3D/`, `Photos/Product/`, `Photos/ReverseEngineering/` |
 | **Subfolders inside shared folders** | `lowercase` | `docs/references/`, `tools/rfcap/`, `tools/rfcap/captures/` |
 | **All filenames** | shell-safe: `[A-Za-z0-9._-]` only | `Remote-Front.jpg`, `maxx-song-1.wma`, `Maxx-Steele-Transmitter-Reverse-Engineered-Notes.pdf` |
@@ -47,7 +48,7 @@ Each module has a [`KiCAD/`](Transmitter/KiCAD/) subfolder for schematic/PCB wor
 | Path | Description |
 |------|-------------|
 | [`docs/`](docs/) | RE manuals, architecture notes, [reference PDFs](docs/references/) |
-
+| [`DataSheets/`](DataSheets/) | Third-party component datasheets (indexed in [`DataSheets/README.md`](DataSheets/README.md)) |
 | [`tools/`](tools/) | Cartridge ROM tools, [`rfcap/`](tools/rfcap/) GNU Radio OOK flowgraphs, [`sanitize_filenames.py`](tools/sanitize_filenames.py) |
 | [`libraries/`](libraries/) | Shared KiCad symbol libraries |
 

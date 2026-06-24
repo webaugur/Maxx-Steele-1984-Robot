@@ -91,7 +91,7 @@ KiCad project: [`Receiver/KiCAD/Receiver-27MHz.pro`](Receiver/KiCAD/Receiver-27M
 
 - [ ] Receiver schematic scans / photos (if separate from KiCad)
 - [ ] Receiver PCB photos / layout archive
-- [ ] Receiver datasheets folder
+- [ ] Add receiver IC datasheets to [`DataSheets/`](DataSheets/)
 - [ ] Receiver 3D model
 
 ---
@@ -139,13 +139,13 @@ Most content present (manuals, photos, firmware, datasheets, sounds, disassembly
 - [ ] KiCad project under [`Power/KiCAD/`](Power/KiCAD/) (currently README + `sym-lib-table` only)
 - [ ] Schematic source or scans
 - [ ] PCB layout and photos
-- [ ] Power-module datasheets
+- [ ] Add power-module datasheets to [`DataSheets/`](DataSheets/)
 
 ### Face `[planned]`
 
 - [ ] KiCad project under [`Face/KiCAD/`](Face/KiCAD/)
 - [ ] Display / speech subsystem schematic
-- [ ] PCB layout, photos, datasheets
+- [ ] PCB layout and photos; add face/speech IC datasheets to [`DataSheets/`](DataSheets/)
 
 ### PaddleMirror `[archive]`
 
