@@ -20,7 +20,7 @@ P 3050 2250
 F 0 "U1" H 3050 3281 50  0000 C CNN
 F 1 "COP411" H 3050 3190 50  0000 C CNN
 F 2 "Package_DIP:DIP-20_W7.62mm_Socket_LongPads" H 2750 2100 50  0001 C CNN
-F 3 "https://atarihq.com/danb/files/COP411.PDF" H 2750 2100 50  0001 C CNN
+F 3 "${KIPRJMOD}/../../DataSheets/National-COP411L.pdf" H 2750 2100 50  0001 C CNN
 	1    3050 2250
 	1    0    0    -1  
 $EndComp

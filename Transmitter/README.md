@@ -7,7 +7,7 @@
 | [`KiCAD/`](KiCAD/) | KiCad schematic/PCB — [`Transmitter-27MHz.pro`](KiCAD/Transmitter-27MHz.pro) |
 | [`ReverseEngineering/`](ReverseEngineering/) | Protocol and hardware notes |
 | [`Stickers/`](Stickers/) | Remote sticker artwork |
-| [`Datasheets/`](Datasheets/) | Pointer to [`DataSheets/`](../DataSheets/) (e.g. [`COP411L.pdf`](../DataSheets/COP411L.pdf)) |
+| [`Datasheets/`](Datasheets/) | Pointer to [`DataSheets/`](../DataSheets/) (e.g. [`National-COP411L.pdf`](../DataSheets/National-COP411L.pdf)) |
 | [`Photos/`](Photos/) | Product shots and reverse-engineering images |
 
 Shared symbols: [`libraries/`](../libraries/).  

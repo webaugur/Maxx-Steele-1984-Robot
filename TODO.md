@@ -69,7 +69,7 @@ KiCad project: [`Transmitter/KiCAD/Transmitter-27MHz.pro`](Transmitter/KiCAD/Tra
 
 **Housekeeping** (dirs have content; `null.txt` is stale)
 
-- [x] Remove [`Transmitter/Datasheets/null.txt`](Transmitter/Datasheets/null.txt) (`COP411L.pdf` present)
+- [x] Remove [`Transmitter/Datasheets/null.txt`](Transmitter/Datasheets/null.txt) (`National-COP411L.pdf` present)
 - [x] Remove [`Transmitter/Stickers/null.txt`](Transmitter/Stickers/null.txt) (SVG/PDF artwork present)
 - [x] Remove [`Transmitter/ReverseEngineering/null.txt`](Transmitter/ReverseEngineering/null.txt) (ODT/DOCX/PDF notes present)
 

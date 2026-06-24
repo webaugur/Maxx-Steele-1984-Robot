@@ -12,7 +12,7 @@ Much of the information in this archive has unknown ownership or uses licensed n
 |-------|------|----------|
 | **Top-level hardware modules** | `CamelCase` (no spaces or hyphens) | `Transmitter/`, `Mainboard/`, `PaddleMirror/`, `Cartridge/` |
 | **Top-level shared folders** | `lowercase` | `docs/`, `tools/`, `libraries/` |
-| **Third-party datasheets** | **`DataSheets/`** (overrides lowercase rule) | All vendor PDFs; see [`DataSheets/README.md`](DataSheets/README.md) |
+| **Third-party datasheets** | **`DataSheets/`** (overrides lowercase rule) | Vendor PDFs as `OEM-PartNumber.pdf`; see [`DataSheets/README.md`](DataSheets/README.md) |
 | **Subfolders inside modules** | `CamelCase` | `Photos/`, `Firmware/`, `KiCAD/`, `PCBoard/`, `Model3D/`, `Photos/Product/`, `Photos/ReverseEngineering/` |
 | **Subfolders inside shared folders** | `lowercase` | `docs/references/`, `tools/rfcap/`, `tools/rfcap/captures/` |
 | **All filenames** | shell-safe: `[A-Za-z0-9._-]` only | `Remote-Front.jpg`, `maxx-song-1.wma`, `Maxx-Steele-Transmitter-Reverse-Engineered-Notes.pdf` |
