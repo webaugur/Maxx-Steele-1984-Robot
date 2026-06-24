@@ -20,5 +20,6 @@ Example firmware is complete ([`Examples/`](Examples/)).
 
 - [x] [`Examples/CBSDemo/KiCAD/`](Examples/CBSDemo/KiCAD/) — CBSDemo cartridge schematic (rev 0.1; PCB TBD)
 - [x] [`Examples/UltraMaxx/KiCAD/`](Examples/UltraMaxx/KiCAD/) — points to CBSDemo hardware
+- [x] [`Examples/UltraMaxx/PICOROM.md`](Examples/UltraMaxx/PICOROM.md) — PicoROM P28 adaptation for U1 ([PicoROM](https://github.com/wickerwaka/PicoROM))
 - [x] [`Model3D/`](Model3D/) — cartridge STEP assembly (shell + PCB placeholder + 44-pos edge)
 - [x] [`Photos/`](Photos/) — cartridge card photo

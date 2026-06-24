@@ -42,7 +42,8 @@ COP411L (U1), 455 kHz clock, 27 MHz OOK stage.
 | Asset | Path | Status |
 |-------|------|--------|
 | KiCad (CBSDemo) | [`Cartridge/Examples/CBSDemo/KiCAD/CBSDemo.kicad_pro`](../Cartridge/Examples/CBSDemo/KiCAD/CBSDemo.kicad_pro) | Active (rev 0.1) |
-| KiCad (UltraMaxx) | [`Cartridge/Examples/UltraMaxx/KiCAD/`](../Cartridge/Examples/UltraMaxx/KiCAD/) | Planned |
+| KiCad (UltraMaxx) | [`Cartridge/Examples/UltraMaxx/KiCAD/`](../Cartridge/Examples/UltraMaxx/KiCAD/) (same PCB as CBSDemo) | Active |
+| PicoROM (UltraMaxx U1) | [`Cartridge/Examples/UltraMaxx/PICOROM.md`](../Cartridge/Examples/UltraMaxx/PICOROM.md) | Active |
 
 ---
 

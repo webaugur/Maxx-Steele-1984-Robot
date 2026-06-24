@@ -110,6 +110,7 @@ Example firmware is complete ([`Cartridge/Examples/`](Cartridge/Examples/)).
 
 - [x] [`Cartridge/Examples/CBSDemo/KiCAD/`](Cartridge/Examples/CBSDemo/KiCAD/) — CBSDemo cartridge schematic ([#25](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/25)) — PCB layout still open
 - [x] [`Cartridge/Examples/UltraMaxx/KiCAD/`](Cartridge/Examples/UltraMaxx/KiCAD/) — UltraMaxx hardware pointer ([#27](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/27))
+- [x] [`Cartridge/Examples/UltraMaxx/PICOROM.md`](Cartridge/Examples/UltraMaxx/PICOROM.md) — PicoROM P28 adaptation for U1 (based on CBSDemo; [wickerwaka/PicoROM](https://github.com/wickerwaka/PicoROM))
 - [x] [`Cartridge/Model3D/`](Cartridge/Model3D/) — cartridge STEP assembly ([#28](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/28)) — PCB layout still TBD
 - [x] [`Cartridge/Photos/`](Cartridge/Photos/) — cartridge card photo
 

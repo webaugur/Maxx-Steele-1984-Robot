@@ -50,7 +50,7 @@ Each module has a [`KiCAD/`](Transmitter/KiCAD/) subfolder for schematic/PCB wor
 |------|-------------|
 | [`TechnicalManual/`](TechnicalManual/) | Technical manual (bytecode, opcodes, I/O, appendices) — [README](TechnicalManual/README.md), [PDF](TechnicalManual/Maxx-Steele-Technical-Manual.pdf) |
 | [`DataSheets/`](DataSheets/) | Third-party component datasheets (indexed in [`DataSheets/README.md`](DataSheets/README.md)) |
-| [`tools/`](tools/) | Cartridge ROM tools, KiCad [`upgrade_legacy_sch.py`](tools/upgrade_legacy_sch.py) / [`gen_cartridge_sch.py`](tools/gen_cartridge_sch.py), [`rfcap/`](tools/rfcap/) GNU Radio OOK flowgraphs |
+| [`tools/`](tools/) | Cartridge ROM [`maxx_rom.py`](tools/maxx_rom.py), PicoROM [`picorom_cart.py`](tools/picorom_cart.py), KiCad [`upgrade_legacy_sch.py`](tools/upgrade_legacy_sch.py) / [`gen_cartridge_sch.py`](tools/gen_cartridge_sch.py), [`rfcap/`](tools/rfcap/) GNU Radio OOK flowgraphs |
 | [`libraries/`](libraries/) | Shared KiCad symbol libraries |
 
 ## Paths
