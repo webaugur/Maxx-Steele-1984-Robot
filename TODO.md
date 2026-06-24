@@ -10,7 +10,7 @@ Generated from an audit of empty directories, module READMEs, and KiCad project 
 
 | Module | Status | Biggest gaps |
 |--------|--------|--------------|
-| Transmitter | **Active** | KiCad repair/fab; empty schematic/PCB/3D/photos folders |
+| Transmitter | **Active** | KiCad repair/fab; empty schematic/PCB/3D folders |
 | Receiver | **Active** | Schematic only — no PCB layout or fab outputs |
 | Mainboard | Partial | Raster schematics; no KiCad project |
 | Demo Cartridge | Partial | Firmware done; no hardware CAD |
@@ -41,7 +41,7 @@ KiCad project: [`Transmitter/KiCAD/Transmitter-27MHz.pro`](Transmitter/KiCAD/Tra
 - [ ] [`Transmitter/Schematic/`](Transmitter/Schematic/) — dedicated schematic scan or vector export (separate from KiCad sources)
 - [ ] [`Transmitter/PC-Board/`](Transmitter/PC-Board/) — PCB photos, fab drawings, or layout exports
 - [ ] [`Transmitter/3D-Model/`](Transmitter/3D-Model/) — enclosure / remote mechanical CAD
-- [x] [`Transmitter/Photos/`](Transmitter/Photos/) — README pointer to [`docs/photos/transmitter/`](docs/photos/transmitter/)
+- [x] [`Transmitter/Photos/`](Transmitter/Photos/) — product and reverse-engineering images
 
 **Housekeeping** (dirs have content; `null.txt` is stale)
 
@@ -90,7 +90,7 @@ Firmware is complete ([`Demo Cartridge/Firmware/`](Demo Cartridge/Firmware/)).
 - [ ] [`Demo Cartridge/Schematic/`](Demo Cartridge/Schematic/) — schematic scan or source
 - [ ] [`Demo Cartridge/PC-Board/`](Demo Cartridge/PC-Board/) — PCB layout / photos
 - [ ] [`Demo Cartridge/3D-Model/`](Demo Cartridge/3D-Model/) — cartridge mechanical model
-- [x] [`Demo Cartridge/Photos/`](Demo Cartridge/Photos/) — README pointer to [`docs/photos/accessories/demo-cartridge/`](docs/photos/accessories/demo-cartridge/)
+- [x] [`Demo Cartridge/Photos/`](Demo Cartridge/Photos/) — cartridge card photo
 
 ### Chassis
 
@@ -129,14 +129,14 @@ Most content present (manuals, photos, firmware, datasheets, sounds, disassembly
 
 - [ ] [`Paddle Mirror/KiCAD/`](Paddle Mirror/KiCAD/) — KiCad project
 - [ ] [`Paddle Mirror/3D-Model/`](Paddle Mirror/3D-Model/) — mechanical CAD
-- [x] [`Paddle Mirror/Photos/`](Paddle Mirror/Photos/) — README pointer to [`docs/photos/accessories/paddle-mirror/`](docs/photos/accessories/paddle-mirror/)
+- [x] [`Paddle Mirror/Photos/`](Paddle Mirror/Photos/) — accessory photo
 
 ---
 
 ## Repository hygiene
 
 - [x] Remove orphan empty [`Accessories/`](Accessories/) (leftover after promoting Demo Cartridge and Paddle Mirror to top-level modules)
-- [x] Photo policy: canonical copies in [`docs/photos/`](docs/photos/); module `Photos/` folders are README pointers (documented in [`docs/photos/README.md`](docs/photos/README.md))
+- [x] Photo policy: module photos live under each module's `Photos/` folder (removed `docs/photos/`)
 
 ---
 

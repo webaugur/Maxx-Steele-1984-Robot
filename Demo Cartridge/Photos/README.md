@@ -1,3 +1,5 @@
 # Demo cartridge photos
 
-Card photo: [`docs/photos/accessories/demo-cartridge/maxxcard.jpg`](../../docs/photos/accessories/demo-cartridge/maxxcard.jpg).
+| File | Description |
+|------|-------------|
+| [`maxxcard.jpg`](maxxcard.jpg) | Demo program cartridge card |

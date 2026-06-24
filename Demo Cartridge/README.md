@@ -10,7 +10,7 @@
 | [`Schematic/`](Schematic/) | Cartridge schematic |
 | [`PC-Board/`](PC-Board/) | PCB layout |
 | [`3D-Model/`](3D-Model/) | Mechanical model |
-| [`Photos/`](Photos/) | Pointer to [`docs/photos/accessories/demo-cartridge/`](../docs/photos/accessories/demo-cartridge/) |
+| [`Photos/`](Photos/) | Cartridge card photo |
 
 Programming manual: [`docs/PROGRAMMING.md`](../docs/PROGRAMMING.md).
 

@@ -6,6 +6,6 @@ Paddle mirror accessory for the Maxx Steele robot.
 |------|-------------|
 | [`KiCAD/`](KiCAD/) | KiCad project (placeholder) |
 | [`3D-Model/`](3D-Model/) | Mechanical model |
-| [`Photos/`](Photos/) | Pointer to [`docs/photos/accessories/paddle-mirror/`](../docs/photos/accessories/paddle-mirror/) |
+| [`Photos/`](Photos/) | Accessory photo |
 
 Shared KiCad symbols: [`libraries/`](../libraries/).

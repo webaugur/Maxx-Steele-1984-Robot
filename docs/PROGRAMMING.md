@@ -297,7 +297,7 @@ Physical button names (remote faceplate):
 - **GAME, PROGRAM, LEARN, EXECUTE**
 - **POWER/STOP** (Y)
 
-Reference images: [`keyboard-matrix-reference-1.png`](photos/transmitter/reverse-engineering/keyboard-matrix-reference-1.png), [`keyboard-matrix-reference-2.png`](photos/transmitter/reverse-engineering/keyboard-matrix-reference-2.png)
+Reference images: [`keyboard-matrix-reference-1.png`](../Transmitter/Photos/reverse-engineering/keyboard-matrix-reference-1.png), [`keyboard-matrix-reference-2.png`](../Transmitter/Photos/reverse-engineering/keyboard-matrix-reference-2.png)
 
 ---
 

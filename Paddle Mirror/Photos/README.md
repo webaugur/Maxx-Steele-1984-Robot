@@ -1,3 +1,5 @@
 # Paddle mirror photos
 
-Accessory photo: [`docs/photos/accessories/paddle-mirror/ab226.jpg`](../../docs/photos/accessories/paddle-mirror/ab226.jpg).
+| File | Description |
+|------|-------------|
+| [`ab226.jpg`](ab226.jpg) | Paddle mirror accessory |
