@@ -1,5 +1,7 @@
 # Maxx Steele Cartridge Programming Manual
 
+> **Full reference:** [`ProgrammersGuide/`](../ProgrammersGuide/) — numbered chapters, appendices, and quick-reference card (C64 Programmer's Reference style).
+
 This document describes how to write programs for the 1984 CBS Toys / Ideal **Maxx Steele** robot using plug-in ROM cartridges. It is derived from:
 
 - [`Firmware/Assembly/maxx_demo_ROM_532.dsm`](Firmware/Assembly/maxx_demo_ROM_532.dsm) — annotated demo cartridge (R. Wind)

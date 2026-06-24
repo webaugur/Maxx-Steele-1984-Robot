@@ -12,6 +12,7 @@
 | [`Model3D/`](Model3D/) | Mechanical model |
 | [`Photos/`](Photos/) | Cartridge card photo |
 | [`PROGRAMMING.md`](PROGRAMMING.md) | Cartridge programming manual (bytecode, speech, music) |
+| [`ProgrammersGuide/`](../ProgrammersGuide/) | Full programmer's reference guide (C64-style chapters, appendices) |
 
 Shared KiCad symbols: [`libraries/`](../libraries/).
 
