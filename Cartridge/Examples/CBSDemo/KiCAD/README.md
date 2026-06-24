@@ -6,8 +6,10 @@ Reverse-engineered schematic of the factory CBS demo cartridge PCB, derived from
 
 | File | Description |
 |------|-------------|
-| [`CBSDemo.pro`](CBSDemo.pro) | KiCad project (schematic-only; no PCB yet) |
-| [`CBSDemo.sch`](CBSDemo.sch) | Schematic (legacy EESchema v4; KiCad 10 opens natively) |
+| [`CBSDemo.kicad_pro`](CBSDemo.kicad_pro) | **KiCad 10 project** — open this file |
+| [`CBSDemo.kicad_sch`](CBSDemo.kicad_sch) | Native schematic (symbols embedded; no cache.lib needed) |
+| [`CBSDemo.sch`](CBSDemo.sch) | Legacy schematic (kept for compatibility; may prompt for `*-cache.lib`) |
+| [`CBSDemo.pro`](CBSDemo.pro) | Legacy project file (superseded by `.kicad_pro`) |
 | [`CBSDemo-schematic.pdf`](CBSDemo-schematic.pdf) | Exported schematic PDF |
 | [`CBSDemo-cartridge-bom.csv`](CBSDemo-cartridge-bom.csv) | Bill of materials |
 | [`trace-worksheet.md`](trace-worksheet.md) | Photo trace notes and confidence table |
@@ -19,8 +21,10 @@ Reverse-engineered schematic of the factory CBS demo cartridge PCB, derived from
 ```bash
 python3 tools/gen_cartridge_sch.py
 cd Cartridge/Examples/CBSDemo/KiCAD
-kicad-cli sch export pdf CBSDemo.sch -o CBSDemo-schematic.pdf
+kicad-cli sch export pdf CBSDemo.kicad_sch -o CBSDemo-schematic.pdf
 ```
+
+Open in KiCad: **`CBSDemo.kicad_pro`** (not the legacy `.pro` / `.sch` pair).
 
 ## Board summary (as photographed)
 
