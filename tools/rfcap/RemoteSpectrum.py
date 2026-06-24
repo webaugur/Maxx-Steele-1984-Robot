@@ -37,8 +37,8 @@ from gnuradio import gr
 import sys
 import signal
 
-_PROJECT_ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(_PROJECT_ROOT / "tools"))
+_TOOLS_DIR = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(_TOOLS_DIR))
 from project_paths import capture_prefix, resolve_capture_path
 from argparse import ArgumentParser
 from gnuradio.eng_arg import eng_float, intx

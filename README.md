@@ -29,8 +29,7 @@ Each module has a [`KiCAD/`](Transmitter/KiCAD/) subfolder for schematic/PCB wor
 |------|-------------|
 | [`docs/`](docs/) | RE manuals, [module photos](docs/photos/), [reference PDFs](docs/references/) |
 
-| [`tools/`](tools/) | Cartridge ROM disassembler / validator |
-| [`rfcap/`](rfcap/) | GNU Radio OOK flowgraphs; data in [`rfcap/captures/`](rfcap/captures/) |
+| [`tools/`](tools/) | Cartridge ROM tools, [`rfcap/`](tools/rfcap/) GNU Radio OOK flowgraphs |
 | [`libraries/`](libraries/) | Shared KiCad symbol libraries |
 
 ## Paths

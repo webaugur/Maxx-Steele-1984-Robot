@@ -5,7 +5,7 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
-_MARKER_DIRS = ("docs", "rfcap", "Chassis")
+_MARKER_DIRS = ("docs", "tools", "Chassis")
 
 
 def project_root(start: Path | str | None = None) -> Path:
@@ -49,7 +49,7 @@ def ensure_dir(path: Path | str) -> Path:
 
 def capture_dir() -> Path:
     """GNU Radio IQ capture output directory."""
-    return ensure_dir(project_root() / "rfcap" / "captures")
+    return ensure_dir(project_root() / "tools" / "rfcap" / "captures")
 
 
 def capture_prefix() -> str:
@@ -62,6 +62,8 @@ def resolve_capture_path(path: Path | str) -> str:
     candidate = Path(path)
     if candidate.is_absolute():
         return as_posix(candidate)
-    if candidate.parts and candidate.parts[0] == "rfcap":
+    if candidate.parts[:2] == ("tools", "rfcap"):
         return as_posix(resolve_from_root(candidate))
-    return as_posix(resolve_from_root(Path("rfcap") / "captures" / candidate))
+    if candidate.parts and candidate.parts[0] == "rfcap":
+        return as_posix(resolve_from_root(Path("tools") / candidate))
+    return as_posix(resolve_from_root(Path("tools/rfcap/captures") / candidate))
