@@ -13,7 +13,7 @@ Much of the information in this archive has unknown ownership or uses licensed n
 | **Top-level hardware modules** | `CamelCase` (no spaces or hyphens) | `Transmitter/`, `Mainboard/`, `PaddleMirror/`, `Cartridge/` |
 | **Top-level shared folders** | `lowercase` | `tools/`, `libraries/` |
 | **Third-party datasheets** | **`DataSheets/`** (overrides lowercase rule) | Vendor PDFs as `OEM-PartNumber.pdf`; see [`DataSheets/README.md`](DataSheets/README.md) |
-| **Programmer's reference** | **`ProgrammersGuide/`** (overrides lowercase rule) | C64-style programming manual; see [`ProgrammersGuide/README.md`](ProgrammersGuide/README.md) |
+| **Technical manual** | **`TechnicalManual/`** (overrides lowercase rule) | C64-style programming manual; see [`TechnicalManual/README.md`](TechnicalManual/README.md) |
 | **Subfolders inside modules** | `CamelCase` | `Photos/`, `Firmware/`, `KiCAD/`, `PCBoard/`, `Model3D/`, `Photos/Product/`, `Photos/ReverseEngineering/` |
 | **Subfolders inside shared folders** | `lowercase` | `tools/rfcap/`, `tools/rfcap/captures/` |
 | **All filenames** | shell-safe: `[A-Za-z0-9._-]` only | `Remote-Front.jpg`, `maxx-song-1.wma`, `Maxx-Steele-Transmitter-Reverse-Engineered-Notes.pdf` |
@@ -40,7 +40,7 @@ Each module has a [`KiCAD/`](Transmitter/KiCAD/) subfolder for schematic/PCB wor
 | [`Power/`](Power/) | Planned | `Power/KiCAD/` |
 | [`Mainboard/`](Mainboard/) | Planned | `Mainboard/KiCAD/` |
 | [`Face/`](Face/) | Planned | `Face/KiCAD/` |
-| [`Cartridge/`](Cartridge/) | ROM, firmware, [programming manual](Cartridge/PROGRAMMING.md), [programmer's guide](ProgrammersGuide/README.md) | `Cartridge/KiCAD/` (planned) |
+| [`Cartridge/`](Cartridge/) | ROM, firmware, [programming manual](Cartridge/PROGRAMMING.md), [technical manual](TechnicalManual/README.md) | `Cartridge/KiCAD/` (planned) |
 | [`PaddleMirror/`](PaddleMirror/) | Archive | `PaddleMirror/KiCAD/` (planned) |
 | [`Chassis/`](Chassis/) | Body, manuals, photos, internal ROM | `Chassis/KiCAD/` (mechanical, planned) |
 
@@ -48,7 +48,7 @@ Each module has a [`KiCAD/`](Transmitter/KiCAD/) subfolder for schematic/PCB wor
 
 | Path | Description |
 |------|-------------|
-| [`ProgrammersGuide/`](ProgrammersGuide/) | Programmer's reference (bytecode, opcodes, I/O, appendices) — [README](ProgrammersGuide/README.md), [PDF](ProgrammersGuide/Maxx-Steele-Programmers-Reference.pdf) |
+| [`TechnicalManual/`](TechnicalManual/) | Technical manual (bytecode, opcodes, I/O, appendices) — [README](TechnicalManual/README.md), [PDF](TechnicalManual/Maxx-Steele-Technical-Manual.pdf) |
 | [`DataSheets/`](DataSheets/) | Third-party component datasheets (indexed in [`DataSheets/README.md`](DataSheets/README.md)) |
 | [`tools/`](tools/) | Cartridge ROM tools, [`rfcap/`](tools/rfcap/) GNU Radio OOK flowgraphs, [`sanitize_filenames.py`](tools/sanitize_filenames.py) |
 | [`libraries/`](libraries/) | Shared KiCad symbol libraries |

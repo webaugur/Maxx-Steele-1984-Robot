@@ -1,10 +1,10 @@
-# Maxx Steele Programmer's Reference Guide
+# Maxx Steele Technical Manual
 
-This guide describes how to program the 1984 CBS Toys / Ideal **Maxx Steele** robot at the software level: bytecode motion programs, speech, music, cartridge images, and the 6502 internal ROM that interprets them.
+This manual describes how to program the 1984 CBS Toys / Ideal **Maxx Steele** robot at the software level: bytecode motion programs, speech, music, cartridge images, and the 6502 internal ROM that interprets them.
 
 It is modeled on the structure of the [Commodore 64 Programmer's Reference Guide](https://archive.org/details/c64-programmer-ref) — numbered chapters, appendices, a quick-reference card, and a schematic index — adapted to Maxx Steele hardware.
 
-**PDF (latest):** [`Maxx-Steele-Programmers-Reference.pdf`](Maxx-Steele-Programmers-Reference.pdf) — rebuilt automatically when chapter `.md` files change (`python3 tools/build_programmers_guide_pdf.py` locally; GitHub Actions on push to `main`).
+**PDF (latest):** [`Maxx-Steele-Technical-Manual.pdf`](Maxx-Steele-Technical-Manual.pdf) — front/rear covers plus chapters; rebuilt when `.md` or cover images change (`python3 tools/build_technical_manual_pdf.py` locally; GitHub Actions on push to `main`).
 
 ## What this guide covers
 
