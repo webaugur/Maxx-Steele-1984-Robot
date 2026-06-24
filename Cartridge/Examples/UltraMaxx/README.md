@@ -16,7 +16,8 @@ Copyright string: `(c) UltraMaxx    ` (17 ASCII bytes, space-padded)
 ## Quick: MaxxBAS compile + PicoROM upload
 
 ```bash
-python3 tools/maxx upload Cartridge/Examples/UltraMaxx/Firmware/Basic/hello.bas --device maxx_cart
+export PATH="$(git rev-parse --show-toplevel)/tools/bin:$PATH"
+maxx upload Cartridge/Examples/UltraMaxx/Firmware/Basic/hello.bas --device maxx_cart
 # or: make -C Cartridge/Examples/UltraMaxx/Firmware upload-hello
 ```
 

@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Validate and upload cartridge images via PicoROM (accepts .532, .bas, .maxx).
+set -euo pipefail
+BIN_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+TOOLS_DIR="$(cd "$BIN_DIR/.." && pwd)"
+exec python3 "$TOOLS_DIR/picorom_cart.py" "$@"

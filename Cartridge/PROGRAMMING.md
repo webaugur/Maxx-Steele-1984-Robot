@@ -319,10 +319,12 @@ Reference images: [`Remote-Front.jpg`](../Transmitter/Photos/Product/Remote-Fron
 Write a `.bas` or `.maxx` source file and compile to a 4096-byte image:
 
 ```bash
-python3 tools/maxx compile myprogram.bas -o mycart.532
-python3 tools/maxx validate mycart.532
-python3 tools/maxx upload myprogram.bas --device maxx_cart
-python3 tools/maxx list mycart.532 --json   # simulator input
+export PATH="$(git rev-parse --show-toplevel)/tools/bin:$PATH"
+
+maxx compile myprogram.bas -o mycart.532
+maxx validate mycart.532
+maxx upload myprogram.bas --device maxx_cart
+maxx list mycart.532 --json   # simulator input
 ```
 
 Example: [`Examples/UltraMaxx/Firmware/Basic/hello.bas`](Examples/UltraMaxx/Firmware/Basic/hello.bas). Statements: `DELAY`, `FORWARD`, `BACK`, `LEFT`, `RIGHT`, `LAMP ON/OFF`, `HOME`, `PLAY`, `SPEAK`, `SAY`, `END`. See [`Examples/UltraMaxx/PICOROM.md`](Examples/UltraMaxx/PICOROM.md).

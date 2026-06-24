@@ -5,10 +5,11 @@ Rust implementation of the Maxx Steele toolchain. The **`maxx`** binary is the p
 ## Quick start
 
 ```bash
-# From repo root (builds release binary on first use)
-python3 tools/maxx compile Cartridge/Examples/UltraMaxx/Firmware/Basic/hello.bas
-python3 tools/maxx list Cartridge/Examples/UltraMaxx/Firmware/Binary/hello.532 --json
-python3 tools/maxx upload Cartridge/Examples/UltraMaxx/Firmware/Basic/hello.bas --device maxx_cart --dry-run
+export PATH="$(git rev-parse --show-toplevel)/tools/bin:$PATH"
+
+maxx compile Cartridge/Examples/UltraMaxx/Firmware/Basic/hello.bas
+maxx list Cartridge/Examples/UltraMaxx/Firmware/Binary/hello.532 --json
+maxx upload Cartridge/Examples/UltraMaxx/Firmware/Basic/hello.bas --device maxx_cart --dry-run
 ```
 
 Or build directly:

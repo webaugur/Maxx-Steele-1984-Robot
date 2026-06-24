@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# Compile MaxxBAS source to a .532 cartridge image.
+set -euo pipefail
+BIN_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+exec "$BIN_DIR/maxx" compile "$@"

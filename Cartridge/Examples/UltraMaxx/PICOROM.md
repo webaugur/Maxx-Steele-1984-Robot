@@ -109,23 +109,23 @@ Sample source: [`Firmware/Basic/hello.bas`](Firmware/Basic/hello.bas)
 | `maxx simulate FILE.532` | Step preview (vector graphics TBD) |
 
 ```bash
+export PATH="$(git rev-parse --show-toplevel)/tools/bin:$PATH"
+
 # One entry point (auto-builds Rust release binary on first run)
-python3 tools/maxx compile Cartridge/Examples/UltraMaxx/Firmware/Basic/hello.bas
-python3 tools/maxx validate Cartridge/Examples/UltraMaxx/Firmware/Binary/hello.532
-python3 tools/maxx list Cartridge/Examples/UltraMaxx/Firmware/Binary/hello.532 --json
+maxx compile Cartridge/Examples/UltraMaxx/Firmware/Basic/hello.bas
+maxx validate Cartridge/Examples/UltraMaxx/Firmware/Binary/hello.532
+maxx list Cartridge/Examples/UltraMaxx/Firmware/Binary/hello.532 --json
 
 # Upload directly from source — no manual compile step
-python3 tools/maxx upload Cartridge/Examples/UltraMaxx/Firmware/Basic/hello.bas \
-  --device maxx_cart --dry-run
+maxx upload Cartridge/Examples/UltraMaxx/Firmware/Basic/hello.bas --device maxx_cart --dry-run
 
 # Makefile shortcuts
 make -C Cartridge/Examples/UltraMaxx/Firmware compile
 make -C Cartridge/Examples/UltraMaxx/Firmware upload-hello
 make -C Cartridge/Examples/UltraMaxx/Firmware test
 
-# Legacy wrappers still work
-python3 tools/picorom_cart.py upload --device maxx_cart \
-  --rom Cartridge/Examples/UltraMaxx/Firmware/Basic/hello.bas
+# Named-cart upload
+picorom-cart upload --cart ultramaxx --device maxx_cart
 ```
 
 Rust library: [`tools/maxxbas/`](../../../tools/maxxbas/). `maxx list --json` emits a `ProgramTrace` for a future robot simulator.
