@@ -297,7 +297,7 @@ Physical button names (remote faceplate):
 - **GAME, PROGRAM, LEARN, EXECUTE**
 - **POWER/STOP** (Y)
 
-Reference images: [`sch/152424684_...png`](../sch/152424684_2889213484670913_395615042803450797_n.png), [`sch/152362298_...png`](../sch/152362298_1180244349074295_7476006924589238349_n.png)
+Reference images: [`docs/Photos/152424684_...png`](Photos/152424684_2889213484670913_395615042803450797_n.png), [`docs/Photos/152362298_...png`](Photos/152362298_1180244349074295_7476006924589238349_n.png)
 
 ---
 
