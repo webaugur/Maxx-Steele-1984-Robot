@@ -17,8 +17,15 @@ from PIL import Image
 from project_paths import project_root, resolve_from_root
 
 MANUAL_DIR = Path("TechnicalManual")
-LETTER_DPI = 300
-LETTER_SIZE_PX = (int(8.5 * LETTER_DPI), int(11 * LETTER_DPI))
+# 8.5 x 6.5 inch booklet trim (landscape page: wide x tall).
+BOOKLET_WIDTH_IN = 8.5
+BOOKLET_HEIGHT_IN = 6.5
+BOOKLET_DPI = 300
+BOOKLET_SIZE_PX = (
+    int(BOOKLET_WIDTH_IN * BOOKLET_DPI),
+    int(BOOKLET_HEIGHT_IN * BOOKLET_DPI),
+)
+BOOKLET_PAGESIZE = f"{BOOKLET_WIDTH_IN}inx{BOOKLET_HEIGHT_IN}in"
 OUTPUT_NAME = "Maxx-Steele-Technical-Manual.pdf"
 COVER_FRONT = "cover-front.jpg"
 COVER_REAR = "cover-rear.jpg"
@@ -97,8 +104,11 @@ lang: en-US
 toc: true
 toc-depth: 2
 numbersections: true
-geometry: margin=1in
-fontsize: 11pt
+geometry:
+  - paperwidth=8.5in
+  - paperheight=6.5in
+  - margin=0.5in
+fontsize: 10pt
 documentclass: report
 ---
 
@@ -133,7 +143,7 @@ documentclass: report
 
 def prepare_cover_image(*, source: Path, output: Path) -> None:
     """Shrink-fit like img2pdf, then stretch edge columns to full page width."""
-    page_w, page_h = LETTER_SIZE_PX
+    page_w, page_h = BOOKLET_SIZE_PX
     image = Image.open(source).convert("RGB")
 
     scale = min(page_w / image.width, page_h / image.height)
@@ -194,11 +204,11 @@ def prepare_cover_image(*, source: Path, output: Path) -> None:
                 (x0 + scaled_w, y0 + scaled_h),
             )
 
-    page.save(output, format="JPEG", quality=95, dpi=(LETTER_DPI, LETTER_DPI))
+    page.save(output, format="JPEG", quality=95, dpi=(BOOKLET_DPI, BOOKLET_DPI))
 
 
 def build_cover_pdf(*, image: Path, output: Path, img2pdf: str) -> None:
-    """Render a Letter cover: shrink-fit center, edge columns extended sideways."""
+    """Render a booklet cover: shrink-fit center, edge columns extended sideways."""
     with tempfile.NamedTemporaryFile(suffix=".jpg", delete=False) as handle:
         prepared = Path(handle.name)
 
@@ -208,7 +218,7 @@ def build_cover_pdf(*, image: Path, output: Path, img2pdf: str) -> None:
             [
                 img2pdf,
                 "--pagesize",
-                "Letter",
+                BOOKLET_PAGESIZE,
                 "--fit",
                 "shrink",
                 str(prepared),
