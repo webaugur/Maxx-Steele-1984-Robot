@@ -8,11 +8,20 @@ Fork of the factory [`CBSDemo`](../CBSDemo/) cartridge with **UltraMaxx** commun
 | [`KiCAD/`](KiCAD/) | Hardware pointer → CBSDemo schematic |
 | [`Firmware/Binary/UltraMaxx.532`](Firmware/Binary/UltraMaxx.532) | 4 KB EPROM image (`$A000`) |
 | [`Firmware/Assembly/ultramaxx_ROM_532.dsm`](Firmware/Assembly/ultramaxx_ROM_532.dsm) | Listing derived from R. Wind `maxx_demo_ROM_532.dsm` |
-| [`Firmware/Makefile`](Firmware/Makefile) | Validate + `picorom` upload targets |
+| [`Firmware/Basic/hello.bas`](Firmware/Basic/hello.bas) | MaxxBAS sample program |
+| [`Firmware/Makefile`](Firmware/Makefile) | MaxxBAS `compile`, validate, `picorom` upload |
 
 Copyright string: `(c) UltraMaxx    ` (17 ASCII bytes, space-padded)
 
-## Quick: PicoROM upload
+## Quick: MaxxBAS compile + PicoROM upload
+
+```bash
+make -C Cartridge/Examples/UltraMaxx/Firmware compile
+python3 tools/picorom_cart.py upload --device maxx_cart \
+  --rom Cartridge/Examples/UltraMaxx/Firmware/Binary/hello.532
+```
+
+Stock UltraMaxx image:
 
 ```bash
 python3 tools/picorom_cart.py upload --cart ultramaxx --device maxx_cart

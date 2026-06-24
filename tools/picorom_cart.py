@@ -42,6 +42,12 @@ def resolve_cart(name: str) -> Path:
     return resolve_from_root(CARTS[name], must_exist=True)
 
 
+def resolve_rom_path(args: argparse.Namespace) -> Path:
+    if getattr(args, "rom", None):
+        return resolve_from_root(args.rom, must_exist=True)
+    return resolve_cart(args.cart)
+
+
 def check_cart(path: Path) -> CartImage:
     cart = CartImage.load(path)
     issues = validate_cart(cart)
@@ -72,7 +78,7 @@ def upload_command(
 
 
 def cmd_info(args: argparse.Namespace) -> int:
-    path = resolve_cart(args.cart)
+    path = resolve_rom_path(args)
     cart = check_cart(path)
     print(f"Image:     {path}")
     print(f"Size:      {len(cart.data)} bytes (4 KB @ ${cart.base_addr:04X})")
@@ -89,7 +95,7 @@ def cmd_info(args: argparse.Namespace) -> int:
 
 
 def cmd_upload(args: argparse.Namespace) -> int:
-    path = resolve_cart(args.cart)
+    path = resolve_rom_path(args)
     check_cart(path)
     cmd = upload_command(path, args.device, args.size, args.persist)
 
@@ -116,7 +122,11 @@ def _common_args(parser: argparse.ArgumentParser) -> None:
         "--cart",
         choices=sorted(CARTS),
         default=DEFAULT_CART,
-        help=f"cartridge image (default: {DEFAULT_CART})",
+        help=f"named cartridge image (default: {DEFAULT_CART})",
+    )
+    parser.add_argument(
+        "--rom",
+        help="path to a .532 image (overrides --cart; use after MaxxBAS compile)",
     )
     parser.add_argument(
         "--device",

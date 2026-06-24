@@ -10,7 +10,7 @@ This document describes how to write programs for the 1984 CBS Toys / Ideal **Ma
 - [`Chassis/Firmware/Assembly/maxx_internal_ROM.dsm`](../Chassis/Firmware/Assembly/maxx_internal_ROM.dsm) — internal 6502 interpreter (R. Wind)
 - Original reference guide: [`Chassis/Manual/MaxxSteeleReferenceGuide.pdf`](../Chassis/Manual/MaxxSteeleReferenceGuide.pdf)
 
-Tools live in [`tools/maxx_rom.py`](../tools/maxx_rom.py).
+Tools live in [`tools/maxx_rom.py`](../tools/maxx_rom.py) and [`tools/tinybasic_maxx.py`](../tools/tinybasic_maxx.py) (MaxxBAS compiler).
 
 ---
 
@@ -314,6 +314,20 @@ Reference images: [`Remote-Front.jpg`](../Transmitter/Photos/Product/Remote-Fron
 
 ## 9. Writing a new cartridge
 
+### Option A — MaxxBAS (recommended)
+
+Write a `.bas` or `.maxx` source file and compile to a 4096-byte image:
+
+```bash
+python3 tools/tinybasic_maxx.py compile myprogram.bas -o mycart.532
+python3 tools/maxx_rom.py validate mycart.532
+python3 tools/picorom_cart.py upload --device maxx_cart --rom mycart.532
+```
+
+Example: [`Examples/UltraMaxx/Firmware/Basic/hello.bas`](Examples/UltraMaxx/Firmware/Basic/hello.bas). Statements: `DELAY`, `FORWARD`, `BACK`, `LEFT`, `RIGHT`, `LAMP ON/OFF`, `HOME`, `PLAY`, `SPEAK`, `SAY`, `END`. See [`Examples/UltraMaxx/PICOROM.md`](Examples/UltraMaxx/PICOROM.md).
+
+### Option B — raw bytecode
+
 1. Start from `python3 tools/maxx_rom.py template mycart.532`
 2. Edit the program table at file offset `$35` (address `$A035`) with your bytecode
 3. Optionally patch phrase/music tables at `$81` / `$BB`
@@ -337,6 +351,7 @@ FF FF    ; end
 
 ## 10. Known gaps / future work
 
+- **MaxxBAS `SAY "text"`**: v1 uses phrase indices (`SAY n`) or ROM speech (`SPEAK n`); string literals need phoneme encoding into the `$A081` table
 - **Phoneme token table**: Full `$F4DB` / `$F567` transcription would enable authoring custom speech without copying demo tokens
 - **Operand scaling**: Distance/angle units for motion opcodes are empirical (demo uses values like `$14`, `$06`, `$28`)
 - **8080 code at `$A0C7+`** in the demo image is marked "not Maxx-related" in the `.dsm` listing — treat as padding

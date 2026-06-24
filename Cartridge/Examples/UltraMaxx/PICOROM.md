@@ -78,10 +78,46 @@ python3 tools/picorom_cart.py upload --cart ultramaxx --device maxx_cart --size 
 
 If the cart is not detected after upload, try the other size token. Glue IC **U3** may decode only a 4 KB window regardless of U1 capacity.
 
+## MaxxBAS — compile BASIC-like programs
+
+[MaxxBAS](https://github.com/webaugur/Maxx-Steele-1984-Robot) is a line-oriented language that compiles to the same bytecode layout as the factory demo. No firmware fork: compile on the host, upload the resulting `.532` with stock PicoROM.
+
+| Statement | Bytecode | Notes |
+|-----------|----------|-------|
+| `DELAY n` | `0C nn` | Seconds (0–255) |
+| `FORWARD n` / `BACK n` / `LEFT n` / `RIGHT n` | motion opcodes | Distance or angle |
+| `LAMP ON` / `LAMP OFF` | `0A 01` / `0A 00` | Head lamp |
+| `HOME` | `0B 00` | All joints home |
+| `PLAY n` | `81 nn` | Tune index in music table |
+| `SPEAK n` | `82 nn` | Built-in ROM phrase |
+| `SAY n` | `83 nn` | RAM phrase slot (needs phrase table bytes) |
+| `END` | `FF FF` | Required terminator |
+
+v1 has **no** variables, `GOTO`, or `IF`. Use `SPEAK` for factory speech; custom `SAY` text requires phoneme authoring (future work).
+
+Sample source: [`Firmware/Basic/hello.bas`](Firmware/Basic/hello.bas)
+
+```bash
+# Compile + validate
+python3 tools/tinybasic_maxx.py compile Cartridge/Examples/UltraMaxx/Firmware/Basic/hello.bas \
+  -o Cartridge/Examples/UltraMaxx/Firmware/Binary/hello.532
+
+# Or via Makefile
+make -C Cartridge/Examples/UltraMaxx/Firmware compile
+
+# Upload compiled image (not the stock UltraMaxx binary)
+python3 tools/picorom_cart.py upload --device maxx_cart \
+  --rom Cartridge/Examples/UltraMaxx/Firmware/Binary/hello.532
+
+# Tests
+python3 tools/test_tinybasic_maxx.py
+```
+
 ## Develop / iterate workflow
 
 ```bash
-# Edit program bytes, then re-validate
+# Edit MaxxBAS source or raw program bytes, then re-validate
+make -C Cartridge/Examples/UltraMaxx/Firmware compile
 python3 tools/maxx_rom.py validate Cartridge/Examples/UltraMaxx/Firmware/Binary/UltraMaxx.532
 
 # Push to socketed PicoROM (RAM — fast iteration)
@@ -107,4 +143,4 @@ python3 tools/picorom_cart.py upload --cart cbsdemo --device maxx_cart --size 4k
 - PicoROM project: https://github.com/wickerwaka/PicoROM
 - CBSDemo schematic: [`../CBSDemo/KiCAD/CBSDemo.kicad_pro`](../CBSDemo/KiCAD/CBSDemo.kicad_pro)
 - Cartridge programming: [`../../PROGRAMMING.md`](../../PROGRAMMING.md)
-- `tools/picorom_cart.py`, `tools/maxx_rom.py`
+- `tools/tinybasic_maxx.py`, `tools/picorom_cart.py`, `tools/maxx_rom.py`
