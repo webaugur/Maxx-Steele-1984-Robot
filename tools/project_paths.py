@@ -5,7 +5,7 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
-_MARKER_DIRS = ("firmware", "docs", "rfcap")
+_MARKER_DIRS = ("docs", "rfcap", "Chassis")
 
 
 def project_root(start: Path | str | None = None) -> Path:

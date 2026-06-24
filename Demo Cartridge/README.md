@@ -5,12 +5,12 @@
 | Path | Description |
 |------|-------------|
 | [`KiCAD/`](KiCAD/) | KiCad project (placeholder) |
-| [`Firmware/`](Firmware/) | ROM binary and assembly listing |
+| [`Firmware/Binary/MAXXCART.532`](Firmware/Binary/MAXXCART.532) | 4 KB cartridge ROM |
+| [`Firmware/Assembly/maxx_demo_ROM_532.dsm`](Firmware/Assembly/maxx_demo_ROM_532.dsm) | Annotated disassembly (R. Wind) |
 | [`Schematic/`](Schematic/) | Cartridge schematic |
 | [`PC-Board/`](PC-Board/) | PCB layout |
 | [`3D-Model/`](3D-Model/) | Mechanical model |
 
-Canonical firmware copy for tools: [`firmware/demo-cart/`](../firmware/demo-cart/).  
 Programming manual: [`docs/PROGRAMMING.md`](../docs/PROGRAMMING.md).  
 Card photo: [`docs/photos/accessories/demo-cartridge/`](../docs/photos/accessories/demo-cartridge/).
 
