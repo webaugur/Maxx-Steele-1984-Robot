@@ -53,6 +53,25 @@ mod integration {
     }
 
     #[test]
+    fn ultramaxx_bas_matches_community_rom() {
+        let src = include_str!("../../../Cartridge/Examples/UltraMaxx/Firmware/Basic/ultramaxx.bas");
+        let factory =
+            include_bytes!("../../../Cartridge/Examples/UltraMaxx/Firmware/Binary/UltraMaxx.532");
+        let (phrase, music) = (
+            factory[PHRASE_OFF..MUSIC_OFF].to_vec(),
+            factory[MUSIC_OFF..].to_vec(),
+        );
+        let image = compile_source_with_tables(
+            src,
+            Copyright::UltraMaxx,
+            Some(&phrase),
+            Some(&music),
+        )
+        .unwrap();
+        assert_eq!(image.as_slice(), factory);
+    }
+
+    #[test]
     fn cbsdemo_bas_matches_factory_rom() {
         let src = include_str!("../../../Cartridge/Examples/CBSDemo/Firmware/Basic/cbsdemo.bas");
         let factory = include_bytes!("../../../Cartridge/Examples/CBSDemo/Firmware/Binary/CBSDemo.532");

@@ -68,6 +68,8 @@ enum Commands {
         #[arg(long, default_value = "ultramaxx")]
         copyright: String,
         #[arg(long)]
+        tables_from: Option<PathBuf>,
+        #[arg(long)]
         dry_run: bool,
     },
     /// Preview program steps (simulator placeholder — outputs trace summary)
@@ -113,6 +115,7 @@ fn run() -> Result<(), String> {
             size,
             persist,
             copyright,
+            tables_from,
             dry_run,
         } => cmd_upload(
             &file,
@@ -121,6 +124,7 @@ fn run() -> Result<(), String> {
             &size,
             persist,
             &copyright,
+            tables_from.as_deref(),
             dry_run,
         ),
         Commands::Simulate { image, json } => cmd_simulate(&image, json),
@@ -201,10 +205,11 @@ fn cmd_upload(
     size: &str,
     persist: bool,
     copyright_key: &str,
+    tables_from: Option<&Path>,
     dry_run: bool,
 ) -> Result<(), String> {
     let copyright = parse_copyright(copyright_key)?;
-    let resolved = resolve_input(file, copyright, output, None)?;
+    let resolved = resolve_input(file, copyright, output, tables_from)?;
 
     if input_kind(file) == InputKind::MaxxBas {
         if let Some(out) = output {

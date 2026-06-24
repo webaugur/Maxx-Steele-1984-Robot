@@ -8,15 +8,26 @@ Fork of the factory [`CBSDemo`](../CBSDemo/) cartridge with **UltraMaxx** commun
 | [`KiCAD/`](KiCAD/) | Hardware pointer → CBSDemo schematic |
 | [`Firmware/Binary/UltraMaxx.532`](Firmware/Binary/UltraMaxx.532) | 4 KB EPROM image (`$A000`) |
 | [`Firmware/Assembly/ultramaxx_ROM_532.dsm`](Firmware/Assembly/ultramaxx_ROM_532.dsm) | Listing derived from R. Wind `maxx_demo_ROM_532.dsm` |
-| [`Firmware/Basic/hello.bas`](Firmware/Basic/hello.bas) | MaxxBAS sample program |
+| [`Firmware/Basic/ultramaxx.bas`](Firmware/Basic/ultramaxx.bas) | Full demo program (MaxxBAS, UltraMaxx copyright) |
+| [`Firmware/Basic/hello.bas`](Firmware/Basic/hello.bas) | Short MaxxBAS sample |
 | [`Firmware/Makefile`](Firmware/Makefile) | MaxxBAS `compile`, validate, `picorom` upload |
 
 Copyright string: `(c) UltraMaxx    ` (17 ASCII bytes, space-padded)
 
 ## Quick: MaxxBAS compile + PicoROM upload
 
+Full community demo (38 steps, matches `UltraMaxx.532`):
+
 ```bash
 export PATH="$(git rev-parse --show-toplevel)/tools/bin:$PATH"
+make -C Cartridge/Examples/UltraMaxx/Firmware compile-demo
+maxx upload Cartridge/Examples/UltraMaxx/Firmware/Basic/ultramaxx.bas --device maxx_cart \
+  --copyright ultramaxx --tables-from Cartridge/Examples/UltraMaxx/Firmware/Binary/UltraMaxx.532
+```
+
+Short hello sample:
+
+```bash
 maxx upload Cartridge/Examples/UltraMaxx/Firmware/Basic/hello.bas --device maxx_cart
 # or: make -C Cartridge/Examples/UltraMaxx/Firmware upload-hello
 ```
