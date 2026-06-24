@@ -35,7 +35,7 @@ When an item is done, check it off in **three places**: the GitHub issue, this f
 | Transmitter | **Active** | KiCad repair/fab; empty schematic/PCB/3D folders |
 | Receiver | **Active** | Schematic only — no PCB layout or fab outputs |
 | Mainboard | Partial | Raster schematics; no KiCad project |
-| Cartridge | Partial | Firmware done; no hardware CAD |
+| Cartridge | Partial | Firmware done; CBSDemo schematic rev 0.1; PCB layout TBD |
 | Chassis | Mostly complete | No 3D body model or mechanical KiCad |
 | Power | Planned | No KiCad project |
 | Face | Planned | No KiCad project |
@@ -106,11 +106,11 @@ KiCad project: [`Receiver/KiCAD/Receiver-27MHz.pro`](Receiver/KiCAD/Receiver-27M
 
 Example firmware is complete ([`Cartridge/Examples/`](Cartridge/Examples/)).
 
-**Completely missing** `[empty]`
+**Partial** — schematic rev 0.1 from PCB photo; PCB layout not started
 
-- [ ] [`Cartridge/Examples/CBSDemo/KiCAD/`](Cartridge/Examples/CBSDemo/KiCAD/) — CBSDemo cartridge PCB KiCad project ([#25](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/25))
-- [ ] [`Cartridge/Examples/UltraMaxx/KiCAD/`](Cartridge/Examples/UltraMaxx/KiCAD/) — UltraMaxx cartridge PCB KiCad project ([#27](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/27))
-- [ ] [`Cartridge/Model3D/`](Cartridge/Model3D/) — cartridge mechanical model ([#28](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/28))
+- [x] [`Cartridge/Examples/CBSDemo/KiCAD/`](Cartridge/Examples/CBSDemo/KiCAD/) — CBSDemo cartridge schematic ([#25](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/25)) — PCB layout still open
+- [x] [`Cartridge/Examples/UltraMaxx/KiCAD/`](Cartridge/Examples/UltraMaxx/KiCAD/) — UltraMaxx hardware pointer ([#27](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/27))
+- [x] [`Cartridge/Model3D/`](Cartridge/Model3D/) — cartridge STEP assembly ([#28](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/28)) — PCB layout still TBD
 - [x] [`Cartridge/Photos/`](Cartridge/Photos/) — cartridge card photo
 
 ### Chassis

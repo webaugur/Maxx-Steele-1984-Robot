@@ -1,0 +1,8 @@
+Reference,Value,Footprint,Qty,Notes
+J1,MaxxCard_Edge_44x2.54mm,Connector:Conn_01x44_Pin,1,44-pos card edge per Model3D STEP (22 per PCB face)
+U1,27C512,Package_DIP:DIP-28_W15.24mm,1,As photographed; KM2365 4KB alt per PROGRAMMING.md
+U2,74HC14?,Package_DIP:DIP-14_W7.62mm,1,14-pin glue logic; exact P/N TBD from die marking
+U3,5085-TBD,Package_DIP:DIP-24_W15.24mm,1,24-pin IC; handwritten sticker 5085; function TBD
+C1,0.1uF,Capacitor_THT:C_Disc_D4.3mm_W1.9mm_P5.00mm,1,Decoupling near U1
+C2,0.1uF,Capacitor_THT:C_Disc_D4.3mm_W1.9mm_P5.00mm,1,Decoupling near U3
+C3,0.1uF,Capacitor_THT:C_Disc_D4.3mm_W1.9mm_P5.00mm,1,Decoupling near U2

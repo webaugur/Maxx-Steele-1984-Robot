@@ -16,7 +16,7 @@ Do not duplicate datasheet PDFs elsewhere in the archive — link here from modu
 | [`MOS-6502.pdf`](MOS-6502.pdf) | MOS 6502 CPU | | — | [`Mainboard/`](../Mainboard/), [`Chassis/Firmware/`](../Chassis/Firmware/) |
 | [`Maxx-Steele-CPU-Pinout.pdf`](Maxx-Steele-CPU-Pinout.pdf) | Robot CPU pinout (PDF, project doc) | | — | [`Mainboard/`](../Mainboard/) |
 | [`Maxx-Steele-CPU-Pinout.xlsx`](Maxx-Steele-CPU-Pinout.xlsx) | Robot CPU pinout (spreadsheet, project doc) | | — | [`Mainboard/`](../Mainboard/) |
-| [`Mitsubishi-KM2365.pdf`](Mitsubishi-KM2365.pdf) | Mitsubishi KM2365 EPROM (cartridge ROM) | U400 | — | [`Cartridge/`](../Cartridge/), [`Cartridge/PROGRAMMING.md`](../Cartridge/PROGRAMMING.md) |
+| [`Mitsubishi-KM2365.pdf`](Mitsubishi-KM2365.pdf) | Mitsubishi KM2365 EPROM (cartridge ROM) | U1 alt | [`CBSDemo.sch`](../Cartridge/Examples/CBSDemo/KiCAD/CBSDemo.sch) | [`Cartridge/`](../Cartridge/), [`Cartridge/PROGRAMMING.md`](../Cartridge/PROGRAMMING.md) |
 | [`Mitsubishi-M6116.pdf`](Mitsubishi-M6116.pdf) | Mitsubishi M6116 static RAM | U401 | — | [`Mainboard/`](../Mainboard/) |
 | [`National-COP41xL-Display-Motors.pdf`](National-COP41xL-Display-Motors.pdf) | National COP41xL display & motor driver | U500 | — | [`Face/`](../Face/), [`Mainboard/`](../Mainboard/) |
 | [`Eurotechnique-ET9420.pdf`](Eurotechnique-ET9420.pdf) | Eurotechnique ET9420 speech synthesizer | | — | [`Face/`](../Face/) |

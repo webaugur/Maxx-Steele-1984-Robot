@@ -14,13 +14,11 @@ Shared KiCad symbols: [`libraries/`](../libraries/).
 
 ## TODO
 
-Status: **Partial** — firmware done; no hardware CAD. Full backlog: [`TODO.md`](../TODO.md#cartridge). GitHub: [open issues](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues?q=is%3Aissue+is%3Aopen+label%3Acartridge+label%3Abacklog).
+Status: **Partial** — firmware and CBSDemo schematic done; PCB layout not started. Full backlog: [`TODO.md`](../TODO.md#cartridge). GitHub: [open issues](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues?q=is%3Aissue+is%3Aopen+label%3Acartridge+label%3Abacklog).
 
 Example firmware is complete ([`Examples/`](Examples/)).
 
-**Missing** `[empty]`
-
-- [ ] [`Examples/CBSDemo/KiCAD/`](Examples/CBSDemo/KiCAD/) — CBSDemo cartridge PCB KiCad project
-- [ ] [`Examples/UltraMaxx/KiCAD/`](Examples/UltraMaxx/KiCAD/) — UltraMaxx cartridge PCB KiCad project
-- [ ] [`Model3D/`](Model3D/) — mechanical model
+- [x] [`Examples/CBSDemo/KiCAD/`](Examples/CBSDemo/KiCAD/) — CBSDemo cartridge schematic (rev 0.1; PCB TBD)
+- [x] [`Examples/UltraMaxx/KiCAD/`](Examples/UltraMaxx/KiCAD/) — points to CBSDemo hardware
+- [x] [`Model3D/`](Model3D/) — cartridge STEP assembly (shell + PCB placeholder + 44-pos edge)
 - [x] [`Photos/`](Photos/) — cartridge card photo

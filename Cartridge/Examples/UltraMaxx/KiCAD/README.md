@@ -1,5 +1,9 @@
 # UltraMaxx — KiCad
 
-Placeholder for the UltraMaxx community cartridge PCB schematic and layout.
+UltraMaxx uses the **same cartridge hardware** as the factory [`CBSDemo`](../../CBSDemo/) board. Only the ROM copyright string differs.
 
-Open project file here once created (e.g. `UltraMaxx.pro`).
+Hardware schematic, BOM, and trace notes:
+
+**[`../../CBSDemo/KiCAD/`](../../CBSDemo/KiCAD/)**
+
+Firmware for this example: [`../Firmware/`](../Firmware/)
