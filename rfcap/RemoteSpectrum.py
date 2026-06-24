@@ -28,6 +28,7 @@ from gnuradio import qtgui
 from gnuradio.filter import firdes
 import sip
 from datetime import datetime
+import os
 from gnuradio import analog
 from gnuradio import blocks
 from gnuradio import filter
@@ -78,7 +79,9 @@ class RemoteSpectrum(gr.top_block, Qt.QWidget):
         ##################################################
         # Variables
         ##################################################
-        self.prefix = prefix = "/home/user/Documents/MaxxSteele/"
+        _capture_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "captures")
+        os.makedirs(_capture_dir, exist_ok=True)
+        self.prefix = prefix = _capture_dir + os.sep
         self.tuning = tuning = 27095000
         self.squelch = squelch = 0
         self.samp_rate = samp_rate = 200000

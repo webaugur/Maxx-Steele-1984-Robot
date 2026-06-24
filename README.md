@@ -29,7 +29,7 @@ Much of the information in this archive has unknown ownership or uses licensed n
 | [`docs/`](docs/) | [Cartridge programming manual](docs/PROGRAMMING.md), [transmitter BOM](docs/transmitter-bom.md), [transmitter architecture / 455 kHz IF clock](docs/transmitter-architecture.md) |
 | [`tools/`](tools/) | Cartridge ROM disassembler / validator |
 | [`docs/Photos/`](docs/Photos/) | All physical artifact photos (robot, transmitter, accessories, RE reference) |
-| [`rfcap/`](rfcap/) | GNU Radio 27 MHz OOK flowgraphs; [per-file catalog](rfcap/README.md) (`.dat` IQ captures are local-only, not in git) |
+| [`rfcap/`](rfcap/) | GNU Radio 27 MHz OOK flowgraphs; IQ data in [`rfcap/captures/`](rfcap/captures/) ([catalog](rfcap/README.md), local-only) |
 | [`references/`](references/) | Local PDF copies of key datasheets and RE notes |
 
 ## Quick commands

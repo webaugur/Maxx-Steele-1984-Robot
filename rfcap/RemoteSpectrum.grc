@@ -36,7 +36,7 @@ blocks:
   id: variable
   parameters:
     comment: ''
-    value: '"/home/user/Documents/MaxxSteele/"'
+    value: 'os.path.join(os.path.dirname(os.path.abspath(__file__)), "captures") + os.sep'
   states:
     bus_sink: false
     bus_source: false
@@ -234,7 +234,9 @@ blocks:
   parameters:
     alias: ''
     comment: ''
-    imports: from datetime import datetime
+    imports: |-
+      from datetime import datetime
+      import os
   states:
     bus_sink: false
     bus_source: false

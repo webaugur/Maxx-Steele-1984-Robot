@@ -20,5 +20,5 @@ fp-info-cache
 Thumbs.db
 
 # Large GNU Radio IQ captures (documented in rfcap/README.md; keep locally)
-rfcap/*.dat
+rfcap/captures/*.dat
 

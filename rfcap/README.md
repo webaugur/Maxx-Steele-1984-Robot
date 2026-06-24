@@ -1,6 +1,13 @@
 # GNU Radio 27 MHz OOK captures
 
-Reference documentation for raw **IQ recordings** of the Maxx Steele remote transmitter. The `.dat` files themselves are **not stored in git** (several exceed GitHub's 100 MB limit); keep them locally alongside this folder.
+Flowgraphs and documentation for raw **IQ recordings** of the Maxx Steele remote transmitter.
+
+| Path | Contents |
+|------|----------|
+| `RemoteSpectrum.grc`, `RemoteSpectrum.py`, `RemoteSpectrum_1.grc` | GNU Radio flowgraphs (code) |
+| [`captures/`](captures/) | IQ `.dat` recordings and annotation sidecars (data, local/gitignored) |
+
+The `.dat` files are **not stored in git** (several exceed GitHub's 100 MB limit). Keep them locally under `captures/`.
 
 ## Capture setup
 
@@ -12,12 +19,15 @@ Recorded with `RemoteSpectrum.grc` / `RemoteSpectrum.py` (David L Norris, 2021):
 | Sample rate | 200 kHz |
 | Format | GNU Radio `gr_complex` (complex float32, 8 bytes/sample) |
 | Content | 27 MHz OOK packets from the COP411L transmitter |
+| Output directory | `rfcap/captures/` |
 
 Approximate duration: `file_size ÷ (200 000 × 8)` seconds.
 
 Filenames are **UTC timestamps** from the flowgraph `file_sink` (`YYYY.MM.DD.HH.MM.SS.dat`).
 
 ## IQ capture files (local only)
+
+All paths are relative to `captures/`:
 
 | File | Size | ~Duration | Session / contents |
 |------|------|-----------|-------------------|
@@ -40,19 +50,11 @@ Filenames are **UTC timestamps** from the flowgraph `file_sink` (`YYYY.MM.DD.HH.
 
 The four `.dat.txt` sidecars are annotation placeholders for the 06:50–06:54 per-button recordings (currently empty).
 
-## Flowgraph files (in git)
-
-| File | Contents |
-|------|----------|
-| `RemoteSpectrum.grc` | GNU Radio Companion hierarchy block — spectrum display, OsmoSDR source, squelch, OOK-oriented monitoring. Default tuning 27.095 MHz, 200 kHz sample rate. |
-| `RemoteSpectrum.py` | Python output generated from `RemoteSpectrum.grc`; runnable standalone. |
-| `RemoteSpectrum_1.grc` | Alternate / earlier flowgraph variant with the same general purpose. |
-
 ## Replaying a local capture
 
-1. Place the desired `.dat` file in this directory (or note its path).
+1. Place the desired `.dat` file in `captures/` (or note its path).
 2. Open `RemoteSpectrum.grc` in GNU Radio Companion, or run `RemoteSpectrum.py`.
-3. Set the `recfile` variable to the `.dat` path.
+3. Set the `recfile` variable to the capture path (e.g. `captures/2021.02.14.06.50.10.dat`).
 4. Tune for **27 MHz** RF and inspect OOK timing (~1.55 ms/bit, ~29 ms packet repeat).
 
 See [`docs/transmitter-architecture.md`](../docs/transmitter-architecture.md) for how the transmitter MCU is clocked at the **455 kHz IF** reference so OOK serial data stays coherent with the RF envelope the receiver demodulates.
