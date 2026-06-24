@@ -97,30 +97,38 @@ v1 has **no** variables, `GOTO`, or `IF`. Use `SPEAK` for factory speech; custom
 
 Sample source: [`Firmware/Basic/hello.bas`](Firmware/Basic/hello.bas)
 
-```bash
-# Compile + validate (Python)
-python3 tools/tinybasic_maxx.py compile Cartridge/Examples/UltraMaxx/Firmware/Basic/hello.bas \
-  -o Cartridge/Examples/UltraMaxx/Firmware/Binary/hello.532
+### Unified toolchain (`maxx`)
 
-# Or Rust crate (Phase 2 — PicoROM-aligned host tool)
-cargo build --release --manifest-path tools/maxxbas/Cargo.toml
-tools/maxxbas/target/release/maxxbas compile Cartridge/Examples/UltraMaxx/Firmware/Basic/hello.bas \
-  -o Cartridge/Examples/UltraMaxx/Firmware/Binary/hello.532
+| Command | Description |
+|---------|-------------|
+| `maxx compile FILE.bas [-o OUT.532]` | Compile MaxxBAS → cart image |
+| `maxx check FILE.bas` | Parse source only |
+| `maxx validate FILE.532` | Validate cart structure |
+| `maxx list FILE.532 [--json]` | Program steps (JSON for simulators) |
+| `maxx upload FILE` | Compile if `.bas`/`.maxx`, then PicoROM upload |
+| `maxx simulate FILE.532` | Step preview (vector graphics TBD) |
+
+```bash
+# One entry point (auto-builds Rust release binary on first run)
+python3 tools/maxx compile Cartridge/Examples/UltraMaxx/Firmware/Basic/hello.bas
+python3 tools/maxx validate Cartridge/Examples/UltraMaxx/Firmware/Binary/hello.532
+python3 tools/maxx list Cartridge/Examples/UltraMaxx/Firmware/Binary/hello.532 --json
+
+# Upload directly from source — no manual compile step
+python3 tools/maxx upload Cartridge/Examples/UltraMaxx/Firmware/Basic/hello.bas \
+  --device maxx_cart --dry-run
 
 # Makefile shortcuts
-make -C Cartridge/Examples/UltraMaxx/Firmware compile        # Python
-make -C Cartridge/Examples/UltraMaxx/Firmware compile-rust   # Rust
-make -C Cartridge/Examples/UltraMaxx/Firmware test-rust
+make -C Cartridge/Examples/UltraMaxx/Firmware compile
+make -C Cartridge/Examples/UltraMaxx/Firmware upload-hello
+make -C Cartridge/Examples/UltraMaxx/Firmware test
 
-# Upload compiled image (not the stock UltraMaxx binary)
+# Legacy wrappers still work
 python3 tools/picorom_cart.py upload --device maxx_cart \
-  --rom Cartridge/Examples/UltraMaxx/Firmware/Binary/hello.532
-
-# Tests
-python3 tools/test_tinybasic_maxx.py
+  --rom Cartridge/Examples/UltraMaxx/Firmware/Basic/hello.bas
 ```
 
-Rust library API: [`tools/maxxbas/`](../../../tools/maxxbas/). Intended for future `picorom upload program.maxx` integration.
+Rust library: [`tools/maxxbas/`](../../../tools/maxxbas/). `maxx list --json` emits a `ProgramTrace` for a future robot simulator.
 
 ## Develop / iterate workflow
 
@@ -152,4 +160,4 @@ python3 tools/picorom_cart.py upload --cart cbsdemo --device maxx_cart --size 4k
 - PicoROM project: https://github.com/wickerwaka/PicoROM
 - CBSDemo schematic: [`../CBSDemo/KiCAD/CBSDemo.kicad_pro`](../CBSDemo/KiCAD/CBSDemo.kicad_pro)
 - Cartridge programming: [`../../PROGRAMMING.md`](../../PROGRAMMING.md)
-- `tools/maxxbas/` (Rust), `tools/tinybasic_maxx.py` (Python), `tools/picorom_cart.py`, `tools/maxx_rom.py`
+- `tools/maxx` (primary CLI), `tools/maxxbas/` (Rust), `tools/picorom_cart.py`, `tools/maxx_rom.py`

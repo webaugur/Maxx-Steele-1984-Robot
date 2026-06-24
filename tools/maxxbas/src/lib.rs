@@ -1,16 +1,26 @@
-//! MaxxBAS compiler — compile line-oriented Maxx programs into 4 KB cartridge images.
+//! Maxx Steele toolchain library — compile MaxxBAS, decode ROM programs, validate carts.
 
+mod cart;
+mod decode;
 mod emit;
 mod error;
+mod input;
 mod parse;
+mod upload;
 mod validate;
 
+pub use cart::CartImage;
+pub use decode::{
+    decode_cart, decode_program, format_rom_listing, ProgramStep, ProgramTrace, StepKind,
+};
 pub use emit::{
     compile_source, emit_cart, format_listing, Copyright, EmitOptions, CART_SIZE,
 };
 pub use error::CompileError;
+pub use input::{compile_to_output, default_output, input_kind, resolve_input, InputKind, ResolvedRom};
 pub use parse::{parse_source, program_bytes, Instruction};
-pub use validate::validate_cart;
+pub use upload::{picorom_size_token, run_upload, upload_command, PICOROM_SIZES};
+pub use validate::{validate_cart, validate_cart_image};
 
 /// Compile MaxxBAS source with the given copyright string.
 pub fn compile(text: &str, copyright: Copyright) -> Result<Vec<u8>, CompileError> {
@@ -36,5 +46,14 @@ mod integration {
     fn hello_validates_clean() {
         let image = compile(HELLO_BAS, Copyright::UltraMaxx).unwrap();
         assert!(validate_cart(&image, 0xA000).is_empty());
+    }
+
+    #[test]
+    fn hello_trace_json_round_trip() {
+        let cart = CartImage::from_bytes(HELLO_532.to_vec()).unwrap();
+        let trace = decode_cart(&cart).unwrap();
+        let json = serde_json::to_string(&trace).unwrap();
+        assert!(json.contains("\"op\":\"delay\""));
+        assert!(json.contains("\"op\":\"forward\""));
     }
 }

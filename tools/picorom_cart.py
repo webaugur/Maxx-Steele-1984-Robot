@@ -5,7 +5,11 @@ PicoROM (https://github.com/wickerwaka/PicoROM) is an RP2040-based DIP ROM
 emulator.  Use PicoROM P28 (28-pin) as a drop-in for U1 on the CBSDemo-class
 cartridge board documented in Cartridge/Examples/CBSDemo/KiCAD/.
 
+Accepts .532 ROM images or .bas / .maxx MaxxBAS source (compiled automatically).
+
 Requires the PicoROM 2.x host tool: https://github.com/wickerwaka/PicoROM/releases
+
+Preferred unified CLI:  python3 tools/maxx upload FILE --device maxx_cart
 """
 
 from __future__ import annotations
@@ -17,6 +21,7 @@ import sys
 from pathlib import Path
 
 from maxx_rom import CartImage, validate_cart
+from maxx_toolchain import is_maxxbas_source, resolve_rom_input, run_maxx
 from project_paths import resolve_from_root
 
 # Named cartridge images in this repository
@@ -34,6 +39,7 @@ PICOROM_SIZES = {
 DEFAULT_DEVICE = "maxx_cart"
 DEFAULT_SIZE = "4kb"
 DEFAULT_CART = "ultramaxx"
+DEFAULT_COPYRIGHT = "ultramaxx"
 
 
 def resolve_cart(name: str) -> Path:
@@ -42,10 +48,15 @@ def resolve_cart(name: str) -> Path:
     return resolve_from_root(CARTS[name], must_exist=True)
 
 
-def resolve_rom_path(args: argparse.Namespace) -> Path:
+def resolve_rom_path(args: argparse.Namespace) -> tuple[Path, object | None]:
     if getattr(args, "rom", None):
-        return resolve_from_root(args.rom, must_exist=True)
-    return resolve_cart(args.cart)
+        path = resolve_from_root(args.rom, must_exist=True)
+        copyright = getattr(args, "copyright", DEFAULT_COPYRIGHT)
+        try:
+            return resolve_rom_input(path, copyright=copyright)
+        except FileNotFoundError as exc:
+            raise SystemExit(str(exc)) from exc
+    return resolve_cart(args.cart), None
 
 
 def check_cart(path: Path) -> CartImage:
@@ -78,24 +89,50 @@ def upload_command(
 
 
 def cmd_info(args: argparse.Namespace) -> int:
-    path = resolve_rom_path(args)
-    cart = check_cart(path)
-    print(f"Image:     {path}")
-    print(f"Size:      {len(cart.data)} bytes (4 KB @ ${cart.base_addr:04X})")
-    print(f"Entry:     ${cart.entry_vector:04X}")
-    print(f"Copyright: {cart.copyright.decode('ascii', errors='replace')!r}")
-    print()
-    print("PicoROM hardware: P28 (28-pin DIP) in U1 socket — same as CBSDemo board")
-    print("Upstream:         https://github.com/wickerwaka/PicoROM")
-    print()
-    for key, token in PICOROM_SIZES.items():
-        cmd = upload_command(path, args.device, key, args.persist)
-        print(f"  {key:8} → {' '.join(cmd)}")
-    return 0
+    path, tmp = resolve_rom_path(args)
+    try:
+        cart = check_cart(path)
+        print(f"Image:     {path}")
+        if args.rom and is_maxxbas_source(resolve_from_root(args.rom)):
+            print(f"Source:    {resolve_from_root(args.rom)} (compiled for inspect)")
+        print(f"Size:      {len(cart.data)} bytes (4 KB @ ${cart.base_addr:04X})")
+        print(f"Entry:     ${cart.entry_vector:04X}")
+        print(f"Copyright: {cart.copyright.decode('ascii', errors='replace')!r}")
+        print()
+        print("PicoROM hardware: P28 (28-pin DIP) in U1 socket — same as CBSDemo board")
+        print("Upstream:         https://github.com/wickerwaka/PicoROM")
+        print("Toolchain:        python3 tools/maxx upload …")
+        print()
+        for key, token in PICOROM_SIZES.items():
+            cmd = upload_command(path, args.device, key, args.persist)
+            print(f"  {key:8} → {' '.join(cmd)}")
+        return 0
+    finally:
+        if tmp is not None:
+            Path(tmp.name).unlink(missing_ok=True)
 
 
 def cmd_upload(args: argparse.Namespace) -> int:
-    path = resolve_rom_path(args)
+    # Delegate to unified maxx upload when a source/rom file is provided
+    if args.rom:
+        path = resolve_from_root(args.rom)
+        maxx_argv = [
+            "upload",
+            str(path),
+            "--device",
+            args.device,
+            "--size",
+            args.size,
+            "--copyright",
+            args.copyright,
+        ]
+        if args.persist:
+            maxx_argv.append("--persist")
+        if args.dry_run:
+            maxx_argv.append("--dry-run")
+        return run_maxx(maxx_argv, check=False).returncode
+
+    path, _ = resolve_rom_path(args)
     check_cart(path)
     cmd = upload_command(path, args.device, args.size, args.persist)
 
@@ -108,6 +145,7 @@ def cmd_upload(args: argparse.Namespace) -> int:
         print("picorom not found in PATH. Install from:", file=sys.stderr)
         print("  https://github.com/wickerwaka/PicoROM/releases", file=sys.stderr)
         print()
+        print("Or use: python3 tools/maxx upload --dry-run …")
         print("Run manually:")
         print("  " + " ".join(cmd))
         return 1
@@ -126,7 +164,13 @@ def _common_args(parser: argparse.ArgumentParser) -> None:
     )
     parser.add_argument(
         "--rom",
-        help="path to a .532 image (overrides --cart; use after MaxxBAS compile)",
+        help="path to .532, .bas, or .maxx (overrides --cart; sources are compiled)",
+    )
+    parser.add_argument(
+        "--copyright",
+        default=DEFAULT_COPYRIGHT,
+        choices=("cbs", "ultramaxx"),
+        help="copyright for MaxxBAS compile (default: ultramaxx)",
     )
     parser.add_argument(
         "--device",

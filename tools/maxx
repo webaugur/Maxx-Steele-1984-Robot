@@ -1,0 +1,90 @@
+#!/usr/bin/env python3
+"""Unified Maxx Steele command-line toolchain.
+
+Dispatches to the Rust `maxx` binary (tools/maxxbas/). Builds release on first
+use if the binary is missing.
+
+  maxx compile program.bas -o program.532
+  maxx check program.bas
+  maxx validate program.532
+  maxx list program.532 [--json]
+  maxx upload program.bas --device maxx_cart
+  maxx simulate program.532
+"""
+
+from __future__ import annotations
+
+import argparse
+import os
+import subprocess
+import sys
+from pathlib import Path
+
+from project_paths import project_root
+
+CRATE_DIR = project_root() / "tools" / "maxxbas"
+RELEASE_BIN = CRATE_DIR / "target" / "release" / "maxx"
+DEBUG_BIN = CRATE_DIR / "target" / "debug" / "maxx"
+
+
+def find_maxx_binary() -> Path | None:
+    for candidate in (RELEASE_BIN, DEBUG_BIN):
+        if candidate.is_file():
+            return candidate
+    return None
+
+
+def build_maxx(release: bool = True) -> Path:
+    profile = "release" if release else "debug"
+    cmd = [
+        "cargo",
+        "build",
+        f"--{profile}",
+        "--manifest-path",
+        str(CRATE_DIR / "Cargo.toml"),
+    ]
+    print("building maxx toolchain...", file=sys.stderr)
+    subprocess.run(cmd, check=True)
+    path = RELEASE_BIN if release else DEBUG_BIN
+    if not path.is_file():
+        raise RuntimeError(f"build succeeded but {path} not found")
+    return path
+
+
+def ensure_maxx() -> Path:
+    found = find_maxx_binary()
+    if found is not None:
+        return found
+    return build_maxx(release=True)
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(add_help=False)
+    parser.add_argument("--debug-build", action="store_true", help=argparse.SUPPRESS)
+    parser.add_argument("--no-build", action="store_true", help=argparse.SUPPRESS)
+    args, rest = parser.parse_known_args(list(argv) if argv is not None else None)
+
+    if args.no_build:
+        binary = find_maxx_binary()
+        if binary is None:
+            print(
+                "error: maxx binary not found; run without --no-build or "
+                "cargo build --release --manifest-path tools/maxxbas/Cargo.toml",
+                file=sys.stderr,
+            )
+            return 1
+    elif args.debug_build:
+        binary = find_maxx_binary() or build_maxx(release=False)
+    else:
+        binary = ensure_maxx()
+
+    env = os.environ.copy()
+    tools_dir = str(project_root() / "tools")
+    env["PATH"] = f"{tools_dir}{os.pathsep}{env.get('PATH', '')}"
+
+    result = subprocess.run([str(binary), *rest], env=env)
+    return result.returncode
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

@@ -10,7 +10,7 @@ This document describes how to write programs for the 1984 CBS Toys / Ideal **Ma
 - [`Chassis/Firmware/Assembly/maxx_internal_ROM.dsm`](../Chassis/Firmware/Assembly/maxx_internal_ROM.dsm) — internal 6502 interpreter (R. Wind)
 - Original reference guide: [`Chassis/Manual/MaxxSteeleReferenceGuide.pdf`](../Chassis/Manual/MaxxSteeleReferenceGuide.pdf)
 
-Tools live in [`tools/maxx_rom.py`](../tools/maxx_rom.py), [`tools/tinybasic_maxx.py`](../tools/tinybasic_maxx.py) (MaxxBAS, Python), and [`tools/maxxbas/`](../tools/maxxbas/) (MaxxBAS, Rust).
+Tools: [`tools/maxx`](../tools/maxx) (unified CLI), [`tools/maxxbas/`](../tools/maxxbas/) (Rust library), [`tools/maxx_rom.py`](../tools/maxx_rom.py) (legacy disasm/validate).
 
 ---
 
@@ -319,9 +319,10 @@ Reference images: [`Remote-Front.jpg`](../Transmitter/Photos/Product/Remote-Fron
 Write a `.bas` or `.maxx` source file and compile to a 4096-byte image:
 
 ```bash
-python3 tools/tinybasic_maxx.py compile myprogram.bas -o mycart.532
-python3 tools/maxx_rom.py validate mycart.532
-python3 tools/picorom_cart.py upload --device maxx_cart --rom mycart.532
+python3 tools/maxx compile myprogram.bas -o mycart.532
+python3 tools/maxx validate mycart.532
+python3 tools/maxx upload myprogram.bas --device maxx_cart
+python3 tools/maxx list mycart.532 --json   # simulator input
 ```
 
 Example: [`Examples/UltraMaxx/Firmware/Basic/hello.bas`](Examples/UltraMaxx/Firmware/Basic/hello.bas). Statements: `DELAY`, `FORWARD`, `BACK`, `LEFT`, `RIGHT`, `LAMP ON/OFF`, `HOME`, `PLAY`, `SPEAK`, `SAY`, `END`. See [`Examples/UltraMaxx/PICOROM.md`](Examples/UltraMaxx/PICOROM.md).
