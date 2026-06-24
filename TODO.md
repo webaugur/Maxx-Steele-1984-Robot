@@ -13,7 +13,7 @@ Generated from an audit of empty directories, module READMEs, and KiCad project 
 | Transmitter | **Active** | KiCad repair/fab; empty schematic/PCB/3D folders |
 | Receiver | **Active** | Schematic only — no PCB layout or fab outputs |
 | Mainboard | Partial | Raster schematics; no KiCad project |
-| Demo Cartridge | Partial | Firmware done; no hardware CAD |
+| Cartridge | Partial | Firmware done; no hardware CAD |
 | Chassis | Mostly complete | No 3D body model or mechanical KiCad |
 | Power | Planned | No KiCad project |
 | Face | Planned | No KiCad project |
@@ -80,17 +80,17 @@ KiCad project: [`Receiver/KiCAD/Receiver-27MHz.pro`](Receiver/KiCAD/Receiver-27M
 - [ ] PCB layout project and fabrication artifacts
 - [ ] Module-specific photos (chassis photos: [`Chassis/Photos/`](Chassis/Photos/))
 
-### Demo Cartridge
+### Cartridge
 
-Firmware is complete ([`Demo Cartridge/Firmware/`](Demo Cartridge/Firmware/)).
+Firmware is complete ([`Cartridge/Firmware/`](Cartridge/Firmware/)).
 
 **Completely missing** `[empty]`
 
-- [ ] [`Demo Cartridge/KiCAD/`](Demo Cartridge/KiCAD/) — cartridge PCB KiCad project
-- [ ] [`Demo Cartridge/Schematic/`](Demo Cartridge/Schematic/) — schematic scan or source
-- [ ] [`Demo Cartridge/PC-Board/`](Demo Cartridge/PC-Board/) — PCB layout / photos
-- [ ] [`Demo Cartridge/3D-Model/`](Demo Cartridge/3D-Model/) — cartridge mechanical model
-- [x] [`Demo Cartridge/Photos/`](Demo Cartridge/Photos/) — cartridge card photo
+- [ ] [`Cartridge/KiCAD/`](Cartridge/KiCAD/) — cartridge PCB KiCad project
+- [ ] [`Cartridge/Schematic/`](Cartridge/Schematic/) — schematic scan or source
+- [ ] [`Cartridge/PC-Board/`](Cartridge/PC-Board/) — PCB layout / photos
+- [ ] [`Cartridge/3D-Model/`](Cartridge/3D-Model/) — cartridge mechanical model
+- [x] [`Cartridge/Photos/`](Cartridge/Photos/) — cartridge card photo
 
 ### Chassis
 
@@ -135,7 +135,7 @@ Most content present (manuals, photos, firmware, datasheets, sounds, disassembly
 
 ## Repository hygiene
 
-- [x] Remove orphan empty [`Accessories/`](Accessories/) (leftover after promoting Demo Cartridge and Paddle Mirror to top-level modules)
+- [x] Remove orphan empty [`Accessories/`](Accessories/) (leftover after promoting Cartridge and Paddle Mirror to top-level modules)
 - [x] Photo policy: module photos live under each module's `Photos/` folder (removed `docs/photos/`)
 
 ---
@@ -155,7 +155,7 @@ Most content present (manuals, photos, firmware, datasheets, sounds, disassembly
 1. **Transmitter** — ERC, footprint check, schematic–PCB sync, DRC, Gerbers
 2. **Receiver** — PCB layout and fab outputs
 3. **Mainboard** — KiCad digitization from existing schematic art
-4. **Demo Cartridge** — hardware CAD (schematic, PCB, 3D)
+4. **Cartridge** — hardware CAD (schematic, PCB, 3D)
 5. **Chassis** — 3D body model and mechanical drawings
 6. **Power / Face** — KiCad projects when boards are ready to document
 7. ~~**Housekeeping**~~ — done (stale placeholders removed, `Accessories/` deleted, photo README pointers added)

@@ -1,4 +1,4 @@
-# Demo Cartridge — KiCad
+# Cartridge — KiCad
 
 Placeholder for the cartridge PCB schematic and layout.
 

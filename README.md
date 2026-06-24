@@ -19,7 +19,7 @@ Each module has a [`KiCAD/`](Transmitter/KiCAD/) subfolder for schematic/PCB wor
 | [`Power/`](Power/) | Planned | `Power/KiCAD/` |
 | [`Mainboard/`](Mainboard/) | Planned | `Mainboard/KiCAD/` |
 | [`Face/`](Face/) | Planned | `Face/KiCAD/` |
-| [`Demo Cartridge/`](Demo%20Cartridge/) | Cartridge ROM + firmware | `Demo Cartridge/KiCAD/` (planned) |
+| [`Cartridge/`](Cartridge/) | Cartridge ROM + firmware | `Cartridge/KiCAD/` (planned) |
 | [`Paddle Mirror/`](Paddle%20Mirror/) | Archive | `Paddle Mirror/KiCAD/` (planned) |
 | [`Chassis/`](Chassis/) | Body, manuals, photos, internal ROM | `Chassis/KiCAD/` (mechanical, planned) |
 
@@ -39,7 +39,7 @@ Scripts resolve **project-relative** paths from the repository root (`tools/proj
 ## Quick commands
 
 ```bash
-python3 tools/maxx_rom.py disasm "Demo Cartridge/Firmware/Binary/MAXXCART.532"
+python3 tools/maxx_rom.py disasm "Cartridge/Firmware/Binary/MAXXCART.532"
 
 # KiCad: Transmitter/KiCAD/Transmitter-27MHz.pro
 ```

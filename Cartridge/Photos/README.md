@@ -1,4 +1,4 @@
-# Demo cartridge photos
+# Cartridge photos
 
 | File | Description |
 |------|-------------|

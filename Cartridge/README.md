@@ -1,4 +1,4 @@
-# Demo Cartridge
+# Cartridge
 
 4 KB program cartridge included with the Maxx Steele robot (demo program).
 

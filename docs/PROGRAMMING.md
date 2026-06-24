@@ -2,9 +2,9 @@
 
 This document describes how to write programs for the 1984 CBS Toys / Ideal **Maxx Steele** robot using plug-in ROM cartridges. It is derived from:
 
-- [`Demo Cartridge/Firmware/Assembly/maxx_demo_ROM_532.dsm`](../Demo%20Cartridge/Firmware/Assembly/maxx_demo_ROM_532.dsm) — annotated demo cartridge (R. Wind)
+- [`Cartridge/Firmware/Assembly/maxx_demo_ROM_532.dsm`](../Cartridge/Firmware/Assembly/maxx_demo_ROM_532.dsm) — annotated demo cartridge (R. Wind)
 - [`Chassis/Firmware/Assembly/maxx_internal_ROM.dsm`](../Chassis/Firmware/Assembly/maxx_internal_ROM.dsm) — internal 6502 interpreter (R. Wind)
-- [`Demo Cartridge/Firmware/Binary/MAXXCART.532`](../Demo%20Cartridge/Firmware/Binary/MAXXCART.532) — 4 KB demo cartridge binary
+- [`Cartridge/Firmware/Binary/MAXXCART.532`](../Cartridge/Firmware/Binary/MAXXCART.532) — 4 KB demo cartridge binary
 - Original reference guide: [`Chassis/Manual/MaxxSteeleReferenceGuide.pdf`](../Chassis/Manual/MaxxSteeleReferenceGuide.pdf)
 
 Tools live in [`tools/maxx_rom.py`](../tools/maxx_rom.py).
@@ -163,7 +163,7 @@ Internal ROM keycode table at `$E6B5` maps keypad scan codes to opcodes:
 
 ## 5. Demo cartridge walkthrough
 
-Source: [`Demo Cartridge/Firmware/Assembly/maxx_demo_ROM_532.dsm`](../Demo%20Cartridge/Firmware/Assembly/maxx_demo_ROM_532.dsm)
+Source: [`Cartridge/Firmware/Assembly/maxx_demo_ROM_532.dsm`](../Cartridge/Firmware/Assembly/maxx_demo_ROM_532.dsm)
 
 | Step | Bytes | Action |
 |------|-------|--------|
@@ -209,14 +209,14 @@ Source: [`Demo Cartridge/Firmware/Assembly/maxx_demo_ROM_532.dsm`](../Demo%20Car
 Disassemble any cart image:
 
 ```bash
-python3 tools/maxx_rom.py disasm "Demo Cartridge/Firmware/Binary/MAXXCART.532" \
-  --compare-dsm "Demo Cartridge/Firmware/Assembly/maxx_demo_ROM_532.dsm"
+python3 tools/maxx_rom.py disasm "Cartridge/Firmware/Binary/MAXXCART.532" \
+  --compare-dsm "Cartridge/Firmware/Assembly/maxx_demo_ROM_532.dsm"
 ```
 
 Validate structure:
 
 ```bash
-python3 tools/maxx_rom.py validate "Demo Cartridge/Firmware/Binary/MAXXCART.532"
+python3 tools/maxx_rom.py validate "Cartridge/Firmware/Binary/MAXXCART.532"
 ```
 
 Generate a blank template:
@@ -335,6 +335,6 @@ FF FF    ; end
 
 - GitHub archive: https://github.com/webaugur/Maxx-Steele-1984-Robot
 - R. Wind disassemblies: `maxxbot@yahoo.com` (2002–2006)
-- Demo cartridge ROM: [`Demo Cartridge/Firmware/`](../Demo%20Cartridge/Firmware/)
+- Demo cartridge ROM: [`Cartridge/Firmware/`](../Cartridge/Firmware/)
 - Internal ROM: [`Chassis/Firmware/`](../Chassis/Firmware/)
 - Transmitter hardware: [`docs/transmitter-bom.md`](transmitter-bom.md)
