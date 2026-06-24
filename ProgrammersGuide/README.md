@@ -4,6 +4,8 @@ This guide describes how to program the 1984 CBS Toys / Ideal **Maxx Steele** ro
 
 It is modeled on the structure of the [Commodore 64 Programmer's Reference Guide](https://archive.org/details/c64-programmer-ref) — numbered chapters, appendices, a quick-reference card, and a schematic index — adapted to Maxx Steele hardware.
 
+**PDF (latest):** [`Maxx-Steele-Programmers-Reference.pdf`](Maxx-Steele-Programmers-Reference.pdf) — rebuilt automatically when chapter `.md` files change (`python3 tools/build_programmers_guide_pdf.py` locally; GitHub Actions on push to `main`).
+
 ## What this guide covers
 
 | Document | Audience | Focus |

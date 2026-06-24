@@ -48,7 +48,7 @@ Each module has a [`KiCAD/`](Transmitter/KiCAD/) subfolder for schematic/PCB wor
 
 | Path | Description |
 |------|-------------|
-| [`ProgrammersGuide/`](ProgrammersGuide/) | Programmer's reference (bytecode, opcodes, I/O, appendices) — [`ProgrammersGuide/README.md`](ProgrammersGuide/README.md) |
+| [`ProgrammersGuide/`](ProgrammersGuide/) | Programmer's reference (bytecode, opcodes, I/O, appendices) — [README](ProgrammersGuide/README.md), [PDF](ProgrammersGuide/Maxx-Steele-Programmers-Reference.pdf) |
 | [`DataSheets/`](DataSheets/) | Third-party component datasheets (indexed in [`DataSheets/README.md`](DataSheets/README.md)) |
 | [`tools/`](tools/) | Cartridge ROM tools, [`rfcap/`](tools/rfcap/) GNU Radio OOK flowgraphs, [`sanitize_filenames.py`](tools/sanitize_filenames.py) |
 | [`libraries/`](libraries/) | Shared KiCad symbol libraries |
