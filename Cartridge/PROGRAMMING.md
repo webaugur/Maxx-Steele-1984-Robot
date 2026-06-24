@@ -327,7 +327,7 @@ maxx upload myprogram.bas --device maxx_cart
 maxx list mycart.532 --json   # simulator input
 ```
 
-Example: [`Examples/UltraMaxx/Firmware/Basic/hello.bas`](Examples/UltraMaxx/Firmware/Basic/hello.bas). Statements: `DELAY`, `FORWARD`, `BACK`, `LEFT`, `RIGHT`, `LAMP ON/OFF`, `HOME`, `PLAY`, `SPEAK`, `SAY`, `END`. See [`Examples/UltraMaxx/PICOROM.md`](Examples/UltraMaxx/PICOROM.md).
+Examples: [`Examples/CBSDemo/Firmware/Basic/cbsdemo.bas`](Examples/CBSDemo/Firmware/Basic/cbsdemo.bas) (full factory demo), [`Examples/UltraMaxx/Firmware/Basic/hello.bas`](Examples/UltraMaxx/Firmware/Basic/hello.bas). Statements: `DELAY`, `FORWARD`, `BACK`, `LEFT`, `RIGHT`, `ARMS UP/DOWN`, `WRIST UP/DOWN`, `CLAW ROTATE/OPEN/CLOSE`, `LAMP ON/OFF`, `HOME`, `PLAY`, `SPEAK`, `SAY`, `END`. Use `--tables-from` when `SAY` needs factory phrase bytes.
 
 ### Option B — raw bytecode
 

@@ -14,10 +14,14 @@ pub use decode::{
     decode_cart, decode_program, format_rom_listing, ProgramStep, ProgramTrace, StepKind,
 };
 pub use emit::{
-    compile_source, emit_cart, format_listing, Copyright, EmitOptions, CART_SIZE,
+    compile_source, compile_source_with_tables, emit_cart, format_listing, Copyright, EmitOptions,
+    CART_SIZE, MUSIC_OFF, PHRASE_OFF, PROG_OFF,
 };
 pub use error::CompileError;
-pub use input::{compile_to_output, default_output, input_kind, resolve_input, InputKind, ResolvedRom};
+pub use input::{
+    compile_to_output, default_output, input_kind, load_tables_from_reference, resolve_input,
+    InputKind, ResolvedRom,
+};
 pub use parse::{parse_source, program_bytes, Instruction};
 pub use upload::{picorom_size_token, run_upload, upload_command, PICOROM_SIZES};
 pub use validate::{validate_cart, validate_cart_image};
@@ -46,6 +50,24 @@ mod integration {
     fn hello_validates_clean() {
         let image = compile(HELLO_BAS, Copyright::UltraMaxx).unwrap();
         assert!(validate_cart(&image, 0xA000).is_empty());
+    }
+
+    #[test]
+    fn cbsdemo_bas_matches_factory_rom() {
+        let src = include_str!("../../../Cartridge/Examples/CBSDemo/Firmware/Basic/cbsdemo.bas");
+        let factory = include_bytes!("../../../Cartridge/Examples/CBSDemo/Firmware/Binary/CBSDemo.532");
+        let (phrase, music) = (
+            factory[crate::emit::PHRASE_OFF..crate::emit::MUSIC_OFF].to_vec(),
+            factory[crate::emit::MUSIC_OFF..].to_vec(),
+        );
+        let image = compile_source_with_tables(
+            src,
+            Copyright::Cbs,
+            Some(&phrase),
+            Some(&music),
+        )
+        .unwrap();
+        assert_eq!(image.as_slice(), factory);
     }
 
     #[test]

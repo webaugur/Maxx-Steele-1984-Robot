@@ -136,6 +136,12 @@ fn parse_line(raw: &str, line_no: usize) -> Result<Option<Instruction>, CompileE
         if !first.is_empty() && first.chars().all(|c| c.is_ascii_digit()) {
             line = rest.trim().to_string();
         }
+    } else if !line.is_empty() && line.chars().all(|c| c.is_ascii_digit()) {
+        return Ok(None);
+    }
+
+    if line.is_empty() {
+        return Ok(None);
     }
 
     let parts: Vec<&str> = line.split_whitespace().collect();
@@ -251,6 +257,76 @@ fn parse_line(raw: &str, line_no: usize) -> Result<Option<Instruction>, CompileE
                 operand: parse_operand(rest[0], line_no, "SPEAK")?,
                 source_line: line_no,
                 text,
+            }
+        }
+        "ARMS" => {
+            require_args(rest, 2, line_no, "ARMS requires UP or DOWN and a value")?;
+            let opcode = match rest[0].to_ascii_uppercase().as_str() {
+                "UP" => 0x06,
+                "DOWN" => 0x07,
+                _ => {
+                    return Err(CompileError::Line {
+                        line: line_no,
+                        message: "ARMS requires UP or DOWN".into(),
+                    });
+                }
+            };
+            Instruction {
+                opcode,
+                operand: parse_operand(rest[1], line_no, "ARMS")?,
+                source_line: line_no,
+                text,
+            }
+        }
+        "WRIST" => {
+            require_args(rest, 2, line_no, "WRIST requires UP or DOWN and a value")?;
+            let opcode = match rest[0].to_ascii_uppercase().as_str() {
+                "UP" => 0x04,
+                "DOWN" => 0x05,
+                _ => {
+                    return Err(CompileError::Line {
+                        line: line_no,
+                        message: "WRIST requires UP or DOWN".into(),
+                    });
+                }
+            };
+            Instruction {
+                opcode,
+                operand: parse_operand(rest[1], line_no, "WRIST")?,
+                source_line: line_no,
+                text,
+            }
+        }
+        "CLAW" => {
+            if rest.len() == 2 && rest[0].eq_ignore_ascii_case("ROTATE") {
+                Instruction {
+                    opcode: 0x08,
+                    operand: parse_operand(rest[1], line_no, "CLAW ROTATE")?,
+                    source_line: line_no,
+                    text,
+                }
+            } else if rest.len() == 1 {
+                let operand = match rest[0].to_ascii_uppercase().as_str() {
+                    "OPEN" => 0,
+                    "CLOSE" => 1,
+                    _ => {
+                        return Err(CompileError::Line {
+                            line: line_no,
+                            message: "CLAW requires ROTATE n, OPEN, or CLOSE".into(),
+                        });
+                    }
+                };
+                Instruction {
+                    opcode: 0x09,
+                    operand,
+                    source_line: line_no,
+                    text,
+                }
+            } else {
+                return Err(CompileError::Line {
+                    line: line_no,
+                    message: "CLAW requires ROTATE n, OPEN, or CLOSE".into(),
+                });
             }
         }
         "END" => {

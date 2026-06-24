@@ -7,6 +7,7 @@ compiler emits the same cartridge layout as tools/maxx_rom.py emit_template()
 
 Statements (case-insensitive):
   DELAY n       FORWARD n     BACK n        LEFT n        RIGHT n
+  ARMS UP/DOWN n   WRIST UP/DOWN n   CLAW ROTATE n   CLAW OPEN/CLOSE
   LAMP ON|OFF   HOME          PLAY n        SAY n         SPEAK n
   END
 
@@ -140,6 +141,8 @@ def parse_line(raw: str, line_no: int) -> Instruction | None:
     m = re.match(r"^(\d+)\s+(.+)$", line)
     if m:
         line = m.group(2).strip()
+    elif re.fullmatch(r"\d+", line):
+        return None
 
     parts = line.split()
     if not parts:
@@ -197,6 +200,41 @@ def parse_line(raw: str, line_no: int) -> Instruction | None:
         if len(rest) != 1:
             raise CompileError(f"line {line_no}: SPEAK requires ROM phrase index")
         return Instruction(0x82, parse_operand(rest[0], line_no, "SPEAK"), line_no, line)
+
+    if keyword == "ARMS":
+        if len(rest) != 2:
+            raise CompileError(f"line {line_no}: ARMS requires UP or DOWN and a value")
+        sub = rest[0].upper()
+        if sub == "UP":
+            op = 0x06
+        elif sub == "DOWN":
+            op = 0x07
+        else:
+            raise CompileError(f"line {line_no}: ARMS requires UP or DOWN")
+        return Instruction(op, parse_operand(rest[1], line_no, "ARMS"), line_no, line)
+
+    if keyword == "WRIST":
+        if len(rest) != 2:
+            raise CompileError(f"line {line_no}: WRIST requires UP or DOWN and a value")
+        sub = rest[0].upper()
+        if sub == "UP":
+            op = 0x04
+        elif sub == "DOWN":
+            op = 0x05
+        else:
+            raise CompileError(f"line {line_no}: WRIST requires UP or DOWN")
+        return Instruction(op, parse_operand(rest[1], line_no, "WRIST"), line_no, line)
+
+    if keyword == "CLAW":
+        if len(rest) == 2 and rest[0].upper() == "ROTATE":
+            return Instruction(0x08, parse_operand(rest[1], line_no, "CLAW ROTATE"), line_no, line)
+        if len(rest) == 1:
+            sub = rest[0].upper()
+            if sub == "OPEN":
+                return Instruction(0x09, 0, line_no, line)
+            if sub == "CLOSE":
+                return Instruction(0x09, 1, line_no, line)
+        raise CompileError(f"line {line_no}: CLAW requires ROTATE n, OPEN, or CLOSE")
 
     if keyword == "END":
         if rest:
@@ -263,6 +301,14 @@ def emit_cart(
     return bytes(img)
 
 
+def load_tables_from_reference(path: Path) -> tuple[bytes, bytes]:
+    """Copy phrase and music tables from an existing cartridge image."""
+    data = path.read_bytes()
+    if len(data) != CART_SIZE:
+        raise CompileError(f"reference ROM expected {CART_SIZE} bytes, got {len(data)}")
+    return data[PHRASE_OFF:MUSIC_OFF], data[MUSIC_OFF:]
+
+
 def compile_source(
     text: str,
     *,
@@ -290,10 +336,17 @@ def format_listing(program: list[Instruction]) -> str:
 def cmd_compile(args: argparse.Namespace) -> int:
     src_path = resolve_from_root(args.source, must_exist=True)
     text = src_path.read_text()
+    phrase_table = music_table = None
+    if getattr(args, "tables_from", None):
+        ref = resolve_from_root(args.tables_from, must_exist=True)
+        phrase_table, music_table = load_tables_from_reference(ref)
+
     try:
         image = compile_source(
             text,
             copyright_key=args.copyright,
+            phrase_table=phrase_table,
+            music_table=music_table,
         )
     except CompileError as exc:
         print(f"error: {exc}", file=sys.stderr)
@@ -343,6 +396,10 @@ def main(argv: list[str] | None = None) -> int:
         help="17-byte copyright string (default: ultramaxx)",
     )
     p_compile.add_argument("--listing", action="store_true", help="print bytecode listing to stdout")
+    p_compile.add_argument(
+        "--tables-from",
+        help="copy phrase/music tables from a reference .532 (for factory SAY phrases)",
+    )
 
     p_check = sub.add_parser("check", help="parse source without writing output")
     p_check.add_argument("source", help="MaxxBAS source file")

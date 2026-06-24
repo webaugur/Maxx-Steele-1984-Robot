@@ -34,6 +34,9 @@ enum Commands {
         copyright: String,
         #[arg(long)]
         listing: bool,
+        /// Copy phrase/music tables from a reference .532 (factory SAY phrases)
+        #[arg(long)]
+        tables_from: Option<PathBuf>,
     },
     /// Parse MaxxBAS source without writing output
     Check {
@@ -92,7 +95,14 @@ fn run() -> Result<(), String> {
             output,
             copyright,
             listing,
-        } => cmd_compile(&source, output.as_deref(), &copyright, listing),
+            tables_from,
+        } => cmd_compile(
+            &source,
+            output.as_deref(),
+            &copyright,
+            listing,
+            tables_from.as_deref(),
+        ),
         Commands::Check { source } => cmd_check(&source),
         Commands::Validate { image } => cmd_validate(&image),
         Commands::List { image, json } => cmd_list(&image, json),
@@ -127,13 +137,14 @@ fn cmd_compile(
     output: Option<&Path>,
     copyright_key: &str,
     listing: bool,
+    tables_from: Option<&Path>,
 ) -> Result<(), String> {
     let copyright = parse_copyright(copyright_key)?;
     let out_path = output
         .map(Path::to_path_buf)
         .unwrap_or_else(|| default_output(source));
 
-    compile_to_output(source, &out_path, copyright)?;
+    compile_to_output(source, &out_path, copyright, tables_from)?;
     println!("wrote {} ({CART_SIZE} bytes)", out_path.display());
 
     if listing {
@@ -193,7 +204,7 @@ fn cmd_upload(
     dry_run: bool,
 ) -> Result<(), String> {
     let copyright = parse_copyright(copyright_key)?;
-    let resolved = resolve_input(file, copyright, output)?;
+    let resolved = resolve_input(file, copyright, output, None)?;
 
     if input_kind(file) == InputKind::MaxxBas {
         if let Some(out) = output {

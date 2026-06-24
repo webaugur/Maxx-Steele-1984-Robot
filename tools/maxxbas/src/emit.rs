@@ -90,11 +90,22 @@ pub fn emit_cart(program: &[Instruction], options: EmitOptions<'_>) -> Result<Ve
 }
 
 pub fn compile_source(text: &str, copyright: Copyright) -> Result<Vec<u8>, CompileError> {
+    compile_source_with_tables(text, copyright, None, None)
+}
+
+pub fn compile_source_with_tables(
+    text: &str,
+    copyright: Copyright,
+    phrase_table: Option<&[u8]>,
+    music_table: Option<&[u8]>,
+) -> Result<Vec<u8>, CompileError> {
     let program = crate::parse::parse_source(text)?;
     emit_cart(
         &program,
         EmitOptions {
             copyright,
+            phrase_table,
+            music_table,
             ..Default::default()
         },
     )

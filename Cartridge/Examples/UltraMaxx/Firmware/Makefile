@@ -27,6 +27,7 @@ check:
 
 test:
 	python3 $(REPO_ROOT)/tools/test_tinybasic_maxx.py
+	python3 $(REPO_ROOT)/tools/test_cbsdemo_bas.py
 	cargo test --manifest-path $(REPO_ROOT)/tools/maxxbas/Cargo.toml
 	$(MAXX) compile $(REPO_ROOT)/$(BAS_PATH) -o $(REPO_ROOT)/$(BAS_ROM)
 	$(MAXX) validate $(REPO_ROOT)/$(BAS_ROM)
