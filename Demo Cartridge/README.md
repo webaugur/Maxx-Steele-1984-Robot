@@ -10,8 +10,8 @@
 | [`Schematic/`](Schematic/) | Cartridge schematic |
 | [`PC-Board/`](PC-Board/) | PCB layout |
 | [`3D-Model/`](3D-Model/) | Mechanical model |
+| [`Photos/`](Photos/) | Pointer to [`docs/photos/accessories/demo-cartridge/`](../docs/photos/accessories/demo-cartridge/) |
 
-Programming manual: [`docs/PROGRAMMING.md`](../docs/PROGRAMMING.md).  
-Card photo: [`docs/photos/accessories/demo-cartridge/`](../docs/photos/accessories/demo-cartridge/).
+Programming manual: [`docs/PROGRAMMING.md`](../docs/PROGRAMMING.md).
 
 Shared KiCad symbols: [`libraries/`](../libraries/).

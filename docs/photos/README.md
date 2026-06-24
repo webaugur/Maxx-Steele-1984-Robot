@@ -2,6 +2,8 @@
 
 Photos tied to specific hardware modules. Chassis, packaging, and general robot images are in [`Chassis/Photos/`](../../Chassis/Photos/).
 
+**Policy:** PCB/module reference photos live here under `docs/photos/`. Empty `Photos/` folders inside hardware modules contain README pointers to the canonical paths below (no duplicate copies).
+
 ## Layout
 
 | Folder | Contents |

@@ -41,13 +41,13 @@ KiCad project: [`Transmitter/KiCAD/Transmitter-27MHz.pro`](Transmitter/KiCAD/Tra
 - [ ] [`Transmitter/Schematic/`](Transmitter/Schematic/) — dedicated schematic scan or vector export (separate from KiCad sources)
 - [ ] [`Transmitter/PC-Board/`](Transmitter/PC-Board/) — PCB photos, fab drawings, or layout exports
 - [ ] [`Transmitter/3D-Model/`](Transmitter/3D-Model/) — enclosure / remote mechanical CAD
-- [ ] [`Transmitter/Photos/`](Transmitter/Photos/) — empty; product/RE photos live in [`docs/photos/transmitter/`](docs/photos/transmitter/) — add module-local copies or a README pointer
+- [x] [`Transmitter/Photos/`](Transmitter/Photos/) — README pointer to [`docs/photos/transmitter/`](docs/photos/transmitter/)
 
 **Housekeeping** (dirs have content; `null.txt` is stale)
 
-- [ ] Remove [`Transmitter/Datasheets/null.txt`](Transmitter/Datasheets/null.txt) (`COP411L.pdf` present)
-- [ ] Remove [`Transmitter/Stickers/null.txt`](Transmitter/Stickers/null.txt) (SVG/PDF artwork present)
-- [ ] Remove [`Transmitter/Reverse-Engineering/null.txt`](Transmitter/Reverse-Engineering/null.txt) (ODT/DOCX/PDF notes present)
+- [x] Remove [`Transmitter/Datasheets/null.txt`](Transmitter/Datasheets/null.txt) (`COP411L.pdf` present)
+- [x] Remove [`Transmitter/Stickers/null.txt`](Transmitter/Stickers/null.txt) (SVG/PDF artwork present)
+- [x] Remove [`Transmitter/Reverse-Engineering/null.txt`](Transmitter/Reverse-Engineering/null.txt) (ODT/DOCX/PDF notes present)
 
 ### Receiver
 
@@ -90,7 +90,7 @@ Firmware is complete ([`Demo Cartridge/Firmware/`](Demo Cartridge/Firmware/)).
 - [ ] [`Demo Cartridge/Schematic/`](Demo Cartridge/Schematic/) — schematic scan or source
 - [ ] [`Demo Cartridge/PC-Board/`](Demo Cartridge/PC-Board/) — PCB layout / photos
 - [ ] [`Demo Cartridge/3D-Model/`](Demo Cartridge/3D-Model/) — cartridge mechanical model
-- [ ] [`Demo Cartridge/Photos/`](Demo Cartridge/Photos/) — empty; card photo in [`docs/photos/accessories/demo-cartridge/`](docs/photos/accessories/demo-cartridge/)
+- [x] [`Demo Cartridge/Photos/`](Demo Cartridge/Photos/) — README pointer to [`docs/photos/accessories/demo-cartridge/`](docs/photos/accessories/demo-cartridge/)
 
 ### Chassis
 
@@ -103,8 +103,8 @@ Most content present (manuals, photos, firmware, datasheets, sounds, disassembly
 
 **Housekeeping**
 
-- [ ] Remove [`Chassis/Artwork/Null`](Chassis/Artwork/Null) (SVG logos present)
-- [ ] Remove [`Chassis/Sounds/Null.txt`](Chassis/Sounds/Null.txt) (`.wma` samples present)
+- [x] Remove [`Chassis/Artwork/Null`](Chassis/Artwork/Null) (SVG logos present)
+- [x] Remove [`Chassis/Sounds/Null.txt`](Chassis/Sounds/Null.txt) (`.wma` samples present)
 
 ---
 
@@ -129,14 +129,14 @@ Most content present (manuals, photos, firmware, datasheets, sounds, disassembly
 
 - [ ] [`Paddle Mirror/KiCAD/`](Paddle Mirror/KiCAD/) — KiCad project
 - [ ] [`Paddle Mirror/3D-Model/`](Paddle Mirror/3D-Model/) — mechanical CAD
-- [ ] [`Paddle Mirror/Photos/`](Paddle Mirror/Photos/) — empty; photo in [`docs/photos/accessories/paddle-mirror/`](docs/photos/accessories/paddle-mirror/)
+- [x] [`Paddle Mirror/Photos/`](Paddle Mirror/Photos/) — README pointer to [`docs/photos/accessories/paddle-mirror/`](docs/photos/accessories/paddle-mirror/)
 
 ---
 
 ## Repository hygiene
 
-- [ ] Remove orphan empty [`Accessories/`](Accessories/) (leftover after promoting Demo Cartridge and Paddle Mirror to top-level modules)
-- [ ] Decide policy for module `Photos/` vs [`docs/photos/`](docs/photos/) — consolidate or add README redirects
+- [x] Remove orphan empty [`Accessories/`](Accessories/) (leftover after promoting Demo Cartridge and Paddle Mirror to top-level modules)
+- [x] Photo policy: canonical copies in [`docs/photos/`](docs/photos/); module `Photos/` folders are README pointers (documented in [`docs/photos/README.md`](docs/photos/README.md))
 
 ---
 
@@ -158,4 +158,4 @@ Most content present (manuals, photos, firmware, datasheets, sounds, disassembly
 4. **Demo Cartridge** — hardware CAD (schematic, PCB, 3D)
 5. **Chassis** — 3D body model and mechanical drawings
 6. **Power / Face** — KiCad projects when boards are ready to document
-7. **Housekeeping** — stale `null.txt`, empty `Accessories/`, photo path policy
+7. ~~**Housekeeping**~~ — done (stale placeholders removed, `Accessories/` deleted, photo README pointers added)
