@@ -40,7 +40,7 @@ Each module has a [`KiCAD/`](Transmitter/KiCAD/) subfolder for schematic/PCB wor
 | [`Power/`](Power/) | Planned | `Power/KiCAD/` |
 | [`Mainboard/`](Mainboard/) | Planned | `Mainboard/KiCAD/` |
 | [`Face/`](Face/) | Planned | `Face/KiCAD/` |
-| [`Cartridge/`](Cartridge/) | ROM, firmware, [programming manual](Cartridge/PROGRAMMING.md), [technical manual](TechnicalManual/README.md) | `Cartridge/KiCAD/` (planned) |
+| [`Cartridge/`](Cartridge/) | ROM, firmware, [programming manual](Cartridge/PROGRAMMING.md), [technical manual](TechnicalManual/README.md) | `Cartridge/Examples/*/KiCAD/` (planned) |
 | [`PaddleMirror/`](PaddleMirror/) | Archive | `PaddleMirror/KiCAD/` (planned) |
 | [`Chassis/`](Chassis/) | Body, manuals, photos, internal ROM | `Chassis/KiCAD/` (mechanical, planned) |
 

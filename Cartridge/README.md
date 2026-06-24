@@ -4,10 +4,7 @@
 
 | Path | Description |
 |------|-------------|
-| [`Examples/`](Examples/) | Example cartridge ROMs ([`CBSDemo`](Examples/CBSDemo/), [`UltraMaxx`](Examples/UltraMaxx/)) |
-| [`KiCAD/`](KiCAD/) | KiCad project (placeholder) |
-| [`Schematic/`](Schematic/) | Cartridge schematic |
-| [`PCBoard/`](PCBoard/) | PCB layout |
+| [`Examples/`](Examples/) | Example cartridges — ROM, KiCad ([`CBSDemo`](Examples/CBSDemo/), [`UltraMaxx`](Examples/UltraMaxx/)) |
 | [`Model3D/`](Model3D/) | Mechanical model |
 | [`Photos/`](Photos/) | Cartridge card photo |
 | [`PROGRAMMING.md`](PROGRAMMING.md) | Cartridge programming manual (bytecode, speech, music) |
@@ -23,8 +20,7 @@ Example firmware is complete ([`Examples/`](Examples/)).
 
 **Missing** `[empty]`
 
-- [ ] [`KiCAD/`](KiCAD/) — cartridge PCB KiCad project
-- [ ] [`Schematic/`](Schematic/) — schematic scan or source
-- [ ] [`PCBoard/`](PCBoard/) — PCB layout / photos
+- [ ] [`Examples/CBSDemo/KiCAD/`](Examples/CBSDemo/KiCAD/) — CBSDemo cartridge PCB KiCad project
+- [ ] [`Examples/UltraMaxx/KiCAD/`](Examples/UltraMaxx/KiCAD/) — UltraMaxx cartridge PCB KiCad project
 - [ ] [`Model3D/`](Model3D/) — mechanical model
 - [x] [`Photos/`](Photos/) — cartridge card photo

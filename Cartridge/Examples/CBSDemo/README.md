@@ -4,6 +4,7 @@ Original **1985 CBS Toys** demonstration program shipped with the Maxx Steele ro
 
 | Path | Description |
 |------|-------------|
+| [`KiCAD/`](KiCAD/) | KiCad project (placeholder) |
 | [`Firmware/Binary/CBSDemo.532`](Firmware/Binary/CBSDemo.532) | 4 KB EPROM image (`$A000`) |
 | [`Firmware/Assembly/maxx_demo_ROM_532.dsm`](Firmware/Assembly/maxx_demo_ROM_532.dsm) | Annotated disassembly (R. Wind, 2002–2006) |
 | [`Firmware/Assembly/maxx_demo_ROM_532.dsm.pdf`](Firmware/Assembly/maxx_demo_ROM_532.dsm.pdf) | PDF of the R. Wind listing |

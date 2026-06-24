@@ -4,6 +4,7 @@ Fork of the factory [`CBSDemo`](../CBSDemo/) cartridge with **UltraMaxx** commun
 
 | Path | Description |
 |------|-------------|
+| [`KiCAD/`](KiCAD/) | KiCad project (placeholder) |
 | [`Firmware/Binary/UltraMaxx.532`](Firmware/Binary/UltraMaxx.532) | 4 KB EPROM image (`$A000`) |
 | [`Firmware/Assembly/ultramaxx_ROM_532.dsm`](Firmware/Assembly/ultramaxx_ROM_532.dsm) | Listing derived from R. Wind `maxx_demo_ROM_532.dsm` |
 

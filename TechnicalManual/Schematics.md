@@ -41,8 +41,8 @@ COP411L (U1), 455 kHz clock, 27 MHz OOK stage.
 
 | Asset | Path | Status |
 |-------|------|--------|
-| Schematic scan | [`Cartridge/Schematic/`](../Cartridge/Schematic/) | **Empty** — needed |
-| KiCad | [`Cartridge/KiCAD/`](../Cartridge/KiCAD/) | Planned |
+| KiCad (CBSDemo) | [`Cartridge/Examples/CBSDemo/KiCAD/`](../Cartridge/Examples/CBSDemo/KiCAD/) | Planned |
+| KiCad (UltraMaxx) | [`Cartridge/Examples/UltraMaxx/KiCAD/`](../Cartridge/Examples/UltraMaxx/KiCAD/) | Planned |
 
 ---
 

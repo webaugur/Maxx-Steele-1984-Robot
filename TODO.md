@@ -108,9 +108,8 @@ Example firmware is complete ([`Cartridge/Examples/`](Cartridge/Examples/)).
 
 **Completely missing** `[empty]`
 
-- [ ] [`Cartridge/KiCAD/`](Cartridge/KiCAD/) — cartridge PCB KiCad project ([#25](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/25))
-- [ ] [`Cartridge/Schematic/`](Cartridge/Schematic/) — schematic scan or source ([#26](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/26))
-- [ ] [`Cartridge/PCBoard/`](Cartridge/PCBoard/) — PCB layout / photos ([#27](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/27))
+- [ ] [`Cartridge/Examples/CBSDemo/KiCAD/`](Cartridge/Examples/CBSDemo/KiCAD/) — CBSDemo cartridge PCB KiCad project ([#25](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/25))
+- [ ] [`Cartridge/Examples/UltraMaxx/KiCAD/`](Cartridge/Examples/UltraMaxx/KiCAD/) — UltraMaxx cartridge PCB KiCad project ([#27](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/27))
 - [ ] [`Cartridge/Model3D/`](Cartridge/Model3D/) — cartridge mechanical model ([#28](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/28))
 - [x] [`Cartridge/Photos/`](Cartridge/Photos/) — cartridge card photo
 
