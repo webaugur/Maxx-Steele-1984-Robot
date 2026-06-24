@@ -19,13 +19,14 @@ Each module has a [`KiCAD/`](Transmitter/KiCAD/) subfolder for schematic/PCB wor
 | [`Power/`](Power/) | Planned | `Power/KiCAD/` |
 | [`Mainboard/`](Mainboard/) | Planned | `Mainboard/KiCAD/` |
 | [`Face/`](Face/) | Planned | `Face/KiCAD/` |
+| [`Demo Cartridge/`](Demo%20Cartridge/) | Archive + firmware | `Demo Cartridge/KiCAD/` (planned) |
+| [`Paddle Mirror/`](Paddle%20Mirror/) | Archive | `Paddle Mirror/KiCAD/` (planned) |
 
 ### Original archive
 
 | Path | Description |
 |------|-------------|
 | [`Robot/`](Robot/) | Robot body — electronics, firmware, schematics |
-| [`Accessories/`](Accessories/) | Demo cartridge, paddle mirror |
 | [`Manual/`](Manual/) | Original manuals |
 | [`References/`](References/) | Third-party articles and workshop notes |
 | [`Artwork/`](Artwork/) | Logos and artwork |
