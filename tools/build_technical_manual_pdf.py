@@ -75,15 +75,14 @@ def preprocess_markdown(text: str) -> str:
 
 
 def merge_chapters(manual_dir: Path) -> str:
-    """Concatenate manual chapters; page break only before major sections."""
+    """Concatenate manual chapters; each chapter file starts at the top of a page."""
     parts: list[str] = []
     for index, name in enumerate(CHAPTERS):
         path = manual_dir / name
         if not path.is_file():
             raise FileNotFoundError(path)
         body = preprocess_markdown(path.read_text(encoding="utf-8").strip())
-        # README flows into the TOC; later files start on a fresh page.
-        if index == 1:
+        if index > 0:
             parts.append(r"\clearpage")
         parts.append(body)
     return "\n\n".join(parts) + "\n"
@@ -118,11 +117,16 @@ classoption:
   - 9pt
 linestretch: 0.92
 header-includes:
+  - \\usepackage{{xcolor}}
+  - \\definecolor{{maxxnavy}}{{RGB}}{{0,35,102}}
   - \\usepackage{{titlesec}}
   - \\usepackage{{needspace}}
   - \\usepackage{{etoolbox}}
   - \\usepackage{{enumitem}}
   - \\usepackage{{setspace}}
+  - \\titleformat{{\\section}}{{\\color{{maxxnavy}}\\bfseries\\Large}}{{\\thesection}}{{1em}}{{}}
+  - \\titleformat{{\\subsection}}{{\\color{{maxxnavy}}\\bfseries\\large}}{{\\thesubsection}}{{1em}}{{}}
+  - \\titleformat{{\\subsubsection}}{{\\color{{maxxnavy}}\\bfseries\\normalsize}}{{\\thesubsubsection}}{{1em}}{{}}
   - \\makeatletter
   - \\pretocmd{{\\section}}{{\\needspace{{8\\baselineskip}}}}{{}}{{}}
   - \\pretocmd{{\\subsection}}{{\\needspace{{6\\baselineskip}}}}{{}}{{}}
