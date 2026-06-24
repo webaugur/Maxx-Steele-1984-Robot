@@ -10,7 +10,7 @@ Shared symbols: [`libraries/`](../libraries/).
 
 ## TODO
 
-Status: **Active** — schematic only; no PCB layout or fab outputs. Full backlog: [`TODO.md`](../TODO.md#receiver).
+Status: **Active** — schematic only; no PCB layout or fab outputs. Full backlog: [`TODO.md`](../TODO.md#receiver). GitHub: [open issues](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues?q=is%3Aissue+is%3Aopen+label%3Areceiver+label%3Abacklog).
 
 **KiCad (in progress)**
 

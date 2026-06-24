@@ -8,23 +8,21 @@ Folder and filename naming: see [Naming conventions](README.md#naming-convention
 
 ## GitHub issues
 
-Yes — these items can be tracked as [GitHub Issues](https://docs.github.com/en/issues). **Issues are currently disabled** on [`webaugur/Maxx-Steele-1984-Robot`](https://github.com/webaugur/Maxx-Steele-1984-Robot); enable them under **Settings → General → Features → Issues**, then create backlog issues.
+Open backlog items are tracked as individual [GitHub Issues](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues?q=is%3Aissue+is%3Aopen+label%3Abacklog) ([#2](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/2)–[#41](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/41)). Each open `[ ]` item below links to its issue.
 
-**Recommended layout** (one tracking issue per module, checklist in the issue body):
+| Module | Filter |
+|--------|--------|
+| Transmitter | [open issues](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues?q=is%3Aissue+is%3Aopen+label%3Atransmitter+label%3Abacklog) |
+| Receiver | [open issues](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues?q=is%3Aissue+is%3Aopen+label%3Areceiver+label%3Abacklog) |
+| Mainboard | [open issues](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues?q=is%3Aissue+is%3Aopen+label%3Amainboard+label%3Abacklog) |
+| Cartridge | [open issues](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues?q=is%3Aissue+is%3Aopen+label%3Acartridge+label%3Abacklog) |
+| Chassis | [open issues](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues?q=is%3Aissue+is%3Aopen+label%3Achassis+label%3Abacklog) |
+| Power | [open issues](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues?q=is%3Aissue+is%3Aopen+label%3Apower+label%3Abacklog) |
+| Face | [open issues](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues?q=is%3Aissue+is%3Aopen+label%3Aface+label%3Abacklog) |
+| PaddleMirror | [open issues](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues?q=is%3Aissue+is%3Aopen+label%3Apaddlemirror+label%3Abacklog) |
+| RFCAP / tools | [open issues](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues?q=is%3Aissue+is%3Aopen+label%3Atools+label%3Abacklog) |
 
-| Module | Suggested issue title | Labels |
-|--------|----------------------|--------|
-| Transmitter | `Transmitter backlog` | `backlog`, `transmitter` |
-| Receiver | `Receiver backlog` | `backlog`, `receiver` |
-| Mainboard | `Mainboard backlog` | `backlog`, `mainboard` |
-| Cartridge | `Cartridge backlog` | `backlog`, `cartridge` |
-| Chassis | `Chassis backlog` | `backlog`, `chassis` |
-| Power | `Power backlog` | `backlog`, `power` |
-| Face | `Face backlog` | `backlog`, `face` |
-| PaddleMirror | `PaddleMirror backlog` | `backlog`, `paddlemirror` |
-| RFCAP captures | `RFCAP capture annotations` | `backlog`, `tools` |
-
-Copy the open checklist from each module README into the matching issue. When an item is done, check it off in **three places**: the GitHub issue, this file, and the module README. Add the issue link to the module README `## TODO` section once created.
+When an item is done, check it off in **three places**: the GitHub issue, this file, and the module README.
 
 **Legend:** `[empty]` = directory has a README placeholder only (no real assets yet). `[partial]` = work started but not finished. `[planned]` = README marks module as not yet started.
 
@@ -53,18 +51,18 @@ KiCad project: [`Transmitter/KiCAD/Transmitter-27MHz.pro`](Transmitter/KiCAD/Tra
 
 **KiCad / RE (in progress)**
 
-- [ ] Run ERC; resolve outstanding errors/warnings
-- [ ] Confirm COP411L-PAC/N **DIP-20** footprint matches physical package
-- [ ] Sync schematic ↔ PCB (31 nets per current `.net`)
-- [ ] Run DRC on layout
-- [ ] Export Gerbers / drill files for fab review
-- [ ] Align [`Transmitter/transmitter-bom.md`](Transmitter/transmitter-bom.md) with final schematic refs
+- [ ] Run ERC; resolve outstanding errors/warnings ([#2](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/2))
+- [ ] Confirm COP411L-PAC/N **DIP-20** footprint matches physical package ([#3](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/3))
+- [ ] Sync schematic ↔ PCB (31 nets per current `.net`) ([#4](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/4))
+- [ ] Run DRC on layout ([#5](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/5))
+- [ ] Export Gerbers / drill files for fab review ([#6](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/6))
+- [ ] Align [`Transmitter/transmitter-bom.md`](Transmitter/transmitter-bom.md) with final schematic refs ([#7](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/7))
 
 **Completely missing artifact folders** `[empty]`
 
-- [ ] [`Transmitter/Schematic/`](Transmitter/Schematic/) — dedicated schematic scan or vector export (separate from KiCad sources)
-- [ ] [`Transmitter/PCBoard/`](Transmitter/PCBoard/) — PCB photos, fab drawings, or layout exports
-- [ ] [`Transmitter/Model3D/`](Transmitter/Model3D/) — enclosure / remote mechanical CAD
+- [ ] [`Transmitter/Schematic/`](Transmitter/Schematic/) — dedicated schematic scan or vector export (separate from KiCad sources) ([#8](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/8))
+- [ ] [`Transmitter/PCBoard/`](Transmitter/PCBoard/) — PCB photos, fab drawings, or layout exports ([#9](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/9))
+- [ ] [`Transmitter/Model3D/`](Transmitter/Model3D/) — enclosure / remote mechanical CAD ([#10](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/10))
 - [x] [`Transmitter/Photos/`](Transmitter/Photos/) — product and reverse-engineering images
 
 **Housekeeping** (dirs have content; `null.txt` is stale)
@@ -79,20 +77,20 @@ KiCad project: [`Receiver/KiCAD/Receiver-27MHz.pro`](Receiver/KiCAD/Receiver-27M
 
 **KiCad (in progress)**
 
-- [ ] Create `.kicad_pcb` from schematic
-- [ ] Assign footprints for superhet / OOK strip
-- [ ] Route board; generate `.net` and sync with schematic
-- [ ] Run ERC and DRC
-- [ ] Export Gerbers
-- [ ] Add [`Receiver/KiCAD/README.md`](Receiver/KiCAD/README.md) (other modules have one)
-- [ ] Expand [`Receiver/README.md`](Receiver/README.md) with BOM/architecture cross-links (mirror Transmitter)
+- [ ] Create `.kicad_pcb` from schematic ([#11](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/11))
+- [ ] Assign footprints for superhet / OOK strip ([#12](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/12))
+- [ ] Route board; generate `.net` and sync with schematic ([#13](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/13))
+- [ ] Run ERC and DRC ([#14](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/14))
+- [ ] Export Gerbers ([#15](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/15))
+- [ ] Add [`Receiver/KiCAD/README.md`](Receiver/KiCAD/README.md) (other modules have one) ([#16](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/16))
+- [ ] Expand [`Receiver/README.md`](Receiver/README.md) with BOM/architecture cross-links (mirror Transmitter) ([#17](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/17))
 
 **Not yet started** (no directories)
 
-- [ ] Receiver schematic scans / photos (if separate from KiCad)
-- [ ] Receiver PCB photos / layout archive
-- [ ] Add receiver IC datasheets to [`DataSheets/`](DataSheets/)
-- [ ] Receiver 3D model
+- [ ] Receiver schematic scans / photos (if separate from KiCad) ([#18](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/18))
+- [ ] Receiver PCB photos / layout archive ([#19](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/19))
+- [ ] Add receiver IC datasheets to [`DataSheets/`](DataSheets/) ([#20](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/20))
+- [ ] Receiver 3D model ([#21](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/21))
 
 ---
 
@@ -100,9 +98,9 @@ KiCad project: [`Receiver/KiCAD/Receiver-27MHz.pro`](Receiver/KiCAD/Receiver-27M
 
 ### Mainboard
 
-- [ ] Digitize [`Mainboard/Schematic/`](Mainboard/Schematic/) raster/SVG into KiCad — [`Mainboard/KiCAD/`](Mainboard/KiCAD/) is `[planned]` (README + `sym-lib-table` only)
-- [ ] PCB layout project and fabrication artifacts
-- [ ] Module-specific photos (chassis photos: [`Chassis/Photos/`](Chassis/Photos/))
+- [ ] Digitize [`Mainboard/Schematic/`](Mainboard/Schematic/) raster/SVG into KiCad — [`Mainboard/KiCAD/`](Mainboard/KiCAD/) is `[planned]` (README + `sym-lib-table` only) ([#22](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/22))
+- [ ] PCB layout project and fabrication artifacts ([#23](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/23))
+- [ ] Module-specific photos (chassis photos: [`Chassis/Photos/`](Chassis/Photos/)) ([#24](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/24))
 
 ### Cartridge
 
@@ -110,10 +108,10 @@ Firmware is complete ([`Cartridge/Firmware/`](Cartridge/Firmware/)).
 
 **Completely missing** `[empty]`
 
-- [ ] [`Cartridge/KiCAD/`](Cartridge/KiCAD/) — cartridge PCB KiCad project
-- [ ] [`Cartridge/Schematic/`](Cartridge/Schematic/) — schematic scan or source
-- [ ] [`Cartridge/PCBoard/`](Cartridge/PCBoard/) — PCB layout / photos
-- [ ] [`Cartridge/Model3D/`](Cartridge/Model3D/) — cartridge mechanical model
+- [ ] [`Cartridge/KiCAD/`](Cartridge/KiCAD/) — cartridge PCB KiCad project ([#25](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/25))
+- [ ] [`Cartridge/Schematic/`](Cartridge/Schematic/) — schematic scan or source ([#26](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/26))
+- [ ] [`Cartridge/PCBoard/`](Cartridge/PCBoard/) — PCB layout / photos ([#27](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/27))
+- [ ] [`Cartridge/Model3D/`](Cartridge/Model3D/) — cartridge mechanical model ([#28](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/28))
 - [x] [`Cartridge/Photos/`](Cartridge/Photos/) — cartridge card photo
 
 ### Chassis
@@ -122,8 +120,8 @@ Most content present (manuals, photos, firmware, datasheets, sounds, disassembly
 
 **Completely missing** `[empty]`
 
-- [ ] [`Chassis/Model3D/`](Chassis/Model3D/) — full robot body mechanical CAD
-- [ ] [`Chassis/KiCAD/`](Chassis/KiCAD/) — enclosure / mechanism drawings (README placeholder only)
+- [ ] [`Chassis/Model3D/`](Chassis/Model3D/) — full robot body mechanical CAD ([#29](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/29))
+- [ ] [`Chassis/KiCAD/`](Chassis/KiCAD/) — enclosure / mechanism drawings (README placeholder only) ([#30](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/30))
 
 **Housekeeping**
 
@@ -136,23 +134,23 @@ Most content present (manuals, photos, firmware, datasheets, sounds, disassembly
 
 ### Power `[planned]`
 
-- [ ] KiCad project under [`Power/KiCAD/`](Power/KiCAD/) (currently README + `sym-lib-table` only)
-- [ ] Schematic source or scans
-- [ ] PCB layout and photos
-- [ ] Add power-module datasheets to [`DataSheets/`](DataSheets/)
+- [ ] KiCad project under [`Power/KiCAD/`](Power/KiCAD/) (currently README + `sym-lib-table` only) ([#31](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/31))
+- [ ] Schematic source or scans ([#32](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/32))
+- [ ] PCB layout and photos ([#33](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/33))
+- [ ] Add power-module datasheets to [`DataSheets/`](DataSheets/) ([#34](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/34))
 
 ### Face `[planned]`
 
-- [ ] KiCad project under [`Face/KiCAD/`](Face/KiCAD/)
-- [ ] Display / speech subsystem schematic
-- [ ] PCB layout and photos; add face/speech IC datasheets to [`DataSheets/`](DataSheets/)
+- [ ] KiCad project under [`Face/KiCAD/`](Face/KiCAD/) ([#35](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/35))
+- [ ] Display / speech subsystem schematic ([#36](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/36))
+- [ ] PCB layout and photos; add face/speech IC datasheets to [`DataSheets/`](DataSheets/) ([#37](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/37))
 
 ### PaddleMirror `[archive]`
 
 **Completely missing** `[empty]`
 
-- [ ] [`PaddleMirror/KiCAD/`](PaddleMirror/KiCAD/) — KiCad project
-- [ ] [`PaddleMirror/Model3D/`](PaddleMirror/Model3D/) — mechanical CAD
+- [ ] [`PaddleMirror/KiCAD/`](PaddleMirror/KiCAD/) — KiCad project ([#39](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/39))
+- [ ] [`PaddleMirror/Model3D/`](PaddleMirror/Model3D/) — mechanical CAD ([#40](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/40))
 - [x] [`PaddleMirror/Photos/`](PaddleMirror/Photos/) — accessory photo
 
 ---
@@ -166,7 +164,7 @@ Most content present (manuals, photos, firmware, datasheets, sounds, disassembly
 
 ## Tools and captures
 
-- [ ] Annotate four empty per-button capture sidecars in [`tools/rfcap/captures/`](tools/rfcap/captures/):
+- [ ] Annotate four empty per-button capture sidecars in [`tools/rfcap/captures/`](tools/rfcap/captures/) ([#41](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/41)):
   - `2021.02.14.06.50.10.dat.txt`
   - `2021.02.14.06.51.12.dat.txt`
   - `2021.02.14.06.52.42.dat.txt`

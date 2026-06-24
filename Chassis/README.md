@@ -27,7 +27,7 @@ Third-party component PDFs live in [`DataSheets/`](../DataSheets/) (repository-w
 
 ## TODO
 
-Status: **Mostly complete** — no 3D body model or mechanical KiCad. Full backlog: [`TODO.md`](../TODO.md#chassis).
+Status: **Mostly complete** — no 3D body model or mechanical KiCad. Full backlog: [`TODO.md`](../TODO.md#chassis). GitHub: [open issues](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues?q=is%3Aissue+is%3Aopen+label%3Achassis+label%3Abacklog).
 
 **Missing** `[empty]`
 

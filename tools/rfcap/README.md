@@ -61,7 +61,7 @@ See [`Transmitter/transmitter-architecture.md`](../../Transmitter/transmitter-ar
 
 ## TODO
 
-Full backlog: [`TODO.md`](../../TODO.md#tools-and-captures).
+Full backlog: [`TODO.md`](../../TODO.md#tools-and-captures). GitHub: [#41](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/41).
 
 - [ ] Annotate four empty per-button capture sidecars in [`captures/`](captures/):
   - `2021.02.14.06.50.10.dat.txt`

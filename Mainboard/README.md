@@ -14,7 +14,7 @@ Shared KiCad symbols: [`libraries/`](../libraries/).
 
 ## TODO
 
-Status: **Partial** — raster schematics; no KiCad project. Full backlog: [`TODO.md`](../TODO.md#mainboard).
+Status: **Partial** — raster schematics; no KiCad project. Full backlog: [`TODO.md`](../TODO.md#mainboard). GitHub: [open issues](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues?q=is%3Aissue+is%3Aopen+label%3Amainboard+label%3Abacklog).
 
 - [ ] Digitize [`Schematic/`](Schematic/) raster/SVG into KiCad — [`KiCAD/`](KiCAD/) is `[planned]` (README + `sym-lib-table` only)
 - [ ] PCB layout project and fabrication artifacts

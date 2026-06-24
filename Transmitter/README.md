@@ -23,7 +23,7 @@ Third-party component PDFs live in [`DataSheets/`](../DataSheets/) (repository-w
 
 ## TODO
 
-Status: **Active** — KiCad repair/fab; empty schematic/PCB/3D folders. Full backlog: [`TODO.md`](../TODO.md#transmitter).
+Status: **Active** — KiCad repair/fab; empty schematic/PCB/3D folders. Full backlog: [`TODO.md`](../TODO.md#transmitter). GitHub: [open issues](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues?q=is%3Aissue+is%3Aopen+label%3Atransmitter+label%3Abacklog).
 
 **KiCad / RE (in progress)**
 
