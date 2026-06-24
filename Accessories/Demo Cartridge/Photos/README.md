@@ -1,0 +1,1 @@
+Photos moved to [`docs/Photos/accessories/demo-cartridge/`](../../../docs/Photos/accessories/demo-cartridge/).

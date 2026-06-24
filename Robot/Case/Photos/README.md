@@ -1,0 +1,1 @@
+Photos moved to [`docs/Photos/robot/`](../../docs/Photos/README.md) (`case/`, `autopsy/`, `cyberia-makerspace/`, `mint-vintage-toys/`).

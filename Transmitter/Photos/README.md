@@ -1,0 +1,1 @@
+Photos moved to [`docs/Photos/transmitter/product/`](../../docs/Photos/transmitter/product/).

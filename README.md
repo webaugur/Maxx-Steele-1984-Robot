@@ -12,9 +12,9 @@ Much of the information in this archive has unknown ownership or uses licensed n
 
 | Path | Description |
 |------|-------------|
-| [`Robot/`](Robot/) | Robot body — electronics, firmware, photos, schematics |
+| [`Robot/`](Robot/) | Robot body — electronics, firmware, schematics |
 | [`Receiver/`](Receiver/) | Robot 27 MHz receiver module — KiCad project |
-| [`Transmitter/`](Transmitter/) | 27 MHz remote — photos, RE notes, datasheets, KiCad project |
+| [`Transmitter/`](Transmitter/) | 27 MHz remote — RE notes, datasheets, KiCad project |
 | [`Accessories/`](Accessories/) | Demo cartridge and other accessories |
 | [`Manual/`](Manual/) | Original manuals |
 | [`References/`](References/) | Third-party articles and workshop notes |
@@ -28,7 +28,7 @@ Much of the information in this archive has unknown ownership or uses licensed n
 | [`firmware/`](firmware/) | Curated ROM binaries + disassembly listings |
 | [`docs/`](docs/) | [Cartridge programming manual](docs/PROGRAMMING.md), [transmitter BOM](docs/transmitter-bom.md), [transmitter architecture / 455 kHz IF clock](docs/transmitter-architecture.md) |
 | [`tools/`](tools/) | Cartridge ROM disassembler / validator |
-| [`docs/Photos/`](docs/Photos/) | Schematic photos, PCB images, handwritten BOM |
+| [`docs/Photos/`](docs/Photos/) | All physical artifact photos (robot, transmitter, accessories, RE reference) |
 | [`rfcap/`](rfcap/) | GNU Radio 27 MHz OOK flowgraphs; [per-file catalog](rfcap/README.md) (`.dat` IQ captures are local-only, not in git) |
 | [`references/`](references/) | Local PDF copies of key datasheets and RE notes |
 

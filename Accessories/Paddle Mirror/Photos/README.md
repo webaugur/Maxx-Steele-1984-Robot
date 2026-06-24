@@ -1,0 +1,1 @@
+Photos moved to [`docs/Photos/accessories/paddle-mirror/`](../../../docs/Photos/accessories/paddle-mirror/).
