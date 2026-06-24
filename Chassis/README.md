@@ -11,11 +11,19 @@ Robot body, packaging, manuals, and material not tied to a single PCB module.
 | [`Disassembly/`](Disassembly/) | Disassembly guide and photos |
 | [`Sounds/`](Sounds/) | Sample speech and song audio |
 | [`Firmware/`](Firmware/) | Internal 6502 ROM binary and disassembly |
-| [`Datasheets/`](Datasheets/) | Pointer to [`DataSheets/`](../DataSheets/) (third-party vendor PDFs) |
 | [`Model3D/`](Model3D/) | Mechanical CAD (placeholder) |
 | [`KiCAD/`](KiCAD/) | Mechanical / enclosure CAD (placeholder) |
 
 Module-specific hardware lives in [`Transmitter/`](../Transmitter/), [`Receiver/`](../Receiver/), [`Mainboard/`](../Mainboard/), [`Face/`](../Face/), [`Power/`](../Power/), [`Cartridge/`](../Cartridge/), and [`PaddleMirror/`](../PaddleMirror/).
+
+## Datasheets
+
+Third-party component PDFs live in [`DataSheets/`](../DataSheets/) (repository-wide index). Parts referenced from chassis / internal ROM work:
+
+| File | Part |
+|------|------|
+| [`MOS-6502.pdf`](../DataSheets/MOS-6502.pdf) | MOS 6502 CPU |
+| [`National-COP420.pdf`](../DataSheets/National-COP420.pdf) | National COP420 family MCU |
 
 ## TODO
 

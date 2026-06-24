@@ -34,7 +34,7 @@ Do not duplicate datasheet PDFs elsewhere in the archive — link here from modu
 
 1. Place new third-party PDFs here using `OEM-PartNumber.pdf` (shell-safe — see [naming conventions](../README.md#naming-conventions)).
 2. Add a row to the index table with **Refdes** and **Schematic** columns when known.
-3. Link from the module README `Datasheets/` pointer (if any), not the other way around.
+3. Add a **Datasheets** section to the relevant module README; do not duplicate PDFs under modules.
 
 ---
 

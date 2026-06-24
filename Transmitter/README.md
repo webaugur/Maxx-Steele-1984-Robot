@@ -7,12 +7,19 @@
 | [`KiCAD/`](KiCAD/) | KiCad schematic/PCB — [`Transmitter-27MHz.pro`](KiCAD/Transmitter-27MHz.pro) |
 | [`ReverseEngineering/`](ReverseEngineering/) | Protocol and hardware notes ([`Maxx-Steele-Transmitter-Reverse-Engineered-Notes.pdf`](ReverseEngineering/Maxx-Steele-Transmitter-Reverse-Engineered-Notes.pdf), ODT/DOCX sources) |
 | [`Stickers/`](Stickers/) | Remote sticker artwork |
-| [`Datasheets/`](Datasheets/) | Pointer to [`DataSheets/`](../DataSheets/) (e.g. [`National-COP411L.pdf`](../DataSheets/National-COP411L.pdf)) |
 | [`Photos/`](Photos/) | Product shots and reverse-engineering images |
 | [`transmitter-architecture.md`](transmitter-architecture.md) | 455 kHz IF clock, OOK protocol, signal path |
 | [`transmitter-bom.md`](transmitter-bom.md) | Bill of materials |
 
 Shared symbols: [`libraries/`](../libraries/).
+
+## Datasheets
+
+Third-party component PDFs live in [`DataSheets/`](../DataSheets/) (repository-wide index). Parts used on this module:
+
+| File | Part |
+|------|------|
+| [`National-COP411L.pdf`](../DataSheets/National-COP411L.pdf) | National COP411L 4-bit MCU (U1) |
 
 ## TODO
 
