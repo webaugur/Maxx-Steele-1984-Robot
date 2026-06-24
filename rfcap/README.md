@@ -54,7 +54,7 @@ The four `.dat.txt` sidecars are annotation placeholders for the 06:50–06:54 p
 
 1. Place the desired `.dat` file in `captures/` (or note its path).
 2. Open `RemoteSpectrum.grc` in GNU Radio Companion, or run `RemoteSpectrum.py`.
-3. Set the `recfile` variable to the capture path (e.g. `captures/2021.02.14.06.50.10.dat`).
+3. Set the `recfile` variable to a project-relative path (e.g. `rfcap/captures/2021.02.14.06.50.10.dat`) or a filename under `rfcap/captures/`.
 4. Tune for **27 MHz** RF and inspect OOK timing (~1.55 ms/bit, ~29 ms packet repeat).
 
 See [`docs/transmitter-architecture.md`](../docs/transmitter-architecture.md) for how the transmitter MCU is clocked at the **455 kHz IF** reference so OOK serial data stays coherent with the RF envelope the receiver demodulates.

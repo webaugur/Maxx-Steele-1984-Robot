@@ -29,12 +29,17 @@ from gnuradio.filter import firdes
 import sip
 from datetime import datetime
 import os
+from pathlib import Path
 from gnuradio import analog
 from gnuradio import blocks
 from gnuradio import filter
 from gnuradio import gr
 import sys
 import signal
+
+_PROJECT_ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(_PROJECT_ROOT / "tools"))
+from project_paths import capture_prefix, resolve_capture_path
 from argparse import ArgumentParser
 from gnuradio.eng_arg import eng_float, intx
 from gnuradio import eng_notation
@@ -79,9 +84,7 @@ class RemoteSpectrum(gr.top_block, Qt.QWidget):
         ##################################################
         # Variables
         ##################################################
-        _capture_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "captures")
-        os.makedirs(_capture_dir, exist_ok=True)
-        self.prefix = prefix = _capture_dir + os.sep
+        self.prefix = prefix = capture_prefix()
         self.tuning = tuning = 27095000
         self.squelch = squelch = 0
         self.samp_rate = samp_rate = 200000
@@ -345,7 +348,7 @@ class RemoteSpectrum(gr.top_block, Qt.QWidget):
         return self.recfile
 
     def set_recfile(self, recfile):
-        self.recfile = recfile
+        self.recfile = resolve_capture_path(recfile)
         self.blocks_wavfile_sink_0.open(self.recfile)
 
 

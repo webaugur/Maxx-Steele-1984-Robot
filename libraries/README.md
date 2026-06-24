@@ -22,7 +22,9 @@ Both KiCad projects reference this directory directly — no per-project copies 
 | Transmitter | [`Transmitter/KiCAD/`](../Transmitter/KiCAD/) |
 | Receiver | [`Receiver/KiCAD/`](../Receiver/KiCAD/) |
 
-- `sym-lib-table` (KiCad 6+) — `${KIPRJMOD}/../../libraries/cop41xl-kicad-library/cop41xl.lib`
+- `sym-lib-table` (KiCad 6+) — `${KIPRJMOD}/../../libraries/cop41xl-kicad-library/cop41xl.lib` (repo-root-relative from each `*/KiCAD/` project)
 - `*.pro` (KiCad 5.x) — `LibDir1=${KIPRJMOD}/../../libraries/cop41xl-kicad-library`
+
+Paths use KiCad's `${KIPRJMOD}` (project directory), not absolute filesystem paths.
 
 Schematic symbol: `cop41xl:COP411L` (20-pin COP411L on the Maxx Steele remote MCU board).

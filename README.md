@@ -32,10 +32,14 @@ Much of the information in this archive has unknown ownership or uses licensed n
 | [`rfcap/`](rfcap/) | GNU Radio 27 MHz OOK flowgraphs; IQ data in [`rfcap/captures/`](rfcap/captures/) ([catalog](rfcap/README.md), local-only) |
 | [`references/`](references/) | Local PDF copies of key datasheets and RE notes |
 
+## Paths
+
+Scripts resolve **project-relative** paths from the repository root (via `tools/project_paths.py`), so commands work regardless of the current working directory. KiCad projects use `${KIPRJMOD}/../../libraries/...` for the shared symbol library.
+
 ## Quick commands
 
 ```bash
-# Disassemble demo cartridge
+# Disassemble demo cartridge (path is relative to repo root)
 python3 tools/maxx_rom.py disasm firmware/demo-cart/MAXXCART.532
 
 # Open KiCad transmitter project

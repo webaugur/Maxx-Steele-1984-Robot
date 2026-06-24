@@ -16,6 +16,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable
 
+from project_paths import resolve_from_root
+
 COPYRIGHT = b"(c) 1985 CBS Toys"
 CART_SIZE = 4096
 PROG_RAM = 0x0200
@@ -319,15 +321,15 @@ def main(argv: Iterable[str] | None = None) -> int:
     args = parser.parse_args(list(argv) if argv is not None else None)
 
     if args.cmd == "disasm":
-        cart = CartImage.load(Path(args.cart), args.base)
+        cart = CartImage.load(resolve_from_root(args.cart), args.base)
         comments = None
         if args.compare_dsm:
-            comments = parse_dsm_program_comments(Path(args.compare_dsm))
+            comments = parse_dsm_program_comments(resolve_from_root(args.compare_dsm))
         print(format_listing(cart, comments))
         return 0
 
     if args.cmd == "validate":
-        cart = CartImage.load(Path(args.cart), args.base)
+        cart = CartImage.load(resolve_from_root(args.cart), args.base)
         issues = validate_cart(cart)
         if issues:
             for issue in issues:
@@ -337,12 +339,12 @@ def main(argv: Iterable[str] | None = None) -> int:
         return 0
 
     if args.cmd == "template":
-        emit_template(Path(args.output), args.base if hasattr(args, "base") else 0xA000)
+        emit_template(resolve_from_root(args.output), args.base if hasattr(args, "base") else 0xA000)
         print(f"wrote template to {args.output}")
         return 0
 
     if args.cmd == "opcodes":
-        export_opcode_json(Path(args.output))
+        export_opcode_json(resolve_from_root(args.output))
         print(f"wrote opcode table to {args.output}")
         return 0
 
