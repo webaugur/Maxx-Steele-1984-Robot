@@ -119,8 +119,15 @@ classoption:
 linestretch: 0.92
 header-includes:
   - \\usepackage{{titlesec}}
+  - \\usepackage{{needspace}}
+  - \\usepackage{{etoolbox}}
   - \\usepackage{{enumitem}}
   - \\usepackage{{setspace}}
+  - \\makeatletter
+  - \\pretocmd{{\\section}}{{\\needspace{{8\\baselineskip}}}}{{}}{{}}
+  - \\pretocmd{{\\subsection}}{{\\needspace{{6\\baselineskip}}}}{{}}{{}}
+  - \\pretocmd{{\\subsubsection}}{{\\needspace{{5\\baselineskip}}}}{{}}{{}}
+  - \\makeatother
   - \\titlespacing*{{\\section}}{{0pt}}{{1.1ex plus .15ex}}{{0.55ex plus .1ex}}
   - \\titlespacing*{{\\subsection}}{{0pt}}{{0.9ex plus .15ex}}{{0.4ex plus .1ex}}
   - \\titlespacing*{{\\subsubsection}}{{0pt}}{{0.75ex plus .1ex}}{{0.3ex plus .1ex}}
