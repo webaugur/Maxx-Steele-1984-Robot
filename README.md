@@ -39,7 +39,7 @@ Each module has a [`KiCAD/`](Transmitter/KiCAD/) subfolder for schematic/PCB wor
 | [`Power/`](Power/) | Planned | `Power/KiCAD/` |
 | [`Mainboard/`](Mainboard/) | Planned | `Mainboard/KiCAD/` |
 | [`Face/`](Face/) | Planned | `Face/KiCAD/` |
-| [`Cartridge/`](Cartridge/) | Cartridge ROM + firmware | `Cartridge/KiCAD/` (planned) |
+| [`Cartridge/`](Cartridge/) | ROM, firmware, [programming manual](Cartridge/PROGRAMMING.md) | `Cartridge/KiCAD/` (planned) |
 | [`PaddleMirror/`](PaddleMirror/) | Archive | `PaddleMirror/KiCAD/` (planned) |
 | [`Chassis/`](Chassis/) | Body, manuals, photos, internal ROM | `Chassis/KiCAD/` (mechanical, planned) |
 
@@ -47,7 +47,7 @@ Each module has a [`KiCAD/`](Transmitter/KiCAD/) subfolder for schematic/PCB wor
 
 | Path | Description |
 |------|-------------|
-| [`docs/`](docs/) | RE manuals, architecture notes, [reference PDFs](docs/references/) |
+| [`docs/`](docs/) | Transmitter architecture/BOM, [reference PDFs](docs/references/) |
 | [`DataSheets/`](DataSheets/) | Third-party component datasheets (indexed in [`DataSheets/README.md`](DataSheets/README.md)) |
 | [`tools/`](tools/) | Cartridge ROM tools, [`rfcap/`](tools/rfcap/) GNU Radio OOK flowgraphs, [`sanitize_filenames.py`](tools/sanitize_filenames.py) |
 | [`libraries/`](libraries/) | Shared KiCad symbol libraries |

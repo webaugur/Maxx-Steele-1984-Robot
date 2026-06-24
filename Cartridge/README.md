@@ -11,8 +11,7 @@
 | [`PCBoard/`](PCBoard/) | PCB layout |
 | [`Model3D/`](Model3D/) | Mechanical model |
 | [`Photos/`](Photos/) | Cartridge card photo |
-
-Programming manual: [`docs/PROGRAMMING.md`](../docs/PROGRAMMING.md).
+| [`PROGRAMMING.md`](PROGRAMMING.md) | Cartridge programming manual (bytecode, speech, music) |
 
 Shared KiCad symbols: [`libraries/`](../libraries/).
 

@@ -11,7 +11,7 @@
 |------|-------------|
 | `handwritten-bom.jpg` | Handwritten remote MCU board parts list |
 | `mcu-board-pcb.jpg` | MCU board PCB photo |
-| `keyboard-matrix-reference-1.png` | Keyboard matrix layout (see [`docs/PROGRAMMING.md`](../../docs/PROGRAMMING.md)) |
+| `keyboard-matrix-reference-1.png` | Keyboard matrix layout (see [`Cartridge/PROGRAMMING.md`](../../Cartridge/PROGRAMMING.md)) |
 | `keyboard-matrix-reference-2.png` | Keyboard matrix layout |
 | `schematic-trace-overlay-1.png` | Schematic trace reconstruction |
 | `pcb-trace-overlay-1.png` | PCB trace overlay |
