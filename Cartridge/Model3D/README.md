@@ -37,7 +37,7 @@ The [`maxxcard.jpg`](../Photos/maxxcard.jpg) photo shows **22 gold fingers on th
 
 - Set PCB outline and keep-out from **PCB Placeholder** (import STEP into KiCad or measure in FreeCAD/Fusion).
 - Use **Maxx Chassis Cart Slot** to verify insertion depth and shell clearance.
-- Schematic edge symbol: [`Conn_01x44_Pin`](../Examples/CBSDemo/KiCAD/) (see [`CBSDemo.sch`](../Examples/CBSDemo/KiCAD/CBSDemo.sch)).
+- Schematic edge symbol: [`Conn_01x44_Pin`](../Examples/CBSDemo/KiCAD/) (see [`CBSDemo.kicad_sch`](../Examples/CBSDemo/KiCAD/CBSDemo.kicad_sch)).
 
 ## Related
 

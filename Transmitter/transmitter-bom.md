@@ -4,7 +4,7 @@ Authoritative bill of materials for the COP411-based remote transmitter, merged 
 
 - Handwritten transcription: [`handwritten-bom.jpg`](Photos/ReverseEngineering/handwritten-bom.jpg)
 - PCB photo: [`mcu-board-pcb.jpg`](Photos/ReverseEngineering/mcu-board-pcb.jpg)
-- KiCad project: [`Transmitter-27MHz.sch`](KiCAD/Transmitter-27MHz.sch)
+- KiCad project: [`Transmitter-27MHz.kicad_pro`](KiCAD/Transmitter-27MHz.kicad_pro) ([`Transmitter-27MHz.kicad_sch`](KiCAD/Transmitter-27MHz.kicad_sch))
 - Reverse-engineering notes: [`Maxx-Steele-Transmitter-Reverse-Engineered-Notes.pdf`](ReverseEngineering/Maxx-Steele-Transmitter-Reverse-Engineered-Notes.pdf)
 
 ## Active components

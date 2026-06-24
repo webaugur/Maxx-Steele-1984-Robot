@@ -20,7 +20,7 @@ The Commodore 64 Programmer's Reference included a fold-out schematic. This inde
 
 | Asset | Path | Status |
 |-------|------|--------|
-| KiCad schematic + PCB | [`Transmitter/KiCAD/Transmitter-27MHz.pro`](../Transmitter/KiCAD/Transmitter-27MHz.pro) | Active |
+| KiCad schematic + PCB | [`Transmitter/KiCAD/Transmitter-27MHz.kicad_pro`](../Transmitter/KiCAD/Transmitter-27MHz.kicad_pro) | Active |
 | RE notes | [`Transmitter/ReverseEngineering/`](../Transmitter/ReverseEngineering/) | Available |
 | BOM | [`Transmitter/transmitter-bom.md`](../Transmitter/transmitter-bom.md) | Available |
 
@@ -32,7 +32,7 @@ COP411L (U1), 455 kHz clock, 27 MHz OOK stage.
 
 | Asset | Path | Status |
 |-------|------|--------|
-| KiCad schematic | [`Receiver/KiCAD/Receiver-27MHz.pro`](../Receiver/KiCAD/Receiver-27MHz.pro) | Schematic only |
+| KiCad schematic | [`Receiver/KiCAD/Receiver-27MHz.kicad_pro`](../Receiver/KiCAD/Receiver-27MHz.kicad_pro) | Schematic only |
 | PCB layout | — | Not yet in archive |
 
 ---
@@ -41,7 +41,7 @@ COP411L (U1), 455 kHz clock, 27 MHz OOK stage.
 
 | Asset | Path | Status |
 |-------|------|--------|
-| KiCad (CBSDemo) | [`Cartridge/Examples/CBSDemo/KiCAD/`](../Cartridge/Examples/CBSDemo/KiCAD/) | Planned |
+| KiCad (CBSDemo) | [`Cartridge/Examples/CBSDemo/KiCAD/CBSDemo.kicad_pro`](../Cartridge/Examples/CBSDemo/KiCAD/CBSDemo.kicad_pro) | Active (rev 0.1) |
 | KiCad (UltraMaxx) | [`Cartridge/Examples/UltraMaxx/KiCAD/`](../Cartridge/Examples/UltraMaxx/KiCAD/) | Planned |
 
 ---

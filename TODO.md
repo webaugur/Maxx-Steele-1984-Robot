@@ -47,13 +47,13 @@ When an item is done, check it off in **three places**: the GitHub issue, this f
 
 ### Transmitter
 
-KiCad project: [`Transmitter/KiCAD/Transmitter-27MHz.pro`](Transmitter/KiCAD/Transmitter-27MHz.pro)
+KiCad project: [`Transmitter/KiCAD/Transmitter-27MHz.kicad_pro`](Transmitter/KiCAD/Transmitter-27MHz.kicad_pro)
 
 **KiCad / RE (in progress)**
 
 - [ ] Run ERC; resolve outstanding errors/warnings ([#2](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/2))
 - [ ] Confirm COP411L-PAC/N **DIP-20** footprint matches physical package ([#3](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/3))
-- [ ] Sync schematic ↔ PCB (31 nets per current `.net`) ([#4](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/4))
+- [ ] Sync schematic ↔ PCB (export netlist from `.kicad_sch` via `kicad-cli sch export netlist`) ([#4](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/4))
 - [ ] Run DRC on layout ([#5](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/5))
 - [ ] Export Gerbers / drill files for fab review ([#6](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/6))
 - [ ] Align [`Transmitter/transmitter-bom.md`](Transmitter/transmitter-bom.md) with final schematic refs ([#7](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/7))
@@ -73,7 +73,7 @@ KiCad project: [`Transmitter/KiCAD/Transmitter-27MHz.pro`](Transmitter/KiCAD/Tra
 
 ### Receiver
 
-KiCad project: [`Receiver/KiCAD/Receiver-27MHz.pro`](Receiver/KiCAD/Receiver-27MHz.pro) — schematic only
+KiCad project: [`Receiver/KiCAD/Receiver-27MHz.kicad_pro`](Receiver/KiCAD/Receiver-27MHz.kicad_pro) — schematic only
 
 **KiCad (in progress)**
 

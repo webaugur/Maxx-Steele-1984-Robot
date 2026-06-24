@@ -22,11 +22,14 @@ python3 tools/upgrade_legacy_sch.py Transmitter/KiCAD/Transmitter-27MHz.sch
 kicad-cli pcb upgrade Transmitter/KiCAD/Transmitter-27MHz.kicad_pcb
 ```
 
-## ERC / DRC
+## ERC / DRC / netlist
 
 ```bash
 kicad-cli sch erc Transmitter/KiCAD/Transmitter-27MHz.kicad_sch
 kicad-cli pcb drc Transmitter/KiCAD/Transmitter-27MHz.kicad_pcb
+kicad-cli sch export netlist Transmitter/KiCAD/Transmitter-27MHz.kicad_sch -o /tmp/Transmitter-27MHz.net
 ```
+
+Netlist and BOM exports are regenerated on demand (not committed — see root `.gitignore`).
 
 The upgraded schematic loads and runs ERC in KiCad 10. Remaining violations are from the original design (e.g. undriven nets, footprint filters) — resolve during schematic/PCB sync work.

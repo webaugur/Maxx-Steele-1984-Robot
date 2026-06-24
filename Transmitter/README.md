@@ -30,7 +30,7 @@ Status: **Active** — KiCad repair/fab; empty schematic/PCB/3D folders. Full ba
 
 - [ ] Run ERC; resolve outstanding errors/warnings
 - [ ] Confirm COP411L-PAC/N **DIP-20** footprint matches physical package
-- [ ] Sync schematic ↔ PCB (31 nets per current `.net`)
+- [ ] Sync schematic ↔ PCB (export netlist from `.kicad_sch`)
 - [ ] Run DRC on layout
 - [ ] Export Gerbers / drill files for fab review
 - [ ] Align [`transmitter-bom.md`](transmitter-bom.md) with final schematic refs

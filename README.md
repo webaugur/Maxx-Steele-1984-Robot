@@ -35,12 +35,12 @@ Each module has a [`KiCAD/`](Transmitter/KiCAD/) subfolder for schematic/PCB wor
 
 | Module | Status | KiCad project |
 |--------|--------|---------------|
-| [`Transmitter/`](Transmitter/) | Active — [architecture](Transmitter/transmitter-architecture.md), [BOM](Transmitter/transmitter-bom.md) | [`Transmitter/KiCAD/Transmitter-27MHz.pro`](Transmitter/KiCAD/Transmitter-27MHz.pro) |
-| [`Receiver/`](Receiver/) | Active | [`Receiver/KiCAD/Receiver-27MHz.pro`](Receiver/KiCAD/Receiver-27MHz.pro) |
+| [`Transmitter/`](Transmitter/) | Active — [architecture](Transmitter/transmitter-architecture.md), [BOM](Transmitter/transmitter-bom.md) | [`Transmitter/KiCAD/Transmitter-27MHz.kicad_pro`](Transmitter/KiCAD/Transmitter-27MHz.kicad_pro) |
+| [`Receiver/`](Receiver/) | Active | [`Receiver/KiCAD/Receiver-27MHz.kicad_pro`](Receiver/KiCAD/Receiver-27MHz.kicad_pro) |
 | [`Power/`](Power/) | Planned | `Power/KiCAD/` |
 | [`Mainboard/`](Mainboard/) | Planned | `Mainboard/KiCAD/` |
 | [`Face/`](Face/) | Planned | `Face/KiCAD/` |
-| [`Cartridge/`](Cartridge/) | ROM, firmware, [programming manual](Cartridge/PROGRAMMING.md), [technical manual](TechnicalManual/README.md) | `Cartridge/Examples/*/KiCAD/` (planned) |
+| [`Cartridge/`](Cartridge/) | ROM, firmware, [programming manual](Cartridge/PROGRAMMING.md), [technical manual](TechnicalManual/README.md) | [`CBSDemo.kicad_pro`](Cartridge/Examples/CBSDemo/KiCAD/CBSDemo.kicad_pro) (active); UltraMaxx planned |
 | [`PaddleMirror/`](PaddleMirror/) | Archive | `PaddleMirror/KiCAD/` (planned) |
 | [`Chassis/`](Chassis/) | Body, manuals, photos, internal ROM | `Chassis/KiCAD/` (mechanical, planned) |
 
@@ -50,7 +50,7 @@ Each module has a [`KiCAD/`](Transmitter/KiCAD/) subfolder for schematic/PCB wor
 |------|-------------|
 | [`TechnicalManual/`](TechnicalManual/) | Technical manual (bytecode, opcodes, I/O, appendices) — [README](TechnicalManual/README.md), [PDF](TechnicalManual/Maxx-Steele-Technical-Manual.pdf) |
 | [`DataSheets/`](DataSheets/) | Third-party component datasheets (indexed in [`DataSheets/README.md`](DataSheets/README.md)) |
-| [`tools/`](tools/) | Cartridge ROM tools, [`rfcap/`](tools/rfcap/) GNU Radio OOK flowgraphs, [`sanitize_filenames.py`](tools/sanitize_filenames.py) |
+| [`tools/`](tools/) | Cartridge ROM tools, KiCad [`upgrade_legacy_sch.py`](tools/upgrade_legacy_sch.py) / [`gen_cartridge_sch.py`](tools/gen_cartridge_sch.py), [`rfcap/`](tools/rfcap/) GNU Radio OOK flowgraphs |
 | [`libraries/`](libraries/) | Shared KiCad symbol libraries |
 
 ## Paths
@@ -62,7 +62,7 @@ Scripts resolve **project-relative** paths from the repository root (`tools/proj
 ```bash
 python3 tools/maxx_rom.py disasm "Cartridge/Examples/CBSDemo/Firmware/Binary/CBSDemo.532"
 
-# KiCad: Transmitter/KiCAD/Transmitter-27MHz.pro
+# KiCad 10: open Transmitter/KiCAD/Transmitter-27MHz.kicad_pro
 ```
 
 ## Related repositories

@@ -10,6 +10,8 @@ venv/
 *-cache.lib
 *.kicad_prl
 fp-info-cache
+**/KiCAD/*.net
+**/KiCAD/*.xml
 *.kicad_pcb-bak
 *.sch-bak
 *.bak

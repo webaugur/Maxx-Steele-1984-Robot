@@ -2,4 +2,4 @@
 
 Placeholder for the paddle mirror schematic and PCB.
 
-Open project file here once created (e.g. `PaddleMirror.pro`).
+Open project file here once created (e.g. `PaddleMirror.kicad_pro`).
