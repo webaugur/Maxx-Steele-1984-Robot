@@ -58,7 +58,7 @@ KiCad project: [`Transmitter/KiCAD/Transmitter-27MHz.pro`](Transmitter/KiCAD/Tra
 - [ ] Sync schematic ↔ PCB (31 nets per current `.net`)
 - [ ] Run DRC on layout
 - [ ] Export Gerbers / drill files for fab review
-- [ ] Align [`docs/transmitter-bom.md`](docs/transmitter-bom.md) with final schematic refs
+- [ ] Align [`Transmitter/transmitter-bom.md`](Transmitter/transmitter-bom.md) with final schematic refs
 
 **Completely missing artifact folders** `[empty]`
 

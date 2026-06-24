@@ -9,9 +9,10 @@
 | [`Stickers/`](Stickers/) | Remote sticker artwork |
 | [`Datasheets/`](Datasheets/) | Pointer to [`DataSheets/`](../DataSheets/) (e.g. [`National-COP411L.pdf`](../DataSheets/National-COP411L.pdf)) |
 | [`Photos/`](Photos/) | Product shots and reverse-engineering images |
+| [`transmitter-architecture.md`](transmitter-architecture.md) | 455 kHz IF clock, OOK protocol, signal path |
+| [`transmitter-bom.md`](transmitter-bom.md) | Bill of materials |
 
-Shared symbols: [`libraries/`](../libraries/).  
-RE docs: [`docs/transmitter-architecture.md`](../docs/transmitter-architecture.md), [`docs/transmitter-bom.md`](../docs/transmitter-bom.md).
+Shared symbols: [`libraries/`](../libraries/).
 
 ## TODO
 
@@ -24,7 +25,7 @@ Status: **Active** — KiCad repair/fab; empty schematic/PCB/3D folders. Full ba
 - [ ] Sync schematic ↔ PCB (31 nets per current `.net`)
 - [ ] Run DRC on layout
 - [ ] Export Gerbers / drill files for fab review
-- [ ] Align [`docs/transmitter-bom.md`](../docs/transmitter-bom.md) with final schematic refs
+- [ ] Align [`transmitter-bom.md`](transmitter-bom.md) with final schematic refs
 
 **Missing artifact folders** `[empty]`
 

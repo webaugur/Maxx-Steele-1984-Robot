@@ -57,7 +57,7 @@ The four `.dat.txt` sidecars are annotation placeholders for the 06:50–06:54 p
 3. Set the `recfile` variable to a project-relative path (e.g. `tools/rfcap/captures/2021.02.14.06.50.10.dat`) or a filename under `tools/rfcap/captures/`.
 4. Tune for **27 MHz** RF and inspect OOK timing (~1.55 ms/bit, ~29 ms packet repeat).
 
-See [`docs/transmitter-architecture.md`](../../docs/transmitter-architecture.md) for how the transmitter MCU is clocked at the **455 kHz IF** reference so OOK serial data stays coherent with the RF envelope the receiver demodulates.
+See [`Transmitter/transmitter-architecture.md`](../../Transmitter/transmitter-architecture.md) for how the transmitter MCU is clocked at the **455 kHz IF** reference so OOK serial data stays coherent with the RF envelope the receiver demodulates.
 
 ## TODO
 

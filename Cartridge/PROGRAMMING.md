@@ -228,7 +228,7 @@ python3 tools/maxx_rom.py template mycart.532
 Export opcode JSON:
 
 ```bash
-python3 tools/maxx_rom.py opcodes docs/opcodes.json
+python3 tools/maxx_rom.py opcodes Cartridge/opcodes.json
 ```
 
 ---
@@ -337,4 +337,4 @@ FF FF    ; end
 - R. Wind disassemblies: `maxxbot@yahoo.com` (2002–2006)
 - Demo cartridge ROM: [`Firmware/`](Firmware/)
 - Internal ROM: [`Chassis/Firmware/`](../Chassis/Firmware/)
-- Transmitter hardware: [`docs/transmitter-bom.md`](../docs/transmitter-bom.md)
+- Transmitter hardware: [`Transmitter/transmitter-bom.md`](../Transmitter/transmitter-bom.md)

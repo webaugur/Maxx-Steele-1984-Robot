@@ -10,7 +10,7 @@ Do not duplicate datasheet PDFs elsewhere in the archive — link here from modu
 
 | File | OEM / part | Refdes | Schematic | Used by |
 |------|------------|--------|-----------|---------|
-| [`National-COP411L.pdf`](National-COP411L.pdf) | National COP411L 4-bit MCU | U1 | [`Transmitter-27MHz.sch`](../Transmitter/KiCAD/Transmitter-27MHz.sch) | [`Transmitter/`](../Transmitter/), [`docs/transmitter-bom.md`](../docs/transmitter-bom.md) |
+| [`National-COP411L.pdf`](National-COP411L.pdf) | National COP411L 4-bit MCU | U1 | [`Transmitter-27MHz.sch`](../Transmitter/KiCAD/Transmitter-27MHz.sch) | [`Transmitter/`](../Transmitter/), [`transmitter-bom.md`](../Transmitter/transmitter-bom.md) |
 | [`National-COP420.pdf`](National-COP420.pdf) | National COP420 family MCU | | — | [`Mainboard/`](../Mainboard/), [`Chassis/`](../Chassis/) |
 | [`National-COPS-Programming-Manual-Feb85.pdf`](National-COPS-Programming-Manual-Feb85.pdf) | National COPS programming manual | | — | COP400 family |
 | [`MOS-6502.pdf`](MOS-6502.pdf) | MOS 6502 CPU | | — | [`Mainboard/`](../Mainboard/), [`Chassis/Firmware/`](../Chassis/Firmware/) |

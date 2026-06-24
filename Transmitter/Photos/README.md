@@ -17,4 +17,4 @@
 | `pcb-trace-overlay-1.png` | PCB trace overlay |
 | `pcb-trace-overlay-1-alt.png` | Alternate PCB trace overlay |
 
-Used by [`docs/transmitter-bom.md`](../../docs/transmitter-bom.md) and [`docs/transmitter-architecture.md`](../../docs/transmitter-architecture.md).
+Used by [`transmitter-bom.md`](../transmitter-bom.md) and [`transmitter-architecture.md`](../transmitter-architecture.md).

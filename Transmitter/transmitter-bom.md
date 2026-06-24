@@ -2,10 +2,10 @@
 
 Authoritative bill of materials for the COP411-based remote transmitter, merged from:
 
-- Handwritten transcription: [`handwritten-bom.jpg`](../Transmitter/Photos/ReverseEngineering/handwritten-bom.jpg)
-- PCB photo: [`mcu-board-pcb.jpg`](../Transmitter/Photos/ReverseEngineering/mcu-board-pcb.jpg)
-- KiCad project: [`Transmitter-27MHz.sch`](../Transmitter/KiCAD/Transmitter-27MHz.sch)
-- Reverse-engineering notes: [`Maxx-Steele-Transmitter-Reverse-Engineered-Notes.pdf`](../Transmitter/ReverseEngineering/Maxx-Steele-Transmitter-Reverse-Engineered-Notes.pdf)
+- Handwritten transcription: [`handwritten-bom.jpg`](Photos/ReverseEngineering/handwritten-bom.jpg)
+- PCB photo: [`mcu-board-pcb.jpg`](Photos/ReverseEngineering/mcu-board-pcb.jpg)
+- KiCad project: [`Transmitter-27MHz.sch`](KiCAD/Transmitter-27MHz.sch)
+- Reverse-engineering notes: [`Maxx-Steele-Transmitter-Reverse-Engineered-Notes.pdf`](ReverseEngineering/Maxx-Steele-Transmitter-Reverse-Engineered-Notes.pdf)
 
 ## Active components
 
@@ -68,4 +68,4 @@ Authoritative bill of materials for the COP411-based remote transmitter, merged 
 
 ## Schematic status
 
-The KiCad schematic in `Transmitter/KiCAD/` has all listed components placed and 31 named nets including power, clock, RF, LED, and the 14-pin matrix interface. Unconnected COP411 pins (MOSI, SCK, G2, NRESET) are intentionally left as NoConn per the production board.
+The KiCad schematic in [`KiCAD/`](KiCAD/) has all listed components placed and 31 named nets including power, clock, RF, LED, and the 14-pin matrix interface. Unconnected COP411 pins (MOSI, SCK, G2, NRESET) are intentionally left as NoConn per the production board.
