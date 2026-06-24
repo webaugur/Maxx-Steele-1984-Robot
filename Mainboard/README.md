@@ -5,6 +5,10 @@
 | Path | Description |
 |------|-------------|
 | [`KiCAD/`](KiCAD/) | KiCad project (placeholder) |
+| [`Schematic/`](Schematic/) | Raster scans and vector schematic sources |
+| [`Firmware/`](Firmware/) | Internal 6502 ROM binary and disassembly |
 
-Raster schematic reference: [`docs/photos/robot/schematics/`](../docs/photos/robot/schematics/).  
-Vector sources: [`Robot/Schematic/`](../Robot/Schematic/).
+Canonical internal ROM for tools: [`firmware/internal-rom/`](../firmware/internal-rom/).  
+Chassis photos: [`Chassis/Photos/`](../Chassis/Photos/).
+
+Shared KiCad symbols: [`libraries/`](../libraries/).

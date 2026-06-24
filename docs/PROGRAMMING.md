@@ -5,7 +5,7 @@ This document describes how to write programs for the 1984 CBS Toys / Ideal **Ma
 - [`firmware/demo-cart/maxx_demo_ROM_532.dsm`](../firmware/demo-cart/maxx_demo_ROM_532.dsm) — annotated demo cartridge (R. Wind)
 - [`firmware/internal-rom/maxx_internal_ROM.dsm`](../firmware/internal-rom/maxx_internal_ROM.dsm) — internal 6502 interpreter (R. Wind)
 - [`firmware/demo-cart/MAXXCART.532`](../firmware/demo-cart/MAXXCART.532) — 4 KB demo cartridge binary
-- Original reference guide in the upstream repo: `Manual/MaxxSteeleReferenceGuide.pdf`
+- Original reference guide: [`Chassis/Manual/MaxxSteeleReferenceGuide.pdf`](../Chassis/Manual/MaxxSteeleReferenceGuide.pdf)
 
 Tools live in [`tools/maxx_rom.py`](../tools/maxx_rom.py).
 
@@ -308,7 +308,7 @@ Reference images: [`keyboard-matrix-reference-1.png`](photos/transmitter/reverse
 3. Optionally patch phrase/music tables at `$81` / `$BB`
 4. Keep the bootstrap stub and copyright header intact
 5. Validate with `python3 tools/maxx_rom.py validate mycart.532`
-6. Burn to a 4 KB EPROM (e.g. KM2365 family — see upstream `Robot/Datasheets/U400 KM2365 (ROM).pdf`)
+6. Burn to a 4 KB EPROM (e.g. KM2365 family — see [`Chassis/Datasheets/U400 KM2365 (ROM).pdf`](../Chassis/Datasheets/U400%20KM2365%20(ROM).pdf))
 
 ### Minimal example program
 
@@ -327,7 +327,7 @@ FF FF    ; end
 - **Phoneme token table**: Full `$F4DB` / `$F567` transcription would enable authoring custom speech without copying demo tokens
 - **Operand scaling**: Distance/angle units for motion opcodes are empirical (demo uses values like `$14`, `$06`, `$28`)
 - **8080 code at `$A0C7+`** in the demo image is marked "not Maxx-related" in the `.dsm` listing — treat as padding
-- **Robot main board KiCad**: placeholder at [`Mainboard/KiCAD/`](../Mainboard/KiCAD/); raster reference in [`docs/photos/robot/schematics/`](photos/robot/schematics/); vector sources in `Robot/Schematic/v1.1/`
+- **Robot main board KiCad**: placeholder at [`Mainboard/KiCAD/`](../Mainboard/KiCAD/); schematics in [`Mainboard/Schematic/`](../Mainboard/Schematic/)
 
 ---
 

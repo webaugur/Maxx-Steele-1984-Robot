@@ -21,21 +21,13 @@ Each module has a [`KiCAD/`](Transmitter/KiCAD/) subfolder for schematic/PCB wor
 | [`Face/`](Face/) | Planned | `Face/KiCAD/` |
 | [`Demo Cartridge/`](Demo%20Cartridge/) | Archive + firmware | `Demo Cartridge/KiCAD/` (planned) |
 | [`Paddle Mirror/`](Paddle%20Mirror/) | Archive | `Paddle Mirror/KiCAD/` (planned) |
-
-### Original archive
-
-| Path | Description |
-|------|-------------|
-| [`Robot/`](Robot/) | Robot body — electronics, firmware, schematics |
-| [`Manual/`](Manual/) | Original manuals |
-| [`References/`](References/) | Third-party articles and workshop notes |
-| [`Artwork/`](Artwork/) | Logos and artwork |
+| [`Chassis/`](Chassis/) | Body, manuals, photos, artwork | `Chassis/KiCAD/` (mechanical, planned) |
 
 ### Tools & documentation
 
 | Path | Description |
 |------|-------------|
-| [`docs/`](docs/) | RE manuals, [photos](docs/photos/), [reference PDFs](docs/references/) |
+| [`docs/`](docs/) | RE manuals, [module photos](docs/photos/), [reference PDFs](docs/references/) |
 | [`firmware/`](firmware/) | Curated ROM binaries + disassembly listings |
 | [`tools/`](tools/) | Cartridge ROM disassembler / validator |
 | [`rfcap/`](rfcap/) | GNU Radio OOK flowgraphs; data in [`rfcap/captures/`](rfcap/captures/) |

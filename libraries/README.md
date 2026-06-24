@@ -13,3 +13,4 @@ All `*/KiCAD/` projects load this directory via `${KIPRJMOD}/../../libraries/`.
 | Face | [`Face/KiCAD/`](../Face/KiCAD/) (planned) |
 | Demo Cartridge | [`Demo Cartridge/KiCAD/`](../Demo%20Cartridge/KiCAD/) (planned) |
 | Paddle Mirror | [`Paddle Mirror/KiCAD/`](../Paddle%20Mirror/KiCAD/) (planned) |
+| Chassis | [`Chassis/KiCAD/`](../Chassis/KiCAD/) (mechanical, planned) |

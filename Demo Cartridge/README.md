@@ -12,6 +12,6 @@
 
 Canonical firmware copy for tools: [`firmware/demo-cart/`](../firmware/demo-cart/).  
 Programming manual: [`docs/PROGRAMMING.md`](../docs/PROGRAMMING.md).  
-Photo: [`docs/photos/accessories/demo-cartridge/`](../docs/photos/accessories/demo-cartridge/).
+Card photo: [`docs/photos/accessories/demo-cartridge/`](../docs/photos/accessories/demo-cartridge/).
 
 Shared KiCad symbols: [`libraries/`](../libraries/).
