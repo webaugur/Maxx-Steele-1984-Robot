@@ -114,6 +114,11 @@ def preprocess_markdown(text: str, anchor_map: dict[str, str]) -> str:
 
     def _repo_link(match: re.Match[str]) -> str:
         label, path = match.group(1), match.group(2)
+        bare_label = label.strip()
+        if bare_label.startswith("`") and bare_label.endswith("`") and len(bare_label) >= 2:
+            bare_label = bare_label[1:-1]
+        if bare_label == path or bare_label.rstrip("/") == path.rstrip("/"):
+            return label.strip()
         return f"{label} (`{path}`)"
 
     def _http_link(match: re.Match[str]) -> str:
@@ -126,6 +131,8 @@ def preprocess_markdown(text: str, anchor_map: dict[str, str]) -> str:
     text = REPO_LINK.sub(_repo_link, text)
     text = HTTP_LINK.sub(_http_link, text)
     text = FILE_LINK.sub(_file_link, text)
+    # Drop redundant path suffix when label already matches (legacy or edge cases).
+    text = re.sub(r"`([^`]+)` \(`\1`\)", r"`\1`", text)
     # Thematic breaks render as large vertical gaps in LaTeX PDF output.
     text = re.sub(r"\n---\n", "\n\n", text)
     return text
