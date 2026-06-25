@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Report repo file path references in TechnicalManual/*.md that lack markdown hyperlinks."""
+"""Report repo file path references in manual markdown that lack hyperlinks."""
 
 from __future__ import annotations
 
@@ -8,14 +8,13 @@ import sys
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
-MANUAL = REPO / "TechnicalManual"
+MANUAL_DIRS = (REPO / "TechnicalManual", REPO / "MechanicalManual")
 
-# Repo-root-relative path shapes (not exhaustive; tuned for this tree).
 PATH_RE = re.compile(
     r"(?<![(\[`])"
     r"(?:\.\./)?"
     r"(?:tools|Cartridge|Chassis|DataSheets|Transmitter|Receiver|Mainboard|"
-    r"Power|PaddleMirror|Simulator)/"
+    r"MechanicalManual|TechnicalManual|Power|PaddleMirror|Simulator)/"
     r"[\w./-]+"
     r"|"
     r"(?:\.\./)?Face/(?:KiCAD|Photos|README\.md)"
@@ -25,36 +24,40 @@ PATH_RE = re.compile(
     r"|"
     r"(?:cover-front|cover-rear)\.jpg"
     r"|"
-    r"Maxx-Steele-Technical-Manual\.pdf"
+    r"Maxx-Steele-(?:Technical|Mechanical)-Manual\.pdf"
     r"|"
-    r"build_technical_manual_pdf\.py"
+    r"build_(?:technical|mechanical)_manual_pdf\.py"
     r"|"
     r"tools/maxx_rom\.py"
     r"|"
     r"tools/maxx(?:bas)?(?:/[\w.-]*)?"
+    r"|"
+    r"Chassis/Photos/Disassembly/IMG_\d+\.JPG"
+    r"|"
+    r"Sources/Maxx-Steele-Disassembly-Guide\.docx"
 )
 
 LINK_RE = re.compile(r"\[[^\]]*\]\([^)]+\)")
 
 
 def strip_code_fences(text: str) -> str:
-    """Remove fenced code blocks (paths inside commands are covered by companion prose)."""
     return re.sub(r"```.*?```", "", text, flags=re.DOTALL)
 
 
 def line_has_link(line: str, path: str) -> bool:
     for m in LINK_RE.finditer(line):
         target = m.group(0)
-        # Link text or URL contains the path (allow basename match for short refs).
         if path in target or Path(path).name in target:
             return True
+    # Bare markdown images: ![alt](Photos/IMG_2116.JPG)
+    if f"]({path})" in line or f"]({Path(path).name})" in line:
+        return True
     return False
 
 
-def main() -> int:
+def scan_manual(manual_dir: Path) -> list[str]:
     issues: list[str] = []
-
-    for md in sorted(MANUAL.glob("*.md")):
+    for md in sorted(manual_dir.glob("*.md")):
         raw = md.read_text(encoding="utf-8")
         prose = strip_code_fences(raw)
         for lineno, line in enumerate(prose.splitlines(), start=1):
@@ -64,15 +67,25 @@ def main() -> int:
                 path = m.group(0).lstrip("./")
                 if line_has_link(line, path):
                     continue
-                issues.append(f"{md.relative_to(REPO)}:{lineno}: {path!r} — {line.strip()[:100]}")
+                issues.append(
+                    f"{md.relative_to(REPO)}:{lineno}: {path!r} — {line.strip()[:100]}"
+                )
+    return issues
+
+
+def main() -> int:
+    issues: list[str] = []
+    for manual_dir in MANUAL_DIRS:
+        if manual_dir.is_dir():
+            issues.extend(scan_manual(manual_dir))
 
     if issues:
-        print("Unlinked repo path references in TechnicalManual:")
+        print("Unlinked repo path references in manuals:")
         for item in issues:
             print(f"  {item}")
         return 1
 
-    print("OK: all detected repo path references in TechnicalManual prose are hyperlinked.")
+    print("OK: all detected repo path references in manual prose are hyperlinked.")
     return 0
 
 

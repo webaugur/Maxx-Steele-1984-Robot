@@ -116,7 +116,7 @@ Example firmware is complete ([`Cartridge/Examples/`](Cartridge/Examples/)).
 
 ### Chassis
 
-Most content present (manuals, photos, firmware, datasheets, sounds, disassembly).
+Most content present (manuals, photos, firmware, datasheets, sounds). Disassembly guide: [`MechanicalManual/`](../MechanicalManual/).
 
 **Completely missing** `[empty]`
 

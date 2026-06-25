@@ -14,6 +14,7 @@ Much of the information in this archive has unknown ownership or uses licensed n
 | **Top-level shared folders** | `lowercase` | `tools/`, `libraries/` |
 | **Third-party datasheets** | **`DataSheets/`** (overrides lowercase rule) | Vendor PDFs as `OEM-PartNumber.pdf`; see [`DataSheets/README.md`](DataSheets/README.md) |
 | **Technical manual** | **`TechnicalManual/`** (overrides lowercase rule) | C64-style programming manual; see [`TechnicalManual/README.md`](TechnicalManual/README.md) |
+| **Mechanical manual** | **`MechanicalManual/`** (overrides lowercase rule) | Disassembly / reassembly guide; see [`MechanicalManual/README.md`](MechanicalManual/README.md) |
 | **Subfolders inside modules** | `CamelCase` | `Photos/`, `Firmware/`, `KiCAD/`, `PCBoard/`, `Model3D/`, `Photos/Product/`, `Photos/ReverseEngineering/` |
 | **Subfolders inside shared folders** | `lowercase` | `tools/rfcap/`, `tools/rfcap/captures/` |
 | **All filenames** | shell-safe: `[A-Za-z0-9._-]` only | `Remote-Front.jpg`, `maxx-song-1.wma`, `Maxx-Steele-Transmitter-Reverse-Engineered-Notes.pdf` |
@@ -49,6 +50,7 @@ Each module has a [`KiCAD/`](Transmitter/KiCAD/) subfolder for schematic/PCB wor
 | Path | Description |
 |------|-------------|
 | [`TechnicalManual/`](TechnicalManual/) | Technical manual (bytecode, opcodes, I/O, appendices) — [README](TechnicalManual/README.md), [PDF](TechnicalManual/Maxx-Steele-Technical-Manual.pdf) |
+| [`MechanicalManual/`](MechanicalManual/) | Mechanical manual (disassembly, reassembly, teardown photos) — [README](MechanicalManual/README.md), [PDF](MechanicalManual/Maxx-Steele-Mechanical-Manual.pdf) |
 | [`DataSheets/`](DataSheets/) | Third-party component datasheets (indexed in [`DataSheets/README.md`](DataSheets/README.md)) |
 | [`Simulator/`](Simulator/) | Unified robot simulator (patches, docs); run via `maxx simulate` |
 | [`tools/`](tools/) | [`tools/bin/`](tools/bin/) shell commands (`maxx`, `maxx-rom`, `picorom-cart`), [`maxxbas/`](tools/maxxbas/) Rust library, Python modules, KiCad helpers, [`rfcap/`](tools/rfcap/) GNU Radio OOK flowgraphs |
