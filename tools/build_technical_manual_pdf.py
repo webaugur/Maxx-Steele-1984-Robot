@@ -47,9 +47,15 @@ CHAPTERS = (
 SAME_GUIDE_LINK = re.compile(
     r"\[([^\]]+)\]\((?!https?://)([^)/]+\.md)(#[^)]+)?\)"
 )
-REPO_LINK = re.compile(r"\[([^\]]+)\]\(\.\./([^)]+)\)")
+REPO_LINK = re.compile(r"(?<!!)\[([^\]]+)\]\(\.\./([^)]+)\)")
+LOCAL_LINK = re.compile(r"(?<!!)\[([^\]]+)\]\((?!https?://|\.\./|#)([^)]+)\)")
 HTTP_LINK = re.compile(r"\[([^\]]+)\]\(https?://[^)]+\)")
 FILE_LINK = re.compile(r"\[([^\]]+)\]\((?!https?://)([^)]+\.(?:pdf|md|py|532|64|dsm))\)")
+RASTER_IMAGE_EXT = {".png", ".jpg", ".jpeg", ".gif", ".webp"}
+# Avoid embedding huge schematics inline inside table cells.
+TABLE_IMAGE_EMBED_MAX_BYTES = 400_000
+# Covers are already inserted via pdfpages; keep prose references textual.
+COVER_IMAGE_NAMES = frozenset({"cover-front.jpg", "cover-rear.jpg"})
 
 
 def require_tool(name: str) -> str:
@@ -101,7 +107,52 @@ def front_cover_header_includes(front_cover_pdf: Path) -> list[str]:
     ]
 
 
-def preprocess_markdown(text: str, anchor_map: dict[str, str]) -> str:
+def _link_label(label: str) -> tuple[str, bool]:
+    """Return (bare label, used_backticks)."""
+    stripped = label.strip()
+    if stripped.startswith("`") and stripped.endswith("`") and len(stripped) >= 2:
+        return stripped[1:-1], True
+    return stripped, False
+
+
+def _format_plain_label(label: str) -> str:
+    bare, backticks = _link_label(label)
+    return f"`{bare}`" if backticks else bare
+
+
+def _repo_path_label(label: str, path: str) -> str:
+    bare, _ = _link_label(label)
+    if bare == path or bare.rstrip("/") == path.rstrip("/"):
+        return _format_plain_label(label)
+    if Path(path).name == bare:
+        return _format_plain_label(label)
+    return _format_plain_label(label)
+
+
+def _maybe_embed_raster(
+    resolved: Path,
+    label: str,
+    *,
+    in_table: bool,
+) -> str | None:
+    if not resolved.is_file():
+        return None
+    if resolved.suffix.lower() not in RASTER_IMAGE_EXT:
+        return None
+    bare, _ = _link_label(label)
+    if resolved.name in COVER_IMAGE_NAMES or bare in COVER_IMAGE_NAMES:
+        return _format_plain_label(label)
+    if in_table and resolved.stat().st_size > TABLE_IMAGE_EMBED_MAX_BYTES:
+        return _format_plain_label(label)
+    return f"![{bare}]({resolved})"
+
+
+def preprocess_markdown(
+    text: str,
+    anchor_map: dict[str, str],
+    *,
+    manual_dir: Path,
+) -> str:
     """Normalize links for a single-file PDF build with internal PDF navigation."""
 
     def _same_guide_link(match: re.Match[str]) -> str:
@@ -115,12 +166,23 @@ def preprocess_markdown(text: str, anchor_map: dict[str, str]) -> str:
 
     def _repo_link(match: re.Match[str]) -> str:
         label, path = match.group(1), match.group(2)
-        bare_label = label.strip()
-        if bare_label.startswith("`") and bare_label.endswith("`") and len(bare_label) >= 2:
-            bare_label = bare_label[1:-1]
-        if bare_label == path or bare_label.rstrip("/") == path.rstrip("/"):
-            return label.strip()
-        return f"{label} (`{path}`)"
+        resolved = (manual_dir / ".." / path).resolve()
+        line = text[: match.start()].rsplit("\n", 1)[-1]
+        in_table = line.lstrip().startswith("|")
+        embedded = _maybe_embed_raster(resolved, label, in_table=in_table)
+        if embedded is not None:
+            return embedded
+        return _repo_path_label(label, path)
+
+    def _local_link(match: re.Match[str]) -> str:
+        label, path = match.group(1), match.group(2)
+        resolved = (manual_dir / path).resolve()
+        line = text[: match.start()].rsplit("\n", 1)[-1]
+        in_table = line.lstrip().startswith("|")
+        embedded = _maybe_embed_raster(resolved, label, in_table=in_table)
+        if embedded is not None:
+            return embedded
+        return _format_plain_label(label)
 
     def _http_link(match: re.Match[str]) -> str:
         return match.group(1)
@@ -130,10 +192,9 @@ def preprocess_markdown(text: str, anchor_map: dict[str, str]) -> str:
 
     text = SAME_GUIDE_LINK.sub(_same_guide_link, text)
     text = REPO_LINK.sub(_repo_link, text)
+    text = LOCAL_LINK.sub(_local_link, text)
     text = HTTP_LINK.sub(_http_link, text)
     text = FILE_LINK.sub(_file_link, text)
-    # Drop redundant path suffix when label already matches (legacy or edge cases).
-    text = re.sub(r"`([^`]+)` \(`\1`\)", r"`\1`", text)
     # Thematic breaks render as large vertical gaps in LaTeX PDF output.
     text = re.sub(r"\n---\n", "\n\n", text)
     return text
@@ -150,6 +211,7 @@ def merge_chapters(manual_dir: Path, *, pandoc: str) -> str:
         body = preprocess_markdown(
             path.read_text(encoding="utf-8").strip(),
             anchor_map,
+            manual_dir=manual_dir,
         )
         if index > 0:
             parts.append(r"\clearpage")
