@@ -1,6 +1,6 @@
 # Maxx Steele User Manual
 
-Community edition of the 1984 CBS Toys / Ideal **Electronic Maxx Steele® Personal Robot** factory *User's Guide to Operations*, transcribed from [`Chassis/Manual/MaxxSteeleManual.pdf`](../Chassis/Manual/MaxxSteeleManual.pdf).
+Community edition of the 1984 CBS Toys / Ideal **Electronic Maxx Steele® Personal Robot** factory *User's Guide to Operations*, originally bootstrapped from [`Chassis/Manual/MaxxSteeleManual.pdf`](../Chassis/Manual/MaxxSteeleManual.pdf).
 
 **PDF (latest):** [`Maxx-Steele-User-Manual.pdf`](Maxx-Steele-User-Manual.pdf) — rebuilt when `.md` or cover images change ([`tools/build_user_manual_pdf.py`](../tools/build_user_manual_pdf.py) locally; GitHub Actions on push to `main`).
 
@@ -25,21 +25,30 @@ Community edition of the 1984 CBS Toys / Ideal **Electronic Maxx Steele® Person
 8. [Appendices A–J](08-Appendices.md)
 9. [Cautions, FCC, and stabilizers](09-Compliance.md)
 
-## Source materials
+## Editing and building
+
+**Source of truth:** the chapter `.md` files in this folder. Edit them directly, then rebuild the PDF:
+
+```bash
+python3 tools/build_user_manual_pdf.py
+```
+
+GitHub Actions runs the same build on push when `UserManual/**` changes.
+
+## Bootstrap from factory PDF (optional)
+
+To re-seed chapter markdown from the archival factory PDF (overwrites chapter text from OCR):
+
+```bash
+python3 tools/bootstrap_user_manual_from_pdf.py
+```
+
+Or step-by-step: [`tools/extract_manual_pages.py`](../tools/extract_manual_pages.py) → [`tools/ocr_manual_pages.py`](../tools/ocr_manual_pages.py) → [`tools/gen_user_manual_chapters.py`](../tools/gen_user_manual_chapters.py) `--from-sources`.
 
 | Path | Description |
 |------|-------------|
-| [`Sources/pages/`](Sources/pages/) | 300 DPI page scans extracted from the factory PDF |
-| [`Sources/text/`](Sources/text/) | Tesseract OCR per page (used to bootstrap chapter text) |
-| [`Sources/outline.json`](Sources/outline.json) | Page-to-chapter map |
-
-Regenerate chapter markdown after updating scans or OCR:
-
-```bash
-python3 tools/extract_manual_pages.py
-python3 tools/ocr_manual_pages.py
-python3 tools/gen_user_manual_chapters.py
-python3 tools/build_user_manual_pdf.py
-```
+| [`Sources/pages/`](Sources/pages/) | Page scans (figures + OCR input; optional bootstrap) |
+| [`Sources/text/`](Sources/text/) | Per-page OCR text (bootstrap input only) |
+| [`Sources/outline.json`](Sources/outline.json) | Page-to-chapter map for the generator |
 
 For keypad matrix names and faceplate art, see [`Transmitter/remote-keypad.md`](../Transmitter/remote-keypad.md).

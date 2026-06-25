@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Generate UserManual chapter markdown from OCR text and factory page scans."""
+"""Generate UserManual chapter markdown from OCR text and factory page scans.
+
+By default this script does nothing — chapter .md files are edited directly.
+Pass --from-sources to overwrite chapters from UserManual/Sources/text (bootstrap
+or re-OCR only). See tools/bootstrap_user_manual_from_pdf.py for the full chain.
+"""
 
 from __future__ import annotations
 
@@ -454,22 +459,31 @@ Community edition of the 1984 CBS Toys / Ideal **Electronic Maxx Steele® Person
 
 {chapter_links}
 
-## Source materials
+## Editing and building
+
+**Source of truth:** the chapter `.md` files in this folder. Edit them directly, then rebuild the PDF:
+
+```bash
+python3 tools/build_user_manual_pdf.py
+```
+
+GitHub Actions runs the same build on push when `UserManual/**` changes.
+
+## Bootstrap from factory PDF (optional)
+
+Archival scan: [`Chassis/Manual/MaxxSteeleManual.pdf`](../Chassis/Manual/MaxxSteeleManual.pdf). To re-seed markdown from that PDF (overwrites chapter text from OCR):
+
+```bash
+python3 tools/bootstrap_user_manual_from_pdf.py
+```
+
+Or step-by-step: `extract_manual_pages.py` → `ocr_manual_pages.py` → `gen_user_manual_chapters.py --from-sources`.
 
 | Path | Description |
 |------|-------------|
-| [`Sources/pages/`](Sources/pages/) | 300 DPI page scans extracted from the factory PDF |
-| [`Sources/text/`](Sources/text/) | Tesseract OCR per page (used to bootstrap chapter text) |
-| [`Sources/outline.json`](Sources/outline.json) | Page-to-chapter map |
-
-Regenerate chapter markdown after updating scans or OCR:
-
-```bash
-python3 tools/extract_manual_pages.py
-python3 tools/ocr_manual_pages.py
-python3 tools/gen_user_manual_chapters.py
-python3 tools/build_user_manual_pdf.py
-```
+| [`Sources/pages/`](Sources/pages/) | Page scans (figures + OCR input; optional bootstrap) |
+| [`Sources/text/`](Sources/text/) | Per-page OCR text (bootstrap input only) |
+| [`Sources/outline.json`](Sources/outline.json) | Page-to-chapter map for the generator |
 
 For keypad matrix names and faceplate art, see [`Transmitter/remote-keypad.md`](../Transmitter/remote-keypad.md).
 """
@@ -482,7 +496,27 @@ def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--manual", type=Path, default=MANUAL_DIR)
     ap.add_argument("--outline", type=Path, default=OUTLINE)
+    ap.add_argument(
+        "--from-sources",
+        action="store_true",
+        help="Overwrite chapter .md from OCR (destructive; bootstrap only)",
+    )
+    ap.add_argument(
+        "--include-readme",
+        action="store_true",
+        help="Also overwrite README.md (only with --from-sources)",
+    )
     args = ap.parse_args(argv)
+
+    if not args.from_sources:
+        print(
+            "No action taken. Chapter markdown is edited directly under UserManual/.\n"
+            "To rebuild the PDF: python3 tools/build_user_manual_pdf.py\n"
+            "To re-generate chapters from OCR: add --from-sources\n"
+            "Full bootstrap from factory PDF: python3 tools/bootstrap_user_manual_from_pdf.py",
+            file=sys.stderr,
+        )
+        return 0
 
     root = project_root()
     manual_dir = args.manual if args.manual.is_absolute() else root / args.manual
@@ -492,6 +526,12 @@ def main(argv: list[str] | None = None) -> int:
 
     if not outline_path.is_file():
         print(f"error: missing {outline_path}", file=sys.stderr)
+        return 1
+    if not text_dir.is_dir() or not any(text_dir.glob("page-*.txt")):
+        print(
+            f"error: no OCR text in {text_dir} — run tools/ocr_manual_pages.py first",
+            file=sys.stderr,
+        )
         return 1
 
     outline = load_outline(outline_path)
@@ -506,8 +546,9 @@ def main(argv: list[str] | None = None) -> int:
         )
         print(path.relative_to(root))
 
-    readme = write_readme(manual_dir, outline)
-    print(readme.relative_to(root))
+    if args.include_readme:
+        readme = write_readme(manual_dir, outline)
+        print(readme.relative_to(root))
     return 0
 
 

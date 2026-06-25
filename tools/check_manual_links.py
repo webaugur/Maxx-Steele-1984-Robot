@@ -30,6 +30,8 @@ PATH_RE = re.compile(
     r"|"
     r"gen_user_manual_(?:chapters|outline)\.py"
     r"|"
+    r"bootstrap_user_manual_from_pdf\.py"
+    r"|"
     r"tools/maxx_rom\.py"
     r"|"
     r"tools/maxx(?:bas)?(?:/[\w.-]*)?"
