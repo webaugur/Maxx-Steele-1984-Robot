@@ -12,7 +12,8 @@ It is a community edition of a workshop guide originally written by **Mike McCar
 |----------|----------|-------|
 | **This guide** | Owners, repairers | Case opening, head module, stabilizers, reassembly |
 | [`TechnicalManual/`](../TechnicalManual/) | Programmers, reverse engineers | Bytecode, ROM, I/O, cartridge authoring |
-| [`Chassis/Manual/`](../Chassis/Manual/) | Owners | Factory user / reference manuals (operation) |
+| [`UserManual/`](../UserManual/) | Owners | Setup, operation, games, maintenance (markdown + PDF) |
+| [`Chassis/Manual/`](../Chassis/Manual/) | Owners | Archival factory PDF scans |
 | [`Chassis/Photos/`](../Chassis/Photos/) | Reference | All chassis photos (embedded in Ch 3 by folder) |
 | [`Chassis/Artwork/`](../Chassis/Artwork/) | Reference | Body logos and graphics (listed in Ch 3) |
 

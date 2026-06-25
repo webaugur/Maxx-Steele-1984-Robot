@@ -1,0 +1,75 @@
+MOTE: Prior knowledge of computers or robotics is not necessary to operate Maxx ®.
+
+This Guide to Operations Introduces you to the Electronic Maxx Steele® Personal Robot. The
+manual has five sections. A table of contents is included at the back of this manual.
+
+Section 1, Introduction, is a guide to getting to know your friendly personal robot, Maxx
+Steele®,
+
+section 2, Setup, shows you how to get Maxx ready for use.
+
+Section 3, Operations, introduces you to the things Maxx can do, shows you how to operate the
+
+controller, and provides a summary of commands and functions.
+
+Section 4, Modes, shows you how to enter commands in any one of the five operating modes
+(The Immediate Mode, The Program Mode, The Execute Mode, The Learn Mode and The
+Game-Playing Mode).
+
+Section 5, Advanced Features, shows you how to perform more sophisticated programming
+and editing operations.
+
+The Appendices include: information on the technical aspects of Maxx, a glossary of terms,
+pre-programmed songs, pre-programmed phrases, speech codes, o glossary of prompts,
+routine maintenance, operating conditions, cautions, a summary of controller functions and
+
+special keys, and a table of contents.
+
+This is a guide for the care, programming and enjoyment of Maxx
+Steele®, your personal robot. It outlines the things you need to do to
+become familiar with Maxx and his many features.
+
+In general, here is how Maxx works. He is operated and programmed
+by a wireless remote controller that communicates with a computer
+“brain” housed in his upper body. His brain controls and coordinates
+all of Maxx’s ''mental"’ functions, such as memory, speech, music, time
+and game play. In addition, it operates the “physical” functions of the
+motors in his arms, wrist, claw and wheels.
+
+Maxx's built-in computer features an 8 K ROMoperating system anda
+2 K RAM computer memory, expandable to 63 K total.
+
+His programmable memory and “learn'' mode enable you to program
+a sequence of actions and activities which Maxx will then perform
+again and again—by himself, from memory!
+
+NOTE: | Save the shipping carton and foam inserts. They should be kept
+if you ever need fo transport Maxx or send him to us for any repairs (see
+separate Warranty). IMPORTANT: See separate sheet for instructions
+on installing STABILIZERS and other first-time use information.
+
+2.1 UNPACKING
+
+Carefully remove Maxx, packed in foam shipping shells, from his box.
+Then carefully spread apart the shells.
+
+NOTE: Always lift Maxx by his shoulders, DO NOT LIFT HIM BY HIS
+ARMS AS THIS MIGHT DAMAGE THE ARMS.
+
+2.2 ACTIVATING
+MAXX’S POWER
+
+Maxx's POWER SWITCH is located inside his chest storage compart-
+ment in the lower left corner. This controls all Maxx's electronics,
+including the clock and memory.
+
+To Turn On The Power Switch:
+
+1. Remove TAPE from POWER SWITCH.
+
+2. Put the POWER SWITCH UP into the ON position. Maxx will respond
+by saying, ‘Hello. | am Maxx Steele. [TUNE PLAYS] I'm ready."
+
+3. If Maxx does not respond in exactly this way, shut off the POWER
+
+SWITCH, wait 2 seconds, and turn it on again.

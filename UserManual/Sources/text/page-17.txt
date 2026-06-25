@@ -1,0 +1,62 @@
+Step 000
+
+Press the <HOME> key and the <ENTER> key. - Command
+Maxx will move his arms, wrist and claw to their initial starting, or - Operation
+home, position when the program is executed,
+Step 001
+Press the <WRIST DOWN> key. Then press the <3> key, the <0> - Command
+and the <ENTER> key. .
+Maxx will move his wrist down when the program is executed. - Operation
+Step 002
+Press the <WRIST UP> key. Then Press the <2>key,<0>key - Command
+and the <ENTER> key.
+Maxx will move his wrist up when the program is executed. - Operation
+Step 003
+Press the <WRIST DOWN> key. Then press the <6>key and the - Command
+<ENTER> key.
+Maxx will move his wrist down when the program is executed. - Operation
+Step 004
+Press the <WRIST UP> key. Then press the <1>key andthe - Command
+<ENTER> key.
+Maxx will move his wrist up when the program is executed. - Operation
+EXECUTE
+Press the <EXECUTE> key. - Command
+Maxx will run through the operations you have just programmed = - Operation
+him to perform.
+The claw can also be programmed to rotate to any one of 4.23 PROGRAMMING
+approximately 84 positions, about 4.2 degrees at a time. CLAW MOVEMENT
+
+#To Program The Claw To Rofate:
+l. Press the <PROGRAM> key to enter the Program Mode,
+2. Press the <CLAW ROTATE> key.
+3. The display will read “Cr_"’. This is a PROMPT indicating that Maxx
+expects a number, from 0 to 84, specifying how much the claw should
+be rotated. Experiment with different numbers and observe how the
+claw rotates.
+4. Atter the number keys have been pressed, press the <ENTER> key to
+complete and store the program step.
+3. The display will now show the number of the next program step,
+indicating that Maxx is ready for further programming.
+
+NOTE: The claw only rotates clockwise from Maxx's perspective.
+
+*To Program The Claw To Close Or Open:
+1. Press the <PROGRAM> key to enter the Program mode.
+2. Press the <CLAW CLOSE/OPEN> key.
+3, The display will read “Cco_”. This is a PROMPT indicating that Maxx
+expects a number specifying whether the claw should be closed or
+opened.
+4, Press the <0> key to program the claw to open fully.
+5. Press the <1> key to program the claw to close fully.
+6. After the number key has been pressed, press the <ENTER> key to
+complete and store the program step.
+7. The display will now show the number of the next program step,
+indicating that Maxx is ready for further programming.
+MOTE: The claw will fully close before it will open again, and vice
+versa (see 4.12A Moving Arms, Wrist and Claw},
+
+PROMPT FOR CLAW
+ROTATION
+
+PROMPT FOR CLAW
+MOVEMENT

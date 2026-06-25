@@ -1,0 +1,121 @@
+ANS
+
+i
+DRIVE
+
+Key 0: Drive Left
+Musical Note C
+
+“¥
+
+WRIST
+
+Key 4: Wrist Up
+Musical Note E
+
+8 am GH
+@)
+CLAW
+
+Key 8: Claw Rotate
+Musical Note G8
+
+WAIT
+
+NOTE REST
+
+Wout
+or Note Rest
+
+SONG
+
+WOTES
+
+Song or Netes
+
+GAME
+
+Game
+
+Ty C#
+‘tt
+
+DRIVE
+
+Key 1: Drive Forward
+
+Musical Note CH
+
+oS iF
+
+vy,
+
+WRIST
+
+Key 5: Wrist Down
+Musical Note F
+
+@
+
+CLAW
+
+Key 9: Claw Close or
+Open /Musical Note A
+
+DAIVE
+
+Key 2: Drive Reverse
+Musical Note D
+
+6g Fi
+C)
+ARMS
+
+Key 6: Arms Up
+Musical Nolte Fa
+
+@
+LAMP
+
+Lamp On or OF
+Musical Note AH
+
+SHIFT OCTAVE CLEAR
+Shift Octave Clear
+CLOCK «
+STATUSS SPEECH
+Clock ar Status Speech
+PROGRAM LEARN
+Program Leorn
+POWER/STOP
+
+Reybar: Power/Stop
+
+—"
+DRIWE
+
+Key 3: Drive Right
+Musical Note DF
+
+7, G
+
+C
+
+ARMS
+
+Key 7: Arms Down
+Musical Note G
+
+Musical Note B
+
+ENTER
+
+Enter
+
+MOTION
+
+Back Step
+
+EXECUTE
+
+Execute

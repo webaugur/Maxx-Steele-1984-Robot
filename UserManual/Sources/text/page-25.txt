@@ -1,0 +1,69 @@
+4.61-4.61A
+
+@” = *ogram Songs:
+Zress the <PROGRAM> key. Maxx will play the program tune and
+: display will show ‘Prag’,
+Before the program tune ends, press the <SONG> key. Maxx’s
+splay will show “Song’ and then program step “O00”. PROGRAM STEP
+Press the key corresponding to the pitch of the note.
+Press the key corresponding to the duration of the note (see chart
+nelow).
+=. Maxx’'s display will indicate the note number, pitch and duration as
+this information is entered,
+& Press the <ENTER> key to complete and store the program step. The
+nate of the chosen pitch and duration will play when the <ENTER> key
+5 pressed.
+7, Maxx's display will now show program step "01", indicating that
+he is ready for the next note to be entered.
+
+je (art) Vert
+
+Enter the entire song by repeating this procedure. The notes that have
+been entered can be played ot any time by pressing the <EXECUTE>
+key. This lets you check what you have entered so far. (See 4.14B Using
+the Controller as a Musical Instrument).
+
+Also, this song can be inserted anywhere into a program (see 4,61
+Playing a Programmed Song below).
+
+IMPORTANT: Moxx's music memory can hold up to 127 notes. This
+corresponds toa maximum playing time of approximately 2 minutes if NOTE (PITCH)
+only whole notes are used. The playing time will be shorter if notes of
+shorter duration ore used.
+
+When Maxx's music memory is full, his display will read “FULL, he will
+say ‘Sorry, my circuits are full” and he will return to the Immediate
+Mode. Therefore, if your song is longer than 2 mintues, or 127 notes,
+only the first 2 minutes, or 127 notes, will be stored in Maxx's memory. DURATION (QUARTER)
+
+MOTE: After note number 99 has been entered, Maxx’s display will
+read “O00_", indicating note number 100. In other words, note
+numbers 100 to 127 will appear as numbers 00 to 27 in Maxx's display.
+
+Enter the note's duration with the aid of the following chart:
+
+Key Note Duration Key Note Duration
+1 © whole
+J 5 quarter
+
+? oes holt 6 » dotted eighth
+
+4 d halt 7 A eighth
+
+4 é. dotted quarter Ft 5 dvteeeth
+*To Program A Rest: 4.61A PROGRAMMING
+1. Press the <NOTE REST/WAIT> key. RESTS
+
+2. Reading from left to right, Maxx's display will show the program
+step, the duration!, and the letter “r” followed by a blank.
+
+This is a PROMPT for you to enter the duration of the rest with one of
+the numbers, from 1 to 8, in the table listed above.
+
+3. After the number keys have been pressed, press the <ENTER> key PROMPT FOR REST
+fo complete and store the delay.
+
+4. The display will now show the number of the next program step,
+
+indicating that Maxx is ready for further music programming.
+

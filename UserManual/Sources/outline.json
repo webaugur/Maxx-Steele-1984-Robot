@@ -1,0 +1,83 @@
+{
+  "source_pdf": "Chassis/Manual/MaxxSteeleManual.pdf",
+  "page_count": 48,
+  "covers": {
+    "front_page": 1,
+    "rear_page": 2
+  },
+  "chapters": [
+    {
+      "file": "01-Getting-Started.md",
+      "title": "Chapter 1 — Getting started",
+      "pages": [4, 5, 6],
+      "page_splits": {
+        "6": "2.1 UNPACKING"
+      },
+      "take": "before_split",
+      "figures": [
+        {"page": 4, "caption": "Front view — controller slot, display, cartridge slot, chest panel, arms, claw, headlamp"},
+        {"page": 5, "caption": "Rear view — storage compartment, serving tray, charger jack, stabilizer wheel"}
+      ]
+    },
+    {
+      "file": "02-Setup.md",
+      "title": "Chapter 2 — Setup",
+      "pages": [6, 7, 8],
+      "page_splits": {
+        "6": "2.1 UNPACKING"
+      },
+      "take": "from_split",
+      "figures": [
+        {"page": 8, "caption": "Wireless remote controller — key layout and musical note assignments"}
+      ]
+    },
+    {
+      "file": "03-Operations.md",
+      "title": "Chapter 3 — Starting Maxx",
+      "pages": [9],
+      "figures": []
+    },
+    {
+      "file": "04-Immediate-Mode.md",
+      "title": "Chapter 4 — Immediate mode",
+      "pages": [10, 11, 12, 13],
+      "figures": []
+    },
+    {
+      "file": "05-Program-Learn-Execute.md",
+      "title": "Chapter 5 — Program, learn, and execute modes",
+      "pages": [13, 14, 15, 16, 17, 18, 19, 20, 21, 22],
+      "figures": []
+    },
+    {
+      "file": "06-Games-And-Other-Modes.md",
+      "title": "Chapter 6 — Games and other operating modes",
+      "pages": [22, 23, 24, 25, 26, 27],
+      "figures": []
+    },
+    {
+      "file": "07-Advanced-Features.md",
+      "title": "Chapter 7 — Advanced features",
+      "pages": [28, 29, 30, 31],
+      "figures": []
+    },
+    {
+      "file": "08-Appendices.md",
+      "title": "Chapter 8 — Appendices A–J",
+      "pages": [32, 33, 34, 35, 36, 37, 38, 39],
+      "figures": []
+    },
+    {
+      "file": "09-Compliance.md",
+      "title": "Chapter 9 — Cautions, FCC, and stabilizers",
+      "pages": [39, 40, 43, 44, 45, 46, 47, 48],
+      "figures": [
+        {"page": 43, "caption": "How to install stabilizers"},
+        {"page": 44, "caption": "Stabilizer installation (continued)"},
+        {"page": 45, "caption": "Warranty and service information"},
+        {"page": 46, "caption": "Warranty and service information (continued)"},
+        {"page": 47, "caption": "Warranty and service information (continued)"}
+      ]
+    }
+  ]
+}

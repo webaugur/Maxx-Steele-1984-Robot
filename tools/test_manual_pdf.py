@@ -9,6 +9,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+from display_codes import is_display_code, wrap_display_codes  # noqa: E402
 from manual_pdf import preprocess_markdown  # noqa: E402
 
 
@@ -44,6 +45,30 @@ class PreprocessMarkdownTests(unittest.TestCase):
         out = preprocess_markdown(text, {}, manual_dir=manual_dir)
         self.assertIn("`Mainboard/`", out)
         self.assertNotIn("`Mainboard/` (`Mainboard/`)", out)
+
+    def test_display_code_heuristic(self) -> None:
+        self.assertTrue(is_display_code("AEon"))
+        self.assertTrue(is_display_code("CLoC"))
+        self.assertFalse(is_display_code("I'm ready"))
+
+    def test_wrap_display_codes_in_markdown(self) -> None:
+        text = 'display shows "AEon" and "Thank you."'
+        out = wrap_display_codes(text)
+        self.assertIn("`AEon`", out)
+        self.assertIn('"Thank you."', out)
+
+    def test_display_backtick_to_latex(self) -> None:
+        manual_dir = Path(__file__).resolve().parents[1] / "UserManual"
+        text = "Press `AEon` or `AEon/AEof` or `<POWER/STOP>` key."
+        out = preprocess_markdown(
+            text,
+            {},
+            manual_dir=manual_dir,
+            display_message_style=True,
+        )
+        self.assertIn("\\LED{AEon}", out)
+        self.assertIn("\\LED{AEon}/\\LED{AEof}", out)
+        self.assertIn("`<POWER/STOP>`", out)
 
 
 if __name__ == "__main__":

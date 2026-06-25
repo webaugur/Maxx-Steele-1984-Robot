@@ -1,0 +1,77 @@
+undercarriage, is free from metallic debris such as paper clips and
+metal staples (see APPENDIX G. ROUTINE MAINTENANCE).
+
+Even though Maxx's motors are protected against overloads, care
+should be taken to avoid putting unnecessary strain on the motors. Do
+not overload the arm by giving it too heavy an object to lift or carry.
+Transporting any excess tray or claw weight (12 ounce maximum for
+the claw) will cause the protective emergency clutches in Maxx's arm
+to operate, producing a loud clicking, or “ratcheting,” sound. (This
+does not damage the mechanisms.)
+
+MOTE: if overloaded, Maxx will return to the Immediate Mode and
+stop all motors. If his wheels are turning, his display will read “Stal”
+(stall) and he will play a tone, indicating that his motors are not
+operating correctly. If this happens, press the <STOP> button on
+Maxx’'s head and then press the <HOME> key to return Maxx’'s arms,
+wrist and claw to their initial, or home, starting position.
+
+Also, Maxx should not be allowed to push against immovable objects
+such as a wall or couch. This could strain his walking motors.
+
+It is also important to keep Maxx off uneven surfaces where he is liable
+to tip or fall. IN AN EMERGENCY, the <POWER/STOP> key or the
+STOP BUTTON on Maxx’s head should be used to stop any motors
+from running. Using these buttons will not clear any program that may
+be stored in his memary.
+
+STOP BUTTON
+
+This section deals with the controller and shows you how to use it to
+enter the commands you want Maxx to perform. Each function is
+cross-referenced to the appropriate sections of this guide.
+
+Key 0: Drive Left/Musical Note C (see 4.1 2C Turning, 4.24 Programming
+Body Movements, 4.14 Music, 4.61 Program Song Mode and 4.62
+Learn Song Mode}
+
+Key 1: Drive Forward/Musical Note C# (see 4.12B Moving Forward
+and Backward, 4.24, 4.14, 4.61 and 4.62)
+
+Key 2: Drive Reverse/Musical Note D (see 4.128, 4.24, 4.14, 4.61 and
+4.62)
+
+Key 3: Drive Right/Musical Note D# (see 4.12C, 4.24, 4.14, 4.6] and
+4.62)
+
+Key 4: Wrist Up/Musical Note E (see 4.12A Moving Arms, Wrist and
+Claw, 4.22 Programming Wrist Movements, 4.14, 4.61, and 4.62)
+Key 5: Wrist Down/Musical Note F {see 4.12A, 4.22, 4.14, 4.6] and
+4.62)
+
+Key 6: Arms Up/Musical Note F# (see 4.12A, 4.21 Programming Arm
+Movements, 4.14, 4.61 and 4.62}
+
+Key 7: Arms Down/Musical Note G (see 4.12A, 4.21, 4.14, 4.6] and
+4.62)
+
+Key 8; Claw Rotate/Musical Note G# (see 4.124, 4.23 Programming
+Claw Movements, 4.14, 4.61 and 4.62}
+
+Key 9: Claw Close or Open/Musical Note A (see 4.12A, 4.14, 4.23, 4.61
+and 4.62)
+
+Key : Lamp On or Off/Musical Note A# (see 4.25 Programming the
+Headlamp, 4.14, 4.61 and 4.62)
+
+Key : Home/Musical Note B (see 4.12 Motion, 4.14, 4.61 and 4.62)
+Key : Wait or Note Rest (see 4.14B Using the Controller as a Musical
+Instrument, 4.26 Programming a Delay, and 4.43 Pausing During
+Program Execution)
+
+Key : Shift Octave (see 4.14C Octave Shift and 4.61B Octave Shift)
+
+J. SUMMARY OF
+
+FUNCTIONS
+AND SPECIAL KEYS

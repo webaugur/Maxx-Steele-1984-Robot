@@ -1,0 +1,71 @@
+3. After the number key is pressed, press the <ENTER> key. Maxx will
+play the song.
+
+For example, after PROMPT ‘Sn _" appears, if you press key <1> then
+the <ENTER> key, Maxx will play song number one.
+
+After playing a song, Maxx will return to the Immediate Mode. If
+another song is desired, push the <SONG> key and proceed as
+before.
+
+4.1468 USING THE
+CONTROLLER AS A
+MUSICAL
+INSTRUMENT
+
+NOTE-PLAYING MODE
+
+Maxx’s controller also functions as a “keyboard” instrument.
+
+To Play Music;
+
+|. Press the <SONG> key TWICE.
+
+2. The display will read “notE" (Fig. _), indicating that you are in the
+Note-Playing Mode.
+
+3. Press the keys corresponding to the notes you want to play.
+
+4. Press the <POWER/STOP> key to exit the Note-Playing Mode (see
+4.6] Program Song Mode and 4.62 Learn Song Mode}.
+
+4.14¢ OCTAVE SHIFT
+
+The music Maxx con play has a two-octave range; but since there is
+only one set of keys, a shift key is provided.
+
+*To Shift Octaves:
+|. Press the <OCTAVE> key before the note key is pressed,
+2. Each time the <OCTAVE> key is pressed, the octave switches up or
+down; therefore, if you raised the octave for the previous note and you
+want to return to the lower octave, you must press the <OCTAVE> key
+again to lower the octave before pressing the next note key.
+
+4.2 PROGRAM MODE
+
+NOTE: When in the Program Mode, pressing the <HOME> key and
+the <ENTER> key causes Maxx to move to his initial starting position
+when the program is executed, Doing this is important because it gives
+Maxx a specific starting point from which to begin any operation.
+Without an initial or home position, Maxx would nat know" what
+position his arms, wrist and claw are in. You may want Maxx to execute
+each program from the home position,
+
+*When You Initialize Maxx by Pressing the <HOME> Key, the
+Following Will Take Place:
+1. The WRIST will rotate up fully to its limit, which is parallel to his arms,
+and the claw will rotate to the starting position.
+2. The ARMS will move down, coming to within 2” of his body, and the
+CLAW will fully close.
+
+Entering The Program Mode
+
+Pressing the <PROGRAM> key puts Maxx in the Program Mode, Maxx
+will play his Program Mode tune and say “Please program me.” As
+with a personal computer, you enter commands, step-by-step, in the
+sequence you want Maxx to perform them, Each step is entered one at
+a time. Maxx waits until you press <ENTER> to complete and store
+each program step. The display will then show the number of the next
+step. He waits until you are finished and then runs the program when
+you press the <EXECUTE> key. Maxx will momentarily buzz if an error
+is made.

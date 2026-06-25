@@ -1,0 +1,76 @@
+4. Execute Mode tune. [When Maxx goes into the Execute Mode. |
+
+2. Game Mode tune. [When Maxx goes into the Game-Playing Made.)
+6. Reveille. [When Maxx's alarm is activated. |
+
+7. Power-Down tune. [When Maxx goes into the "Sleep'"’ Mode. }
+
+8. Taps. [When Maxx goes into the Auto Power-Down Mode.]
+
+The first 16 places, numbered O through 15, arefor programmingyour BD, PRE-PROGRAMMED
+ewn combination of words into sentences. The following phrases, PHRASES
+numbered 16 through 32, are the pre-programmed phrases Maxx can
+
+speak. Maxx will say these phrases under the conditions listed below,
+
+or when you select them.
+
+16. “Hello. | am Maxx Steele." [When turned on.]
+
+17, “Please choose game." [When Game Mode is entered.]
+
+18. “Please choose how tough.” [When game chosen has different
+
+levels of difficulty.]
+
+17. “Good play.” [When in Game Mode. }
+
+20. “Thank you.”
+
+21. ‘Is there anything | can do for you?"
+
+22. "Good morning."
+
+23. ‘'It is time to get up.” [When using the Alarm Clock. ]
+
+24. “Maxx Steele wins.” [If Maxx wins a game.|
+
+23. “Congratulations. You win." [If you win a game.|
+
+26. “i need energy. Please recharge me.” [When power is running
+
+down. |
+
+27. “Game over.” [After win or lose statement. |
+
+28. “Choose enter to play again.” [After “Game over” statement. |
+
+29. Sorry my circuits are full.” [When approaching program overload. |
+
+30."Please teach me." [When in the Learn Mode. |
+
+31, “Please program me." [When in the Program Mode. ]
+
+32. “I'm ready.” [When turned on, after statement #16.]
+
+“AEon/AEof” [AUTO-EXECUTION], Auto-Execution is on when LED E. GLOSSARY OF
+display shows ‘AEon.” It is off when the display shows, "AEof" (see PROMPTS AND
+4.11C Auto-Execute}. DISPLAY MESSAGES
+
+“Au” [ARM MOVEMENT]: Indicates that Maxx expects a number,
+specifying how much the arms should be moved (see 4.21
+Programming Arm Movements.)
+
+“beg” [BEGINNING]; Indicates beginning of program (see 4.27
+Clearing Program Steps).
+
+“Cr” [CLAW ROTATION]: Indicates that Maxx expects a number,
+specifying how much claw should be rotated (see 4.23),
+
+“Ceo_ [CLAW MOVEMENT}: Indicates Maxx expects a number
+indicating whether the claw should open or close (see 4.23
+Programming Claw Movements).
+
+“. "(PM INDICATOR]: When in the Clock Mode, the decimal point
+in the upper left of Maxx's display indicates PM when lit (see 4.114
+setting the Time}.

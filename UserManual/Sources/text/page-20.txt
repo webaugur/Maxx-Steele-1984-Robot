@@ -1,0 +1,82 @@
+4.25-4.28 DALEK
+
+5. Press the <O> key to program the headlamp to turn off.
+
+6. After the number key has been pressed, press the <ENTER> key to
+complete and store the program step.
+
+7. The display will now show the number of the next program step,
+indicating that Maxx is ready for further programming.
+
+4.26 PROGRAMMING
+A DELAY
+
+FROMPT FOR
+PROGRAM DELAY
+
+A delay of 0 to 255 seconds between each program step can be
+programmed, This can be useful when you want Maxx to pause at any
+time during a program. The delay command should be used when
+programming Maxx to move first forward and then backward, and
+vice versa, so that he stops between a change in direction.
+
+elo Program a Delay:
+|. Press the <PROGRAM> key to enter the Program Mode.
+2. Press the <NOTE REST/WAIT> key.
+3. The display will read “d__’’. This is a PROMPT indicating that Maxx
+expects a number specifying how many seconds, up to a maximum of
+255 seconds, you want the program to be delayed.
+4. After the number keys have been pressed, press the CENTER> key to
+complete and store the delay.
+5. The display will now show the number of the next program step,
+indicating that Maxx is ready for further programming.
+
+For example, to make the program delay 12 seconds, press the <NOTE
+REST/WAIT> key, the <1> key, the <2> key and the <ENTER> key.
+
+NOTE: When Moxx is executing a program, and he reaches the
+program step that calls for a delay, his display will count down from the
+delay number entered to zero before going to the next program step.
+
+4.27 CLEARING
+PROGRAM STEPS
+
+CLEARING PROGRAM
+STEP
+
+BEGINNING OF
+
+Clearing a program step is useful if you make a mistake while entering
+Oo program,
+IMPORTANT: After executing a program, never go back into the
+
+Program Mode to correct the program unless you are in the Edit Mode,
+or your program will be lost.
+
+NOTE: To change a program without erasing it, see 5.4 PROGRAM
+EDITING,
+eTo Clear Program Steps While Programming:
+]. Press the <CLEAR> key and hold for approx. 1 second.
+2. The display will read ‘“CLr_" for a short time.
+3, The number of the current program step that has just been cleared
+will appear briefly in Maxx’'s display,
+4. Each depression of the <CLEAR> key will clear the previous
+
+PROGRAM command,
+2. Repeated depression of the <CLEAR> key will eventually clear the
+entire program, step by step. The display will indicate “bEg’', showing
+that the program is at the beginning.
+4.28 CLEARING AN If you no longer want an entire program, itcan be cleared from Maxx's
+ENTIRE PROGRAM memary.
+
+CLEARED PROGRAM
+
+*To Clear An Entire Program While in the Program Mode:
+]. Press the <CLEAR> key.
+2. The display will read “CLr’’.
+3. Press the <PROGRAM*> key.
+4, Now the display will read “CLrP,”’ showing that the entire program
+has been cleared. In other words, the entire program will be erased
+from Maxx's memory; it cannot be recalled and must be re-entered,
+As you have seen, in the Program Mode, the programis run by pressing
+the <EXECUTE> key (see 4.4 EXECUTE MODE).

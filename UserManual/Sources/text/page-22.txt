@@ -1,0 +1,84 @@
+4.33-4.51 DALSX
+
+4.33 CLEARING AN
+ENTIRE PROGRAM
+
+the <CLEAR> key and the < PROGRAM > key (see 4.28 Clearing an
+Entire Program).
+
+4.4 EXECUTE MODE
+
+In the Execute Mode, Maxx carries out a program which has been
+entered in the Program, Learn, Speech or Song Modes. He will play the
+Execute Mode tune before running the program. Each program step is
+displayed as Maxx performs it.
+
+4.41 EXECUTING A
+
+Pressing the <EXECUTE> key will make Maxx run a program that has
+been stored while in the Program or Learn Modes. While running the
+program, the display will show the number of the next program step.
+
+NOTE: [he program alternates between running forward and running
+backward. For example, if the program was just stored in the Program
+Mode, pressing the <EXECUTE> key will run the program forward.
+Pressing the <EXECUTE> key again will run the program backward.
+Pressing the <EXECUTE> key once more will run the program forward
+again, and so on.
+
+IMPORTANT: |N THE LEARN MODE, IF THE PROGRAM HAS JUST
+BEEN LEARNED, THE FIRST TIME THE PROGRAM IS EXECUTED IT
+WILL RUN BACKWARD. Pressing the CEXECUTE> key a second time,
+after Maxx has run through the program backwards, will make the
+program run forward,
+
+MOTE: This feature can be switched OFF so that you can only run the
+learned program forward (see 5.6 FORWARD AND BACKWARD
+PROGRAM EXECUTION).
+
+NOTE: Since the claw can only rotate in one direction, when the
+program runs backwards, the claw will move ahead to the position
+where it would have stopped if it had rotated backwards.
+
+4.42 STOPPING
+PROGRAM
+EXECUTION
+
+Use the <POWER/STOP> key if Maxx is about to do something
+undesired, This will abort the execution of the program, stop Maxx,
+and return him to the Immediate Mode. You can also use the STOP
+button on his head. Press the <EXECUTE> key to continue. Maxx will
+resume at the next program step.
+
+4.43 PAUSING DURING
+PROGRAM
+EXECUTION
+
+The <WAIT> key can be used to make Maxx's program pause during
+execution. (To change steps in the program, follow the procedures outlin-
+ed in 5.4 PROGRAM EDITING.) Press < ENTER > for Maxx to continue.
+He will resume at the next program step.
+
+4.5 GAME-PLAYING
+MODE
+
+Maxx is pre-programmed to play two different games. They are
+“Moon Ball”™, Maxx’s version of table tennis played with light, and
+“Force Field’™, where you try to zap" Maxx with “fire” from the
+controller as he momentarily drops his “Force Field.”
+
+Press the <GAME> key. Maxx will play his Game Mode tune and say
+“Please choose game."
+
+To play Moon Ball, press the <0> key. To play Force Field, press the
+<|> key,
+
+4.51 MOON BALL™
+
+*How To Play MOON BALL (Game Choice <0>):
+Object:
+
+To score points using the mirror paddle, by reflecting Maxx’'s
+
+headlamp back to the PHOTO TRANSISTOR between his eyes (see
+Master Photo),

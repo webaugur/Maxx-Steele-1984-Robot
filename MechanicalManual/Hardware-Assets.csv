@@ -17,8 +17,8 @@ Cartridge/Photos/maxxcard.jpg,MechanicalManual|TechnicalManual,Demo cartridge PC
 Chassis/Artwork/Maxx-Steele-MAXX-Logo.svg,MechanicalManual,MAXX Logo SVG body artwork
 Chassis/Artwork/Maxx-Steele-Neck-Tattoo.svg,MechanicalManual,Neck Tattoo SVG body artwork
 Chassis/Artwork/Maxx-Steele-The-Personal-Robot.svg,MechanicalManual,The Personal Robot SVG body artwork
-Chassis/Manual/MaxxSteeleManual.pdf,MechanicalManual|TechnicalManual,Factory owner manual operation and keypad (not ROM layout)
-Chassis/Manual/MaxxSteeleReferenceGuide.pdf,MechanicalManual|TechnicalManual,Factory reference guide modes speech and programming overview
+Chassis/Manual/MaxxSteeleManual.pdf,MechanicalManual|TechnicalManual|UserManual,Archival factory owner manual PDF scan (image-only)
+Chassis/Manual/MaxxSteeleReferenceGuide.pdf,MechanicalManual|TechnicalManual|UserManual,Factory reference guide modes speech and programming overview
 Chassis/Photos/autopsy/Arm-Balance-Spring.jpg,MechanicalManual,Arm balance spring detail — Opened chassis mainboard base arm spring and backoff views
 Chassis/Photos/autopsy/back-off-arms-off.jpg,MechanicalManual,Rear view arms removed — Opened chassis mainboard base arm spring and backoff views
 Chassis/Photos/autopsy/backoff.jpg,MechanicalManual,Rear backoff shell view — Opened chassis mainboard base arm spring and backoff views
@@ -110,3 +110,6 @@ Transmitter/Stickers/Instructions.svg,MechanicalManual,Remote case sticker artwo
 Transmitter/Stickers/MAXX-Logo.svg,MechanicalManual,Remote case sticker artwork — MAXX Logo
 Transmitter/Stickers/Remote-Sticker-Sheet.pdf,MechanicalManual,Remote case sticker artwork — Remote Sticker Sheet
 Transmitter/Stickers/Remote-Sticker-Sheet.svg,MechanicalManual,Remote case sticker artwork — Remote Sticker Sheet
+UserManual/cover-front.jpg,UserManual,Hardware asset — UserManual/cover-front.jpg
+UserManual/cover-rear.jpg,UserManual,Hardware asset — UserManual/cover-rear.jpg
+UserManual/Maxx-Steele-User-Manual.pdf,UserManual,Community owner manual operation games maintenance rebuilt from factory scan

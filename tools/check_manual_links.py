@@ -8,13 +8,13 @@ import sys
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
-MANUAL_DIRS = (REPO / "TechnicalManual", REPO / "MechanicalManual")
+MANUAL_DIRS = (REPO / "TechnicalManual", REPO / "MechanicalManual", REPO / "UserManual")
 
 PATH_RE = re.compile(
     r"(?<![(\[`])"
     r"(?:\.\./)?"
     r"(?:tools|Cartridge|Chassis|DataSheets|Transmitter|Receiver|Mainboard|"
-    r"MechanicalManual|TechnicalManual|Power|PaddleMirror)/"
+    r"MechanicalManual|TechnicalManual|UserManual|Power|PaddleMirror)/"
     r"[\w./-]+"
     r"|"
     r"(?:\.\./)?Face/(?:KiCAD|Photos|README\.md)"
@@ -24,9 +24,11 @@ PATH_RE = re.compile(
     r"|"
     r"(?:cover-front|cover-rear)\.jpg"
     r"|"
-    r"Maxx-Steele-(?:Technical|Mechanical)-Manual\.pdf"
+    r"Maxx-Steele-(?:Technical|Mechanical|User)-Manual\.pdf"
     r"|"
-    r"build_(?:technical|mechanical)_manual_pdf\.py"
+    r"build_(?:technical|mechanical|user)_manual_pdf\.py"
+    r"|"
+    r"gen_user_manual_(?:chapters|outline)\.py"
     r"|"
     r"tools/maxx_rom\.py"
     r"|"

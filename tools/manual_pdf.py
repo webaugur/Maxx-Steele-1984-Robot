@@ -10,6 +10,7 @@ from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
 
+from display_codes import convert_display_backticks_to_latex
 from PIL import Image, ImageDraw, ImageFont
 
 BOOKLET_WIDTH_IN = 6.5
@@ -44,6 +45,9 @@ class ManualSpec:
     output_name: str
     title: str
     author: str = "Maxx-Steele-1984-Robot contributors"
+    number_sections: bool = False
+    display_message_style: bool = False
+    display_font_dir: Path | None = None
 
 
 def require_tool(name: str) -> str:
@@ -135,11 +139,41 @@ def _maybe_embed_raster(
     return f"![{bare}]({resolved})"
 
 
+def _yaml_header_line(line: str) -> str:
+    if "#" in line or ":" in line:
+        return f"  - '{line}'"
+    return f"  - {line}"
+
+
+def led_header_includes(*, font_dir: Path | None) -> list[str]:
+    font_path = None
+    if font_dir is not None:
+        candidate = font_dir / "DSEG7Classic-Bold.ttf"
+        if candidate.is_file():
+            font_path = latex_path(candidate.parent) + "/"
+    if font_path:
+        return [
+            "\\usepackage{fontspec}",
+            f"\\newfontfamily\\LEDfont["
+            f"Path={font_path},"
+            "Extension=.ttf,"
+            "UprightFont=DSEG7Classic-Bold,"
+            "LetterSpace=1.5"
+            "]{DSEG7Classic-Bold}",
+            "\\newcommand{\\LED}[1]{{\\begingroup\\color{red}\\LEDfont\\fontsize{18}{22}\\selectfont #1\\endgroup}}",
+        ]
+    return [
+        "\\usepackage{fontspec}",
+        "\\newcommand{\\LED}[1]{{\\begingroup\\color{red}\\fontfamily{lmtt}\\fontseries{b}\\fontsize{18}{22}\\selectfont #1\\endgroup}}",
+    ]
+
+
 def preprocess_markdown(
     text: str,
     anchor_map: dict[str, str],
     *,
     manual_dir: Path,
+    display_message_style: bool = False,
 ) -> str:
     def _same_guide_link(match: re.Match[str]) -> str:
         label, file_name, anchor = match.group(1), match.group(2), match.group(3)
@@ -198,6 +232,8 @@ def preprocess_markdown(
     text = HTTP_LINK.sub(_http_link, text)
     text = FILE_LINK.sub(_file_link, text)
     text = re.sub(r"\n---\n", "\n\n", text)
+    if display_message_style:
+        text = convert_display_backticks_to_latex(text)
     return text
 
 
@@ -212,6 +248,7 @@ def merge_chapters(spec: ManualSpec, *, pandoc: str) -> str:
             path.read_text(encoding="utf-8").strip(),
             anchor_map,
             manual_dir=spec.manual_dir,
+            display_message_style=spec.display_message_style,
         )
         if index > 0:
             parts.append(r"\clearpage")
@@ -237,6 +274,26 @@ def build_manual_pdf(
     cover_lines = "\n".join(
         f"  - {line}" for line in front_cover_header_includes(front_cover_pdf)
     )
+    display_lines = ""
+    if spec.display_message_style:
+        font_dir = spec.display_font_dir or (spec.manual_dir / "Fonts")
+        display_lines = "\n".join(
+            _yaml_header_line(line) for line in led_header_includes(font_dir=font_dir)
+        )
+        if display_lines:
+            display_lines = display_lines + "\n"
+    if spec.number_sections:
+        section_label = r"{\thesection}"
+        subsection_label = r"{\thesubsection}"
+        subsubsection_label = r"{\thesubsubsection}"
+        title_sep = "1em"
+        bookmarks_numbered = "true"
+    else:
+        section_label = ""
+        subsection_label = ""
+        subsubsection_label = ""
+        title_sep = "0em"
+        bookmarks_numbered = "false"
     metadata = f"""---
 title: "{spec.title}"
 author: "{spec.author}"
@@ -244,7 +301,7 @@ date: "{today}"
 lang: en-US
 toc: true
 toc-depth: 2
-numbersections: true
+numbersections: {str(spec.number_sections).lower()}
 geometry:
   - paperwidth=6.5in
   - paperheight=8.5in
@@ -263,9 +320,9 @@ header-includes:
   - \\usepackage{{etoolbox}}
   - \\usepackage{{enumitem}}
   - \\usepackage{{setspace}}
-  - \\titleformat{{\\section}}{{\\color{{maxxnavy}}\\bfseries\\Large}}{{\\thesection}}{{1em}}{{}}
-  - \\titleformat{{\\subsection}}{{\\color{{maxxnavy}}\\bfseries\\large}}{{\\thesubsection}}{{1em}}{{}}
-  - \\titleformat{{\\subsubsection}}{{\\color{{maxxnavy}}\\bfseries\\normalsize}}{{\\thesubsubsection}}{{1em}}{{}}
+  - \\titleformat{{\\section}}{{\\color{{maxxnavy}}\\bfseries\\Large}}{{{section_label}}}{{{title_sep}}}{{}}
+  - \\titleformat{{\\subsection}}{{\\color{{maxxnavy}}\\bfseries\\large}}{{{subsection_label}}}{{{title_sep}}}{{}}
+  - \\titleformat{{\\subsubsection}}{{\\color{{maxxnavy}}\\bfseries\\normalsize}}{{{subsubsection_label}}}{{{title_sep}}}{{}}
   - \\makeatletter
   - \\pretocmd{{\\section}}{{\\needspace{{8\\baselineskip}}}}{{}}{{}}
   - \\pretocmd{{\\subsection}}{{\\needspace{{6\\baselineskip}}}}{{}}{{}}
@@ -282,14 +339,17 @@ header-includes:
   - \\floatplacement{{figure}}{{H}}
   - \\usepackage{{caption}}
   - \\captionsetup{{skip=4pt}}
-  - \\AtBeginDocument{{\\hypersetup{{colorlinks=true,linkcolor=maxxnavy,urlcolor=maxxnavy,hidelinks=false,bookmarks=true,bookmarksopen=true,bookmarksnumbered=true}}}}
-{cover_lines}
+  - \\AtBeginDocument{{\\hypersetup{{colorlinks=true,linkcolor=maxxnavy,urlcolor=maxxnavy,hidelinks=false,bookmarks=true,bookmarksopen=true,bookmarksnumbered={bookmarks_numbered}}}}}
+{display_lines}{cover_lines}
 ---
 
 """
 
+    input_format = "markdown+raw_tex" if spec.display_message_style else "markdown"
     command = [
         pandoc,
+        "-f",
+        input_format,
         "-",
         "-o",
         str(output),

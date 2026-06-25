@@ -71,6 +71,7 @@ TUNE_DESCRIPTIONS: dict[int, str] = {
 
 SCAN_ROOTS = (
     "Chassis",
+    "UserManual",
     "Transmitter",
     "Receiver",
     "Mainboard",
@@ -146,7 +147,10 @@ def assign_manual(path: Path) -> str:
         return "MechanicalManual|TechnicalManual"
 
     if r.startswith("Chassis/Manual/"):
-        return "MechanicalManual|TechnicalManual"
+        return "MechanicalManual|TechnicalManual|UserManual"
+
+    if r.startswith("UserManual/"):
+        return "UserManual"
 
     if r.startswith("Chassis/Photos/autopsy/"):
         if "Main-Board" in path.name or "Board" in path.name:
@@ -222,7 +226,10 @@ def describe(path: Path) -> str:
         return f"4 KB cartridge EPROM image at $A000 ({stem})"
 
     if r == "Chassis/Manual/MaxxSteeleManual.pdf":
-        return "Factory owner manual operation and keypad (not ROM layout)"
+        return "Archival factory owner manual PDF scan (image-only)"
+
+    if r == "UserManual/Maxx-Steele-User-Manual.pdf":
+        return "Community owner manual operation games maintenance rebuilt from factory scan"
 
     if r == "Chassis/Manual/MaxxSteeleReferenceGuide.pdf":
         return "Factory reference guide modes speech and programming overview"
@@ -313,6 +320,8 @@ def iter_assets() -> list[Path]:
                 continue
             r = rel(path)
             if r in SKIP_REL:
+                continue
+            if r.startswith("UserManual/Sources/"):
                 continue
             found.append(path)
     return found

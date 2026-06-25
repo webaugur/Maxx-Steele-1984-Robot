@@ -12,7 +12,8 @@ It is modeled on the structure of the [Commodore 64 Programmer's Reference Guide
 |----------|----------|-------|
 | **This guide** | Programmers, reverse engineers | Bytecode language, memory map, I/O, internal ROM hooks |
 | [`Cartridge/PROGRAMMING.md`](../Cartridge/PROGRAMMING.md) | Cartridge authors | Step-by-step cart layout, tools, demo walkthrough |
-| [`Chassis/Manual/`](../Chassis/Manual/) | Owners | Factory user / reference manuals (operation, not ROM layout) |
+| [`UserManual/`](../UserManual/) | Owners | Setup, operation, games (not ROM layout) |
+| [`Chassis/Manual/`](../Chassis/Manual/) | Owners | Archival factory PDF scans |
 | [`MechanicalManual/`](../MechanicalManual/) | Repairers | Chassis disassembly, reassembly, teardown photos |
 
 Primary sources: R. Wind disassemblies ([`maxx_internal_ROM.dsm`](../Mainboard/Firmware/Assembly/maxx_internal_ROM.dsm), [`maxx_demo_ROM_532.dsm`](../Cartridge/Examples/CBSDemo/Firmware/Assembly/maxx_demo_ROM_532.dsm)), [`tools/maxx_rom.py`](../tools/maxx_rom.py).

@@ -1,0 +1,48 @@
+E. GLOSSARY OF "O00" - 254" [PROGRAM STEPS]: While entering o program, the
+PROMPTS AND display indicates the current program step (see 4.2 PROGRAM
+DISPLAY MESSAGES = MODE).
+
+F. SPEECH CODES NOTE: You may want to enlarge Maxx's vocabulary by putting
+words together to form new words, For example, if you press the
+<1> key, the <4> key, the <1> key and the <5> key, Maxx will
+respond by saying, ‘Fifteen’ [words 14 (fif) and 15 (teen))}.
+see how many new words you can create by combining other words
+on this list.
+
+SPEECH CODES:
+0. zero 36, but 72. indicate 108. sorry
+1. one 37. by 73. ing 109. sss
+2.two 38. can 74. is 110. steele
+3. three 39. charge 5. it 111. suppose
+4. four 40. choice 76. just 112. sure
+5. five 4], choose 77. lay 113. teach
+6. six 42. circuits 78. let 114. test
+7. seven 43. clear 79. liked 115. thank
+8, eight 44. congratulations 80. load 116. that
+9. nine 45. corded 81. long 117. the
+10. ten 46. day 82. made 118. there
+11. eleven 47. dead 83. match 119. thing
+12. twelve 48. different 84. max 120. time
+13. thir 49. do 85. me 121. tough
+14, fif 50. ear 86. morn 122. try
+15. teen 51. easy 6/7. my 123. turn
+16. twen 52. energy 88. name 124. up
+17. ty 53. enter 89. need 125. upper
+18. hundred 54. error 90. no 126. wait
+Qa 55, est 91. now 127. was
+20. accepted 56, function 92. ok 128. way
+21. again 57. Full 93. opponent 129. were
+22. ah 58. game 94. or 130. what
+23. aid 59. get 95. out 131. when
+24, aim 60. goes 96. over 132. who
+25.am 61. good 97. Ow 133. whoops
+26.an 62. great 98. pal 134. will
+27. and 63. hahahahaha 99. play 135. win
+28. any 64, have 100. please 136. would
+29. approach 65. hello 101. program 13/7. yes
+30. ore 66, how 102. proper 138, you
+31. awe 6/7. human 103. re 139. zz
+32. be 66. | 104. ready 140. [pause]
+33. begin bY. if 105, run
+34. boost 70. I'm 106. serve
+35. bout 71.in 107. same
