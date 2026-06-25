@@ -7,6 +7,7 @@ on:
       - "TechnicalManual/*.md"
       - "TechnicalManual/cover-*.jpg"
       - "tools/build_technical_manual_pdf.py"
+      - "tools/manual_pdf.py"
       - ".github/workflows/technical-manual-pdf.yml"
   workflow_dispatch:
 
