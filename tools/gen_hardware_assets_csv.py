@@ -21,8 +21,8 @@ PHOTO_SECTIONS: dict[str, tuple[str, str]] = {
         "Primary disassembly walkthrough IMG_2116 through IMG_2131",
     ),
     "Photos/cyberia-makerspace": (
-        "Cyberia Makerspace additional angles",
-        "Workshop session variants and timestamps",
+        "Cyberia Makerspace workshop session",
+        "Timestamp photos and hero shot from teardown session",
     ),
     "Photos/autopsy": (
         "Internal autopsy",
@@ -30,7 +30,7 @@ PHOTO_SECTIONS: dict[str, tuple[str, str]] = {
     ),
     "Photos/mint-vintage-toys": (
         "Exterior and collection",
-        "Mint vintage toy listing exterior remote and detail shots",
+        "Mint vintage toy listing exterior and detail shots",
     ),
     "Photos/case": (
         "Case and packaging",
@@ -53,8 +53,6 @@ AUTOPSY_HINTS: dict[str, str] = {
 }
 
 MINT_HINTS: dict[str, str] = {
-    "Remote-Front.jpg": "Remote transmitter front (collection listing)",
-    "Remote-Back.jpg": "Remote transmitter rear (collection listing)",
     "maxx_bottom.jpg": "Robot underside exterior",
     "maxx_in_packing.jpg": "Robot in original packing foam",
     "maxxsteal7.jpg": "Full robot exterior collection shot",
@@ -122,21 +120,9 @@ def chassis_photo_description(path: Path) -> str:
         stem = path.stem.replace("Maxx-Steele-", "").replace("-", " ")
         return no_commas(f"{stem} SVG body artwork")
 
-    if name.startswith("Copy-of-IMG_"):
-        canon = name.replace("Copy-of-", "")
-        return no_commas(
-            f"Duplicate export of Chassis/Photos/Disassembly/{canon} archive only — {blurb}"
-        )
-
-    if key == "Photos/cyberia-makerspace" and re.match(r"IMG_\d{4}\.JPG$", name):
-        return no_commas(
-            f"Duplicate of Chassis/Photos/Disassembly/{name} archive only — {blurb}"
-        )
-
     step = teardown_step(name)
-    if step:
-        suffix = " alternate angle" if name.endswith("-1.jpg") else ""
-        return no_commas(f"{step}{suffix} — {blurb}")
+    if step and key == "Photos/Disassembly":
+        return no_commas(f"{step} — {blurb}")
 
     if re.match(r"2012-", name):
         return no_commas(f"Cyberia workshop timestamp photo — {blurb}")

@@ -15,7 +15,6 @@
 | `keyboard-matrix-reference-2.png` | Keyboard matrix layout |
 | `schematic-trace-overlay-1.png` | Schematic trace reconstruction |
 | `pcb-trace-overlay-1.png` | PCB trace overlay |
-| `pcb-trace-overlay-1-alt.png` | Alternate PCB trace overlay |
 
 | [`Product/Remote-Front.jpg`](Product/Remote-Front.jpg) | Front panel product photo (button label source) |
 | [`Product/Remote-Front.svg`](Product/Remote-Front.svg) | Keypad faceplate diagram (matrix keys A–Y) |

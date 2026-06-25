@@ -2,8 +2,6 @@
 
 All photos and artwork under [`Chassis/`](../Chassis/), grouped by source folder.
 
-Duplicate `Copy-of-IMG_*` exports and second copies of the canonical `IMG_2116`–`IMG_2131` frames in `cyberia-makerspace/` are omitted here (they match [`Chassis/Photos/Disassembly/`](../Chassis/Photos/Disassembly/)).
-
 ## Workshop teardown sequence
 
 Primary disassembly walkthrough (`IMG_2116`–`IMG_2131`). Archive: [`Chassis/Photos/Disassembly/`](../Chassis/Photos/Disassembly/).
@@ -41,11 +39,9 @@ Primary disassembly walkthrough (`IMG_2116`–`IMG_2131`). Archive: [`Chassis/Ph
 ![IMG_2131.JPG](../Chassis/Photos/Disassembly/IMG_2131.JPG)
 
 
-## Cyberia Makerspace — additional angles
+## Cyberia Makerspace — workshop session
 
-Workshop session variants and timestamps. Canonical `IMG_*` frames are in the teardown sequence above. Archive: [`Chassis/Photos/cyberia-makerspace/`](../Chassis/Photos/cyberia-makerspace/).
-
-![2012-07-07_17-38-33_94.jpg](../Chassis/Photos/cyberia-makerspace/2012-07-07_17-38-33_94.jpg)
+Timestamp photos and hero shot from the teardown session. Canonical `IMG_2116`–`IMG_2131` frames are in Disassembly above. Archive: [`Chassis/Photos/cyberia-makerspace/`](../Chassis/Photos/cyberia-makerspace/).
 
 ![2012-09-07_20-53-36_354.jpg](../Chassis/Photos/cyberia-makerspace/2012-09-07_20-53-36_354.jpg)
 
@@ -60,38 +56,6 @@ Workshop session variants and timestamps. Canonical `IMG_*` frames are in the te
 ![2012-09-07_20-54-31_57.jpg](../Chassis/Photos/cyberia-makerspace/2012-09-07_20-54-31_57.jpg)
 
 ![Cyberia-Maxx-Steele.jpg](../Chassis/Photos/cyberia-makerspace/Cyberia-Maxx-Steele.jpg)
-
-![IMG_2116-1.jpg](../Chassis/Photos/cyberia-makerspace/IMG_2116-1.jpg)
-
-![IMG_2117-1.jpg](../Chassis/Photos/cyberia-makerspace/IMG_2117-1.jpg)
-
-![IMG_2118-1.jpg](../Chassis/Photos/cyberia-makerspace/IMG_2118-1.jpg)
-
-![IMG_2119-1.jpg](../Chassis/Photos/cyberia-makerspace/IMG_2119-1.jpg)
-
-![IMG_2120-1.jpg](../Chassis/Photos/cyberia-makerspace/IMG_2120-1.jpg)
-
-![IMG_2121-1.jpg](../Chassis/Photos/cyberia-makerspace/IMG_2121-1.jpg)
-
-![IMG_2122-1.jpg](../Chassis/Photos/cyberia-makerspace/IMG_2122-1.jpg)
-
-![IMG_2123-1.jpg](../Chassis/Photos/cyberia-makerspace/IMG_2123-1.jpg)
-
-![IMG_2124-1.jpg](../Chassis/Photos/cyberia-makerspace/IMG_2124-1.jpg)
-
-![IMG_2125-1.jpg](../Chassis/Photos/cyberia-makerspace/IMG_2125-1.jpg)
-
-![IMG_2126-1.jpg](../Chassis/Photos/cyberia-makerspace/IMG_2126-1.jpg)
-
-![IMG_2127-1.jpg](../Chassis/Photos/cyberia-makerspace/IMG_2127-1.jpg)
-
-![IMG_2128-1.jpg](../Chassis/Photos/cyberia-makerspace/IMG_2128-1.jpg)
-
-![IMG_2129-1.jpg](../Chassis/Photos/cyberia-makerspace/IMG_2129-1.jpg)
-
-![IMG_2130-1.jpg](../Chassis/Photos/cyberia-makerspace/IMG_2130-1.jpg)
-
-![IMG_2131-1.jpg](../Chassis/Photos/cyberia-makerspace/IMG_2131-1.jpg)
 
 
 ## Internal autopsy
@@ -115,7 +79,7 @@ Opened chassis: mainboard, base, arm balance spring, and backoff views. Archive:
 
 ## Exterior and collection
 
-Mint/vintage toy listing photos: exterior, remote, and detail shots. Archive: [`Chassis/Photos/mint-vintage-toys/`](../Chassis/Photos/mint-vintage-toys/).
+Mint/vintage toy listing photos: exterior and detail shots. Remote photos: [`Transmitter/Photos/Product/`](../../Transmitter/Photos/Product/). Archive: [`Chassis/Photos/mint-vintage-toys/`](../Chassis/Photos/mint-vintage-toys/).
 
 ![05-5.jpg](../Chassis/Photos/mint-vintage-toys/05-5.jpg)
 
@@ -153,10 +117,6 @@ Mint/vintage toy listing photos: exterior, remote, and detail shots. Archive: [`
 
 ![40-2.jpg](../Chassis/Photos/mint-vintage-toys/40-2.jpg)
 
-![Remote-Back.jpg](../Chassis/Photos/mint-vintage-toys/Remote-Back.jpg)
-
-![Remote-Front.jpg](../Chassis/Photos/mint-vintage-toys/Remote-Front.jpg)
-
 ![maxx_bottom.jpg](../Chassis/Photos/mint-vintage-toys/maxx_bottom.jpg)
 
 ![maxx_in_packing.jpg](../Chassis/Photos/mint-vintage-toys/maxx_in_packing.jpg)
@@ -169,8 +129,6 @@ Mint/vintage toy listing photos: exterior, remote, and detail shots. Archive: [`
 Retail case, press, and promotional photos. Archive: [`Chassis/Photos/case/`](../Chassis/Photos/case/).
 
 ![1000x1000.jpg](../Chassis/Photos/case/1000x1000.jpg)
-
-![Cyberia-Maxx-Steele.jpg](../Chassis/Photos/case/Cyberia-Maxx-Steele.jpg)
 
 ![Maxx-Steele-Press-Photo.JPG](../Chassis/Photos/case/Maxx-Steele-Press-Photo.JPG)
 

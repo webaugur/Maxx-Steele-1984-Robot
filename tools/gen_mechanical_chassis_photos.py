@@ -19,8 +19,8 @@ SECTIONS: tuple[tuple[str, str, Path], ...] = (
         CHASSIS / "Photos" / "Disassembly",
     ),
     (
-        "Cyberia Makerspace — additional angles",
-        "Workshop session variants and timestamps. Canonical `IMG_*` frames are in the teardown sequence above.",
+        "Cyberia Makerspace — workshop session",
+        "Timestamp photos and hero shot from the teardown session. Canonical `IMG_2116`–`IMG_2131` frames are in Disassembly above.",
         CHASSIS / "Photos" / "cyberia-makerspace",
     ),
     (
@@ -30,7 +30,7 @@ SECTIONS: tuple[tuple[str, str, Path], ...] = (
     ),
     (
         "Exterior and collection",
-        "Mint/vintage toy listing photos: exterior, remote, and detail shots.",
+        "Mint/vintage toy listing photos: exterior and detail shots. Remote photos: [`Transmitter/Photos/Product/`](../../Transmitter/Photos/Product/).",
         CHASSIS / "Photos" / "mint-vintage-toys",
     ),
     (
@@ -44,15 +44,6 @@ SECTIONS: tuple[tuple[str, str, Path], ...] = (
         CHASSIS / "Artwork",
     ),
 )
-
-SKIP_NAMES = frozenset(
-    name
-    for name in (
-        [f"Copy-of-IMG_{n}.JPG" for n in range(2116, 2132)]
-        + [f"IMG_{n}.JPG" for n in range(2116, 2132)]
-    )
-)
-
 
 def rel_chassis(path: Path) -> str:
     return path.relative_to(CHASSIS).as_posix()
@@ -70,17 +61,14 @@ def is_vector(path: Path) -> bool:
     return path.suffix in VECTOR_EXT
 
 
-def list_images(folder: Path, *, cyberia: bool) -> list[Path]:
+def list_images(folder: Path) -> list[Path]:
     if not folder.is_dir():
         return []
-    files = sorted(
+    return sorted(
         p
         for p in folder.iterdir()
         if p.is_file() and (is_raster(p) or is_vector(p))
     )
-    if cyberia:
-        files = [p for p in files if p.name not in SKIP_NAMES]
-    return files
 
 
 def emit_image(path: Path) -> list[str]:
@@ -99,15 +87,10 @@ def main() -> None:
         "",
         "All photos and artwork under [`Chassis/`](../Chassis/), grouped by source folder.",
         "",
-        "Duplicate `Copy-of-IMG_*` exports and second copies of the canonical `IMG_2116`–`IMG_2131` "
-        "frames in `cyberia-makerspace/` are omitted here (they match "
-        "[`Chassis/Photos/Disassembly/`](../Chassis/Photos/Disassembly/)).",
-        "",
     ]
 
     for title, blurb, folder in SECTIONS:
-        cyberia = folder.name == "cyberia-makerspace"
-        images = list_images(folder, cyberia=cyberia)
+        images = list_images(folder)
         lines.append(f"## {title}")
         lines.append("")
         lines.append(f"{blurb} Archive: [`Chassis/{rel_chassis(folder)}/`](../Chassis/{rel_chassis(folder)}/).")
@@ -126,10 +109,7 @@ def main() -> None:
     lines.append("")
 
     OUT.write_text("\n".join(lines), encoding="utf-8")
-    total = sum(
-        len(list_images(folder, cyberia=folder.name == "cyberia-makerspace"))
-        for _, _, folder in SECTIONS
-    )
+    total = sum(len(list_images(folder)) for _, _, folder in SECTIONS)
     print(f"wrote {OUT.relative_to(REPO)} ({total} images)")
 
 
