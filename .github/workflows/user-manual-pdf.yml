@@ -5,13 +5,9 @@ on:
     branches: [main]
     paths:
       - "UserManual/**"
-      - "Chassis/Manual/MaxxSteeleManual.pdf"
-      - "tools/extract_manual_pages.py"
-      - "tools/ocr_manual_pages.py"
-      - "tools/gen_user_manual_outline.py"
-      - "tools/gen_user_manual_chapters.py"
       - "tools/build_user_manual_pdf.py"
       - "tools/manual_pdf.py"
+      - "tools/display_codes.py"
       - ".github/workflows/user-manual-pdf.yml"
   workflow_dispatch:
 
