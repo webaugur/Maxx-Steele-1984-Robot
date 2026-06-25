@@ -27,7 +27,10 @@ The interpreter executes a bytecode program stored in RAM. Cartridges do not run
 | 0 | Immediate | Keys execute instantly |
 | 1 | Learn | Record key sequences |
 | 2 | Program | Enter bytecode steps via keypad |
-| 3 | Execute / Game | Run stored program |
+| 3 | Execute | Run stored program at `$0200` |
+| 4 | Game | Built-in games via `JMP ($0094)` → `$F8CE` |
+
+Full OS flow: [Technical Manual Ch 5](../TechnicalManual/05-Cartridge-Bootstrap-and-Internal-ROM.md).
 
 ---
 
@@ -54,7 +57,7 @@ The interpreter executes a bytecode program stored in RAM. Cartridges do not run
 |------|------|---------|
 | `$02` | Status A | Speech error, backoff, power-down, drive, speech flags |
 | `$03` | Status B | User control, speech enable, execute gating |
-| `$0D` | Mode | 0=immediate, 1=learn, 2=program, 3=execute |
+| `$0D` | Mode | 0=immediate, 1=learn, 2=program, 3=execute, 4=game |
 | `$0F/$10` | Program pointer | Current step in `$0200` table |
 | `$11/$13` | Current opcode/operand | During entry and execution |
 | `$24/$25` | Program byte pointer | Used by executor |

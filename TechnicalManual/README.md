@@ -30,7 +30,7 @@ Primary sources: R. Wind disassemblies ([`maxx_internal_ROM.dsm`](../Mainboard/F
 
 **If you are writing cartridges**, add:
 
-5. [Chapter 5 — Cartridge bootstrap and internal ROM](05-Cartridge-Bootstrap-and-Internal-ROM.md)
+5. [Chapter 5 — Internal ROM operating system](05-Cartridge-Bootstrap-and-Internal-ROM.md)
 6. [Chapter 7 — UltraMaxx BASIC language](07-UltraMaxx-BASIC-Language.md)
 7. [`Cartridge/PROGRAMMING.md`](../Cartridge/PROGRAMMING.md) §9 (authoring workflow)
 
@@ -52,6 +52,7 @@ Keep [Quick reference](Quick-Reference.md) and [Appendices](Appendices.md) open 
 | Learn key sequences | 1 | Records into program RAM |
 | Enter program steps | 2 | Keypad maps to opcodes via `$E6B5` table |
 | Run stored program | 3 | Bytecode at `$0200`, terminator `FF FF` |
+| Built-in games | 4 | `JMP ($0094)` → `$F8CE`; game 1/2 at `$F8E9` / `$FAA4` |
 | Factory demo | 3 + cart | [`CBSDemo.532`](../Cartridge/Examples/CBSDemo/Firmware/Binary/CBSDemo.532) bootstrap |
 | Custom cartridge | 3 + cart | 4 KB EPROM image; see Ch 5–7 + cartridge manual |
 | UltraMaxx BASIC authoring | 3 + cart | Ch 7; [`tools/maxx`](../tools/maxx) `compile` → `.532` |

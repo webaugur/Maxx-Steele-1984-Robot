@@ -34,6 +34,8 @@ tools/maxxbas/target/release/maxx --help
 
 Firmware bypass patches and trap table: [`patches.json`](patches.json) (from Joe / Andy-in-Indy `MaxxSteeleFirmwarePatchesForVirtual6502Simulator.xlsx`, 2022).
 
+Trap addresses map to routines documented in [Technical Manual Ch 5](../../TechnicalManual/05-Cartridge-Bootstrap-and-Internal-ROM.md) (`$E161` learn loop, `$E17B` immediate decode, `$E617` keypad poll, `$EE2F` opcode dispatch). ROM listing: [`Mainboard/Firmware/Assembly/maxx_internal_ROM.dsm`](../../Mainboard/Firmware/Assembly/maxx_internal_ROM.dsm).
+
 `maxx simulate` runs all three layers in one command:
 
 | Layer | Description |

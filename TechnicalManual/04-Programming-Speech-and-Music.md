@@ -98,4 +98,4 @@ References a song index for the internal song table (distinct from `$81` play-tu
 
 ---
 
-**Previous:** [Chapter 3](03-Programming-Motion-and-Display.md) · **Next:** [Chapter 5 — Cartridge and internal ROM](05-Cartridge-Bootstrap-and-Internal-ROM.md)
+**Previous:** [Chapter 3](03-Programming-Motion-and-Display.md) · **Next:** [Chapter 5 — Internal ROM OS](05-Cartridge-Bootstrap-and-Internal-ROM.md)
