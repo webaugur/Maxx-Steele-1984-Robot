@@ -14,7 +14,7 @@ PATH_RE = re.compile(
     r"(?<![(\[`])"
     r"(?:\.\./)?"
     r"(?:tools|Cartridge|Chassis|DataSheets|Transmitter|Receiver|Mainboard|"
-    r"MechanicalManual|TechnicalManual|Power|PaddleMirror|Simulator)/"
+    r"MechanicalManual|TechnicalManual|Power|PaddleMirror)/"
     r"[\w./-]+"
     r"|"
     r"(?:\.\./)?Face/(?:KiCAD|Photos|README\.md)"

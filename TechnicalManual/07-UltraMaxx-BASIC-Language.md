@@ -410,7 +410,7 @@ All commands are provided by [`tools/maxx`](../tools/maxx) (see [`tools/maxxbas/
 | `maxx list` *file.532* | Human-readable step list |
 | `maxx list --json` | Machine-readable trace (simulators) |
 | `maxx upload` *file* | Compile (if needed) + PicoROM |
-| [`maxx simulate`](../tools/maxx) *file* | Step preview ([`Simulator/`](../Simulator/); add `--gui` for interactive playback) |
+| [`maxx simulate`](../tools/maxx) *file* | Step preview ([`tools/maxxbas/`](../tools/maxxbas/); add `--gui` for interactive playback) |
 
 ---
 

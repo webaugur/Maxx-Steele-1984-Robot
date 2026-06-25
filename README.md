@@ -43,7 +43,7 @@ Each module has a [`KiCAD/`](Transmitter/KiCAD/) subfolder for schematic/PCB wor
 | [`Face/`](Face/) | Planned | `Face/KiCAD/` |
 | [`Cartridge/`](Cartridge/) | ROM, firmware, [programming manual](Cartridge/PROGRAMMING.md), [technical manual](TechnicalManual/README.md) | [`CBSDemo.kicad_pro`](Cartridge/Examples/CBSDemo/KiCAD/CBSDemo.kicad_pro) (active); UltraMaxx planned |
 | [`PaddleMirror/`](PaddleMirror/) | Archive | `PaddleMirror/KiCAD/` (planned) |
-| [`Chassis/`](Chassis/) | Body, manuals, photos, internal ROM | `Chassis/KiCAD/` (mechanical, planned) |
+| [`Chassis/`](Chassis/) | Body, manuals, photos | `Chassis/KiCAD/` (mechanical, planned) |
 
 ### Tools & shared assets
 
@@ -52,8 +52,7 @@ Each module has a [`KiCAD/`](Transmitter/KiCAD/) subfolder for schematic/PCB wor
 | [`TechnicalManual/`](TechnicalManual/) | Technical manual (bytecode, opcodes, I/O, appendices) — [README](TechnicalManual/README.md), [PDF](TechnicalManual/Maxx-Steele-Technical-Manual.pdf) |
 | [`MechanicalManual/`](MechanicalManual/) | Mechanical manual (disassembly, reassembly, teardown photos) — [README](MechanicalManual/README.md), [PDF](MechanicalManual/Maxx-Steele-Mechanical-Manual.pdf) |
 | [`DataSheets/`](DataSheets/) | Third-party component datasheets (indexed in [`DataSheets/README.md`](DataSheets/README.md)) |
-| [`Simulator/`](Simulator/) | Unified robot simulator (patches, docs); run via `maxx simulate` |
-| [`tools/`](tools/) | [`tools/bin/`](tools/bin/) shell commands (`maxx`, `maxx-rom`, `picorom-cart`), [`maxxbas/`](tools/maxxbas/) Rust library, Python modules, KiCad helpers, [`rfcap/`](tools/rfcap/) GNU Radio OOK flowgraphs |
+| [`tools/`](tools/) | [`tools/bin/`](tools/bin/) shell commands (`maxx`, `maxx-rom`, `picorom-cart`), [`maxxbas/`](tools/maxxbas/) Rust library + `maxx simulate`, Python modules, KiCad helpers, [`rfcap/`](tools/rfcap/) GNU Radio OOK flowgraphs |
 | [`libraries/`](libraries/) | Shared KiCad symbol libraries |
 
 ## Paths
@@ -68,6 +67,7 @@ export PATH="$(pwd)/tools/bin:$PATH"
 maxx compile Cartridge/Examples/UltraMaxx/Firmware/Basic/hello.bas
 maxx list Cartridge/Examples/UltraMaxx/Firmware/Binary/hello.532 --json
 maxx upload Cartridge/Examples/UltraMaxx/Firmware/Basic/hello.bas --device maxx_cart --dry-run
+maxx simulate Cartridge/Examples/UltraMaxx/Firmware/Binary/hello.532 --gui
 
 # KiCad 10: open Transmitter/KiCAD/Transmitter-27MHz.kicad_pro
 ```

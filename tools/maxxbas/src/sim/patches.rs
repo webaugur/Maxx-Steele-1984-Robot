@@ -24,8 +24,8 @@ pub struct Trap {
 
 impl PatchSet {
     pub fn embedded() -> Self {
-        serde_json::from_str(include_str!("../../../../Simulator/patches.json"))
-            .expect("Simulator/patches.json must parse")
+        serde_json::from_str(include_str!("../../patches.json"))
+            .expect("tools/maxxbas/patches.json must parse")
     }
 
     pub fn trap_addrs(&self) -> Vec<(u16, String)> {
