@@ -106,7 +106,7 @@ Display-only **beg** marker; does not affect execution flow in the demo cart.
 
 1. Every program ends with `FF FF`.
 2. Operands are one byte (`$00`–`FF`); meaning depends on opcode (Ch 2–4).
-3. Test with `python3 tools/maxx_rom.py validate` before burning EPROM.
+3. Test with `python3 tools/maxx_rom.py validate` (see [`tools/maxx_rom.py`](../tools/maxx_rom.py)) before burning EPROM.
 4. For a worked 38-step demo, see [`Cartridge/PROGRAMMING.md`](../Cartridge/PROGRAMMING.md) §5.
 
 ---

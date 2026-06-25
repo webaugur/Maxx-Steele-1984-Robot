@@ -5,8 +5,9 @@ use std::process::ExitCode;
 use clap::{Parser, Subcommand};
 use maxxbas::{
     compile_to_output, decode_cart, default_output, format_listing, format_rom_listing,
-    input_kind, parse_source, program_bytes, resolve_input, run_upload, upload_command,
-    validate_cart_image, CartImage, Copyright, InputKind, CART_SIZE,
+    format_simulation, input_kind, parse_source, program_bytes, resolve_input, run_gui,
+    run_simulation, run_upload, upload_command, validate_cart_image, CartImage, Copyright,
+    InputKind, SimulationOptions, CART_SIZE,
 };
 
 #[derive(Parser)]
@@ -72,11 +73,34 @@ enum Commands {
         #[arg(long)]
         dry_run: bool,
     },
-    /// Preview program steps (simulator placeholder — outputs trace summary)
+    /// Simulate program + robot model + patched internal ROM (unified simulator)
     Simulate {
-        image: PathBuf,
+        /// .bas, .maxx, or .532
+        file: PathBuf,
         #[arg(long)]
         json: bool,
+        /// Skip 65C02 firmware boot simulation
+        #[arg(long)]
+        no_firmware: bool,
+        /// Max CPU cycles for firmware boot (default 25000)
+        #[arg(long, default_value_t = 25000)]
+        cycles: u64,
+        /// Inject a fake keypad byte at $75 before firmware run
+        #[arg(long)]
+        key: Option<u8>,
+        /// Write 64 KB patched memory image (masswerk virtual6502)
+        #[arg(long)]
+        image_out: Option<PathBuf>,
+        #[arg(long, default_value = "ultramaxx")]
+        copyright: String,
+        #[arg(long)]
+        tables_from: Option<PathBuf>,
+        /// Text only — omit ASCII opcode visual storyboard
+        #[arg(long)]
+        plain: bool,
+        /// Open interactive GUI (robot status + step playback)
+        #[arg(long)]
+        gui: bool,
     },
 }
 
@@ -127,7 +151,29 @@ fn run() -> Result<(), String> {
             tables_from.as_deref(),
             dry_run,
         ),
-        Commands::Simulate { image, json } => cmd_simulate(&image, json),
+        Commands::Simulate {
+            file,
+            json,
+            no_firmware,
+            cycles,
+            key,
+            image_out,
+            copyright,
+            tables_from,
+            plain,
+            gui,
+        } => cmd_simulate(
+            &file,
+            json,
+            no_firmware,
+            cycles,
+            key,
+            image_out.as_deref(),
+            &copyright,
+            tables_from.as_deref(),
+            plain,
+            gui,
+        ),
     }
 }
 
@@ -232,28 +278,49 @@ fn cmd_upload(
     run_upload(&cmd, dry_run)
 }
 
-fn cmd_simulate(image: &Path, json: bool) -> Result<(), String> {
-    let cart = CartImage::load(image)?;
-    let trace = decode_cart(&cart)?;
+fn cmd_simulate(
+    file: &Path,
+    json: bool,
+    no_firmware: bool,
+    cycles: u64,
+    key: Option<u8>,
+    image_out: Option<&Path>,
+    copyright_key: &str,
+    tables_from: Option<&Path>,
+    plain: bool,
+    gui: bool,
+) -> Result<(), String> {
+    let copyright = parse_copyright(copyright_key)?;
+    let resolved = resolve_input(file, copyright, None, tables_from)?;
+    let cart = CartImage::load(&resolved.path)?;
+
+    let report = run_simulation(
+        &cart,
+        &file.display().to_string(),
+        &SimulationOptions {
+            max_cycles: cycles,
+            inject_key: key,
+            run_firmware: !no_firmware,
+            cart_bootstrap: !no_firmware,
+            image_out: image_out.map(Path::to_path_buf),
+            plain,
+        },
+    )?;
+
+    if gui {
+        if json {
+            eprintln!("note: --json ignored when --gui is set");
+        }
+        return run_gui(report);
+    }
 
     if json {
-        println!("{}", serde_json::to_string_pretty(&trace).map_err(|e| e.to_string())?);
-        return Ok(());
+        println!("{}", serde_json::to_string_pretty(&report).map_err(|e| e.to_string())?);
+    } else {
+        print!("{}", format_simulation(&report, plain));
+        if let Some(path) = image_out {
+            println!("Wrote 64 KB sim image: {}", path.display());
+        }
     }
-
-    println!("Maxx Steele program simulator (preview)");
-    println!("Copyright: {}", trace.copyright);
-    println!("Steps: {}", trace.steps.len());
-    println!();
-
-    for step in &trace.steps {
-        println!("{:3}  {}", step.index, step.comment);
-    }
-
-    println!();
-    println!(
-        "Vector graphics renderer not yet implemented. \
-         Use `maxx list --json` for machine-readable program trace."
-    );
     Ok(())
 }

@@ -95,6 +95,8 @@ Do not place arbitrary 6502 execution paths in the demo program area unless you 
 
 Step-by-step cartridge creation: [`Cartridge/PROGRAMMING.md`](../Cartridge/PROGRAMMING.md) §9.
 
+Quick commands ([`tools/maxx_rom.py`](../tools/maxx_rom.py); compare listing [`maxx_demo_ROM_532.dsm`](../Cartridge/Examples/CBSDemo/Firmware/Assembly/maxx_demo_ROM_532.dsm)):
+
 ```bash
 python3 tools/maxx_rom.py template mycart.532
 python3 tools/maxx_rom.py validate mycart.532
@@ -108,7 +110,7 @@ EPROM type: Mitsubishi KM2365 family — [`DataSheets/Mitsubishi-KM2365.pdf`](..
 ## Known gaps
 
 - Full subroutine catalog for `$E000`–`FFFF` not yet indexed (see [Appendix I](Appendices.md#i-internal-rom-entry-points)).
-- Padding at `$A0C7+` in demo image marked "not Maxx-related" in `.dsm` — treat as unused.
+- Padding at `$A0C7+` in demo image marked "not Maxx-related" in [`maxx_demo_ROM_532.dsm`](../Cartridge/Examples/CBSDemo/Firmware/Assembly/maxx_demo_ROM_532.dsm) — treat as unused.
 
 ---
 

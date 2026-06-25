@@ -4,7 +4,7 @@ This chapter lists every known Maxx Steele program opcode. Display names come fr
 
 Opcodes are described in **hex order** within each group. For a one-page summary, see [Quick reference](Quick-Reference.md).
 
-Export machine-readable opcode JSON:
+Export machine-readable opcode JSON ([`tools/maxx_rom.py`](../tools/maxx_rom.py); output path is arbitrary, e.g. under [`Cartridge/`](../Cartridge/)):
 
 ```bash
 python3 tools/maxx_rom.py opcodes Cartridge/opcodes.json

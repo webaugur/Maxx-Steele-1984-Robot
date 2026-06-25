@@ -60,7 +60,7 @@ Full glyph bitmaps are embedded in [`maxx_internal_ROM.dsm`](../Chassis/Firmware
 
 ## E — Status bits
 
-### `$02` (from `maxx_rom.py`)
+### `$02` (from [`tools/maxx_rom.py`](../tools/maxx_rom.py))
 
 | Bit | Label |
 |-----|-------|
@@ -106,7 +106,7 @@ File offset = cartridge address − `$A000` for demo cart base.
 
 ---
 
-## H — `maxx_rom.py` commands
+## H — [`tools/maxx_rom.py`](../tools/maxx_rom.py) commands
 
 ```bash
 python3 tools/maxx_rom.py disasm PATH [--compare-dsm DSM]

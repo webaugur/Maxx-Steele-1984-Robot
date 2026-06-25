@@ -6,6 +6,7 @@ mod emit;
 mod error;
 mod input;
 mod parse;
+mod sim;
 mod upload;
 mod validate;
 
@@ -24,6 +25,10 @@ pub use input::{
 };
 pub use parse::{parse_source, program_bytes, Instruction};
 pub use upload::{picorom_size_token, run_upload, upload_command, PICOROM_SIZES};
+pub use sim::{
+    format_human as format_simulation, run_gui, run_simulation, SimulationOptions,
+    SimulationReport,
+};
 pub use validate::{validate_cart, validate_cart_image};
 
 /// Compile MaxxBAS source with the given copyright string.
@@ -96,5 +101,29 @@ mod integration {
         let json = serde_json::to_string(&trace).unwrap();
         assert!(json.contains("\"op\":\"delay\""));
         assert!(json.contains("\"op\":\"forward\""));
+    }
+
+    #[test]
+    fn unified_simulator_hello() {
+        use crate::sim::{run_simulation, SimulationOptions};
+
+        let cart = CartImage::from_bytes(HELLO_532.to_vec()).unwrap();
+        let report = run_simulation(
+            &cart,
+            "hello.532",
+            &SimulationOptions {
+                max_cycles: 18_000,
+                inject_key: None,
+                run_firmware: true,
+                cart_bootstrap: true,
+                image_out: None,
+                plain: false,
+            },
+        )
+        .unwrap();
+        assert_eq!(report.robot.steps.len(), report.program.steps.len());
+        assert!(report.robot.final_state.time_s >= 4.0);
+        let fw = report.firmware.expect("firmware sim");
+        assert!(fw.cycles > 1_000);
     }
 }

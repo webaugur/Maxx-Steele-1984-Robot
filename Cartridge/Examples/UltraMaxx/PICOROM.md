@@ -106,7 +106,7 @@ Sample source: [`Firmware/Basic/hello.bas`](Firmware/Basic/hello.bas)
 | `maxx validate FILE.532` | Validate cart structure |
 | `maxx list FILE.532 [--json]` | Program steps (JSON for simulators) |
 | `maxx upload FILE` | Compile if `.bas`/`.maxx`, then PicoROM upload |
-| `maxx simulate FILE.532` | Step preview (vector graphics TBD) |
+| `maxx simulate FILE.532` | Unified simulator (program + robot + firmware) — see [`Simulator/`](../../../Simulator/) |
 
 ```bash
 export PATH="$(git rev-parse --show-toplevel)/tools/bin:$PATH"

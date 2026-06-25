@@ -1,0 +1,27 @@
+{
+  "source": "Joe / Andy-in-Indy virtual6502 bypass patches (MaxxSteeleFirmwarePatchesForVirtual6502Simulator.xlsx, 2022)",
+  "reference": "https://www.masswerk.at/6502/",
+  "rom_patches": [
+    { "addr": "0xE9E9", "bytes": [0], "purpose": "Clock: timer IRQ memory bypass" },
+    { "addr": "0xEC1B", "bytes": [169, 255, 234], "purpose": "Clock: display wait loop bypass" },
+    { "addr": "0xED5F", "bytes": [105, 127, 234], "purpose": "Display: serial data wait bypass" },
+    { "addr": "0xED6C", "bytes": [105, 127, 234], "purpose": "Display: serial data wait bypass" },
+    { "addr": "0xED82", "bytes": [105, 127, 234], "purpose": "Display: serial data wait bypass" },
+    { "addr": "0xED8C", "bytes": [105, 127, 234], "purpose": "Display: serial data wait bypass" },
+    { "addr": "0xEDA0", "bytes": [105, 127, 234], "purpose": "Display: serial data wait bypass" },
+    { "addr": "0xEF63", "bytes": [169, 0], "purpose": "Motor control: talkback confirm bypass" },
+    { "addr": "0xF438", "bytes": [0], "purpose": "Speech: LC8100 finish flag forced ready" }
+  ],
+  "traps": [
+    { "addr": "0xE161", "name": "key_loop", "note": "Learn-mode keypad loop (main wait)" },
+    { "addr": "0xE17B", "name": "key_decoded", "note": "Immediate mode — key in A, from $75" },
+    { "addr": "0xE617", "name": "poll_key", "note": "JSR get keypad key" },
+    { "addr": "0xEE2F", "name": "dispatch", "note": "Opcode dispatch JMP ($008C)" }
+  ],
+  "boot_phases": [
+    { "cycles_max": 4096, "name": "zero_ram" },
+    { "cycles_max": 6144, "name": "load_tables" },
+    { "cycles_max": 15360, "name": "display_init" },
+    { "cycles_max": 17408, "name": "speech_tune" }
+  ]
+}

@@ -28,7 +28,7 @@ After compile, upload the image with PicoROM or burn EPROM. The robot runs the p
 
 ## Getting started
 
-Add the toolchain to your path once:
+Add the toolchain ([`tools/bin/`](../tools/bin/)) to your path once:
 
 ```bash
 export PATH="$(git rev-parse --show-toplevel)/tools/bin:$PATH"
@@ -304,6 +304,8 @@ Cartridge detection in internal ROM compares this field during warm start.
 
 Programs that use **`SAY`** or **`PLAY`** need matching data in the cart tables at **`$A081`** and **`$A0BB`**. The compiler fills these regions with **`$FF`** / **`$00`** unless you supply a reference image:
 
+Example ([`ultramaxx.bas`](../Cartridge/Examples/UltraMaxx/Firmware/Basic/ultramaxx.bas), tables from [`UltraMaxx.532`](../Cartridge/Examples/UltraMaxx/Firmware/Binary/UltraMaxx.532)):
+
 ```bash
 maxx compile ultramaxx.bas -o UltraMaxx.bas.532 \
   --copyright ultramaxx \
@@ -398,6 +400,8 @@ Control flow is **strictly linear**: the executor runs steps in order from `$020
 
 ## Quick command reference
 
+All commands are provided by [`tools/maxx`](../tools/maxx) (see [`tools/maxxbas/`](../tools/maxxbas/) for the Rust implementation).
+
 | Command | Purpose |
 |---------|---------|
 | `maxx compile` *file.bas* | Build `.532` image |
@@ -406,7 +410,7 @@ Control flow is **strictly linear**: the executor runs steps in order from `$020
 | `maxx list` *file.532* | Human-readable step list |
 | `maxx list --json` | Machine-readable trace (simulators) |
 | `maxx upload` *file* | Compile (if needed) + PicoROM |
-| `maxx simulate` *file.532* | Step preview |
+| [`maxx simulate`](../tools/maxx) *file* | Step preview ([`Simulator/`](../Simulator/); add `--gui` for interactive playback) |
 
 ---
 

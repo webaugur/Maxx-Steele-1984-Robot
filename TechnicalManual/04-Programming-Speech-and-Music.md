@@ -55,7 +55,7 @@ Example program bytes:
 83 00    ; another RAM phrase
 ```
 
-**Note:** Demo listing uses operands `$10`, `$00`, `$01`, etc. — cross-check against your cart image with `maxx_rom.py disasm`.
+**Note:** Demo listing uses operands `$10`, `$00`, `$01`, etc. — cross-check against your cart image with [`tools/maxx_rom.py`](../tools/maxx_rom.py) `disasm`.
 
 ---
 

@@ -105,6 +105,8 @@ FF FF    end program
 
 **Cart limit:** 38 steps max. **Not supported:** variables, `IF`, `GOTO`.
 
+CLI ([`tools/maxx`](../tools/maxx)):
+
 ```bash
 maxx compile FILE.bas -o FILE.532
 maxx upload FILE.bas --device maxx_cart
@@ -113,6 +115,8 @@ maxx upload FILE.bas --device maxx_cart
 ---
 
 ## Tools
+
+Binaries: [`tools/maxx`](../tools/maxx), [`tools/maxx_rom.py`](../tools/maxx_rom.py) (shell wrapper [`tools/bin/maxx-rom`](../tools/bin/maxx-rom)).
 
 ```bash
 maxx compile FILE.bas -o FILE.532

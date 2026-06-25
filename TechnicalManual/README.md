@@ -4,7 +4,7 @@ This manual describes how to program the 1984 CBS Toys / Ideal **Maxx Steele** r
 
 It is modeled on the structure of the [Commodore 64 Programmer's Reference Guide](https://archive.org/details/c64-programmer-ref) — numbered chapters, appendices, a quick-reference card, and a schematic index — adapted to Maxx Steele hardware.
 
-**PDF (latest):** [`Maxx-Steele-Technical-Manual.pdf`](Maxx-Steele-Technical-Manual.pdf) — front/rear covers plus chapters; rebuilt when `.md` or cover images change (`python3 tools/build_technical_manual_pdf.py` locally; GitHub Actions on push to `main`).
+**PDF (latest):** [`Maxx-Steele-Technical-Manual.pdf`](Maxx-Steele-Technical-Manual.pdf) — front/rear covers plus chapters; rebuilt when `.md` or cover images ([`cover-front.jpg`](cover-front.jpg), [`cover-rear.jpg`](cover-rear.jpg)) change ([`tools/build_technical_manual_pdf.py`](../tools/build_technical_manual_pdf.py) locally; GitHub Actions on push to `main`).
 
 ## What this guide covers
 
@@ -53,27 +53,9 @@ Keep [Quick reference](Quick-Reference.md) and [Appendices](Appendices.md) open 
 | Run stored program | 3 | Bytecode at `$0200`, terminator `FF FF` |
 | Factory demo | 3 + cart | [`CBSDemo.532`](../Cartridge/Examples/CBSDemo/Firmware/Binary/CBSDemo.532) bootstrap |
 | Custom cartridge | 3 + cart | 4 KB EPROM image; see Ch 5–7 + cartridge manual |
-| UltraMaxx BASIC authoring | 3 + cart | Ch 7; `maxx compile` → `.532` |
+| UltraMaxx BASIC authoring | 3 + cart | Ch 7; [`tools/maxx`](../tools/maxx) `compile` → `.532` |
 | Speech / music authoring | any | Ch 4; phrase tables in cart or RAM |
 | Repair / RE | — | Ch 6, Schematics, [`DataSheets/`](../DataSheets/) |
-
----
-
-## Table of contents
-
-| Chapter | Title |
-|---------|-------|
-| — | [Introduction](README.md) (this file) |
-| 1 | [Bytecode programming rules](01-Bytecode-Programming-Rules.md) |
-| 2 | [Opcode vocabulary](02-Opcode-Vocabulary.md) |
-| 3 | [Programming motion and display](03-Programming-Motion-and-Display.md) |
-| 4 | [Programming speech and music](04-Programming-Speech-and-Music.md) |
-| 5 | [Cartridge bootstrap and internal ROM](05-Cartridge-Bootstrap-and-Internal-ROM.md) |
-| 6 | [Input/output guide](06-Input-Output-Guide.md) |
-| 7 | [UltraMaxx BASIC language](07-UltraMaxx-BASIC-Language.md) |
-| A–L | [Appendices](Appendices.md) |
-| — | [Quick reference card](Quick-Reference.md) |
-| — | [Schematic diagram index](Schematics.md) |
 
 ---
 

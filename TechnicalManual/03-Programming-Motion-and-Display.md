@@ -85,7 +85,7 @@ When program RAM is full, the display spells **FULL** (bytes at internal ROM lab
 ## Known gaps
 
 - Exact mm/degree mapping for operands is not documented in the internal ROM listing.
-- Motor ramp profiles and limit switches are hardware-dependent; see [`Mainboard/Schematic/`](../Mainboard/Schematic/) and future KiCad RE.
+- Motor ramp profiles and limit switches are hardware-dependent; see [`Mainboard/Schematic/`](../Mainboard/Schematic/) and [`Mainboard/KiCAD/`](../Mainboard/KiCAD/) (digitization in progress).
 
 ---
 

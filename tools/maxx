@@ -9,7 +9,7 @@ use if the binary is missing.
   maxx validate program.532
   maxx list program.532 [--json]
   maxx upload program.bas --device maxx_cart
-  maxx simulate program.532
+  maxx simulate program.532 [--json] [--image-out sim.bin]
 """
 
 from __future__ import annotations

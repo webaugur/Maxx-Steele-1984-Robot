@@ -50,6 +50,7 @@ Each module has a [`KiCAD/`](Transmitter/KiCAD/) subfolder for schematic/PCB wor
 |------|-------------|
 | [`TechnicalManual/`](TechnicalManual/) | Technical manual (bytecode, opcodes, I/O, appendices) — [README](TechnicalManual/README.md), [PDF](TechnicalManual/Maxx-Steele-Technical-Manual.pdf) |
 | [`DataSheets/`](DataSheets/) | Third-party component datasheets (indexed in [`DataSheets/README.md`](DataSheets/README.md)) |
+| [`Simulator/`](Simulator/) | Unified robot simulator (patches, docs); run via `maxx simulate` |
 | [`tools/`](tools/) | [`tools/bin/`](tools/bin/) shell commands (`maxx`, `maxx-rom`, `picorom-cart`), [`maxxbas/`](tools/maxxbas/) Rust library, Python modules, KiCad helpers, [`rfcap/`](tools/rfcap/) GNU Radio OOK flowgraphs |
 | [`libraries/`](libraries/) | Shared KiCad symbol libraries |
 
