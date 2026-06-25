@@ -6,7 +6,7 @@
 |------|-------------|
 | [`Firmware/`](Firmware/) | Masked internal 6502 ROM binary and disassembly (`$E000`–`$FFFF`) |
 | [`KiCAD/`](KiCAD/) | KiCad project (placeholder) |
-| [`Schematic/`](Schematic/) | Raster scans and vector schematic sources |
+| [`Schematic/`](Schematic/) | Raster scans, [IC inventory](Schematic/IC-Inventory.md), [MMIO pin map](Schematic/MMIO-Pin-Map.md) |
 
 Chassis photos: [`Chassis/Photos/`](../Chassis/Photos/).
 

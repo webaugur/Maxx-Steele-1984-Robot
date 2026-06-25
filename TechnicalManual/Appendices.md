@@ -274,6 +274,23 @@ Curated catalog from [`maxx_internal_ROM.dsm`](../Mainboard/Firmware/Assembly/ma
 
 ---
 
+## M — MMIO hardware cross-reference
+
+Partial pin map and IC inventory (provisional decode). Full detail: [`Mainboard/Schematic/MMIO-Pin-Map.md`](../Mainboard/Schematic/MMIO-Pin-Map.md).
+
+| MMIO | Peripheral | Key ROM drivers | Likely IC |
+|------|------------|-----------------|-----------|
+| `$1000` | Timer / display handshake | `$EEEE`, `$ED5F`–`$EDA0` | Counter TBD |
+| `$1200` | LED shift register | `$ED4F`, `$ED7B`, `$F684` | COP41xL U500 |
+| `$1400` | Speech nybbles + strobe | `$F3D8`, `$F460` | LC8100 / ET9420 |
+| `$1600` | Motor aux / music attack | `$F21C`, `$F14B` | COP41xL / COP420 |
+| `$1C00` | Music tone period | `$F207`, `$F21C` | Audio path |
+| `$1E00` | Power latch | `$E041`, `$E07B` | Glue logic |
+
+ROM access listing: [`MMIO-ROM-Crossref.md`](../Mainboard/Schematic/MMIO-ROM-Crossref.md) (`tools/gen_mmio_crossref.py`).
+
+---
+
 ## L — Glossary
 
 | Term | Meaning |

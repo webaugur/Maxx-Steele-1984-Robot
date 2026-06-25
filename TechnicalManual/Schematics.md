@@ -14,6 +14,8 @@ The Commodore 64 Programmer's Reference included a fold-out schematic. This inde
 
 6502 CPU, RAM (M6116), cartridge interface, speech and motor glue.
 
+MMIO hardware (partial): [`Mainboard/Schematic/MMIO-Pin-Map.md`](../Mainboard/Schematic/MMIO-Pin-Map.md), [`IC-Inventory.md`](../Mainboard/Schematic/IC-Inventory.md).
+
 ---
 
 ## Transmitter (remote)

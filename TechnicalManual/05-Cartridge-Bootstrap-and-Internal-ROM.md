@@ -231,7 +231,7 @@ IRQ path decrements **`$26`**, **`$28`**, **`$2A`**, **`$27`** for note timing a
 | `$EDAF` | Stalled-motor check (main loop) |
 | `$EF76` | Leave learn mode / motor cleanup |
 
-I/O bitfields at `$1000`, `$1600`, `$1C00`, and `$1E00` are not fully documented; see [Chapter 6](06-Input-Output-Guide.md).
+MMIO bitfields and CPU pin mapping: [Chapter 6](06-Input-Output-Guide.md), [`Mainboard/Schematic/MMIO-Pin-Map.md`](../Mainboard/Schematic/MMIO-Pin-Map.md).
 
 ---
 
@@ -313,8 +313,9 @@ EPROM type: Mitsubishi KM2365 family — [`DataSheets/Mitsubishi-KM2365.pdf`](..
 
 - **Game internals** — scoring, `$A6`–`$AD` game state, IRQ paths `$FB8C`–`$FC6C` need deeper RE
 - **Full zero page** — only programmer-facing locations are catalogued ([Appendix D](Appendices.md#d-zero-page-registers))
-- **I/O bitfields** — `$1000`, `$1600`, `$1C00`, `$1E00` register layouts incomplete
-- **Motor talkback** — `$EF63` / `$2B` protocol not fully traced to hardware
+- **I/O bitfields** — provisional tables in Ch 6 + MMIO pin map; glue IC refdes still TBD
+- **Motor talkback** — `$EF63` / `$2B` not traced to **MoCOP Done** / COP41xL pin yet
+- **`$F222` motor serial** — target of `$EF2E`/`$EF40`; not fully disassembled in `.dsm`
 - **Phoneme tables** — `$F4DB` / `$F567` not transcribed to phoneme names
 - **Complete subroutine catalog** — partial index in [Appendix I](Appendices.md#i-internal-rom-entry-points); full `$E000`–`FFFF` map not yet mined
 

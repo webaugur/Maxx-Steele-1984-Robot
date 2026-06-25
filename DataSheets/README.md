@@ -11,19 +11,19 @@ Do not duplicate datasheet PDFs elsewhere in the archive — link here from modu
 | File | OEM / part | Refdes | Schematic | Used by |
 |------|------------|--------|-----------|---------|
 | [`National-COP411L.pdf`](National-COP411L.pdf) | National COP411L 4-bit MCU | U1 | [`Transmitter-27MHz.kicad_sch`](../Transmitter/KiCAD/Transmitter-27MHz.kicad_sch) | [`Transmitter/`](../Transmitter/), [`transmitter-bom.md`](../Transmitter/transmitter-bom.md) |
-| [`National-COP420.pdf`](National-COP420.pdf) | National COP420 family MCU | | — | [`Mainboard/`](../Mainboard/), [`Chassis/`](../Chassis/) |
+| [`National-COP420.pdf`](National-COP420.pdf) | National COP420 family MCU | U? | — | [`Mainboard/`](../Mainboard/) — motion serial (COPData/MoCOP pins) |
 | [`National-COPS-Programming-Manual-Feb85.pdf`](National-COPS-Programming-Manual-Feb85.pdf) | National COPS programming manual | | — | COP400 family |
-| [`MOS-6502.pdf`](MOS-6502.pdf) | MOS 6502 CPU | | — | [`Mainboard/`](../Mainboard/) |
+| [`MOS-6502.pdf`](MOS-6502.pdf) | MOS 6502 CPU | U400? | — | [`Mainboard/`](../Mainboard/) |
 | [`Maxx-Steele-CPU-Pinout.pdf`](Maxx-Steele-CPU-Pinout.pdf) | Robot CPU pinout (PDF, project doc) | | — | [`Mainboard/`](../Mainboard/) |
 | [`Maxx-Steele-CPU-Pinout.xlsx`](Maxx-Steele-CPU-Pinout.xlsx) | Robot CPU pinout (spreadsheet, project doc) | | — | [`Mainboard/`](../Mainboard/) |
 | [`Mitsubishi-KM2365.pdf`](Mitsubishi-KM2365.pdf) | Mitsubishi KM2365 EPROM (cartridge ROM) | U1 alt | [`CBSDemo.kicad_sch`](../Cartridge/Examples/CBSDemo/KiCAD/CBSDemo.kicad_sch) | [`Cartridge/`](../Cartridge/), [`Cartridge/PROGRAMMING.md`](../Cartridge/PROGRAMMING.md) |
 | [`Mitsubishi-M6116.pdf`](Mitsubishi-M6116.pdf) | Mitsubishi M6116 static RAM | U401 | — | [`Mainboard/`](../Mainboard/) |
 | [`National-COP41xL-Display-Motors.pdf`](National-COP41xL-Display-Motors.pdf) | National COP41xL display & motor driver | U500 | — | [`Face/`](../Face/), [`Mainboard/`](../Mainboard/) |
-| [`Eurotechnique-ET9420.pdf`](Eurotechnique-ET9420.pdf) | Eurotechnique ET9420 speech synthesizer | | — | [`Face/`](../Face/) |
+| [`Eurotechnique-ET9420.pdf`](Eurotechnique-ET9420.pdf) | Eurotechnique ET9420 speech synthesizer | U? | — | [`Face/`](../Face/) — alternate speech IC candidate |
 | [`Thompson-ET9420-Options.pdf`](Thompson-ET9420-Options.pdf) | Thompson ET9420 options / application note | | — | [`Face/`](../Face/) |
 | [`Sanyo-LC3100.pdf`](Sanyo-LC3100.pdf) | Sanyo LC3100 speech chip | | — | [`Face/`](../Face/) |
 | [`Sanyo-LC3100-2.pdf`](Sanyo-LC3100-2.pdf) | Sanyo LC3100 (alternate scan) | | — | [`Face/`](../Face/) |
-| [`Sanyo-LC8100.pdf`](Sanyo-LC8100.pdf) | Sanyo LC8100 speech chip | | — | [`Face/`](../Face/) |
+| [`Sanyo-LC8100.pdf`](Sanyo-LC8100.pdf) | Sanyo LC8100 speech chip | U? | — | [`Face/`](../Face/) — MMIO `$1400`; variant TBD |
 | [`Sanyo-LC81196.pdf`](Sanyo-LC81196.pdf) | Sanyo LC81196 / LC8100 family | | — | [`Face/`](../Face/) |
 
 **Refdes** — schematic designator when known from a KiCad schematic (`.kicad_sch`) or the Yahoo Groups archive filenames (`U400`, `U401`, `U500`). Blank when not yet traced on a schematic.
