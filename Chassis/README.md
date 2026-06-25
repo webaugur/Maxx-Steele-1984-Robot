@@ -11,7 +11,6 @@ Robot body, packaging, manuals, and material not tied to a single PCB module.
 | [`Photos/Disassembly/`](Photos/Disassembly/) | Teardown workshop photos (`IMG_2116`–`IMG_2131`) |
 | [`MechanicalManual/`](../MechanicalManual/) | Disassembly / reassembly manual (text + PDF) |
 | [`Sounds/`](Sounds/) | Sample speech and song audio (indexed in [`MechanicalManual/Hardware-Assets.csv`](../MechanicalManual/Hardware-Assets.csv); `maxx-song-N` → `PLAY N`) |
-| [`Firmware/`](Firmware/) | Internal 6502 ROM binary and disassembly |
 | [`Model3D/`](Model3D/) | Mechanical CAD (placeholder) |
 | [`KiCAD/`](KiCAD/) | Mechanical / enclosure CAD (placeholder) |
 
@@ -19,7 +18,7 @@ Module-specific hardware lives in [`Transmitter/`](../Transmitter/), [`Receiver/
 
 ## Datasheets
 
-Third-party component PDFs live in [`DataSheets/`](../DataSheets/) (repository-wide index). Parts referenced from chassis / internal ROM work:
+Third-party component PDFs live in [`DataSheets/`](../DataSheets/) (repository-wide index). Parts referenced from chassis work:
 
 | File | Part |
 |------|------|

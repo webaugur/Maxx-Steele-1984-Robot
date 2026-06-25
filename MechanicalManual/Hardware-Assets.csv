@@ -17,8 +17,6 @@ Cartridge/Photos/maxxcard.jpg,MechanicalManual|TechnicalManual,Demo cartridge PC
 Chassis/Artwork/Maxx-Steele-MAXX-Logo.svg,MechanicalManual,MAXX Logo SVG body artwork
 Chassis/Artwork/Maxx-Steele-Neck-Tattoo.svg,MechanicalManual,Neck Tattoo SVG body artwork
 Chassis/Artwork/Maxx-Steele-The-Personal-Robot.svg,MechanicalManual,The Personal Robot SVG body artwork
-Chassis/Firmware/Assembly/maxx_internal_ROM.dsm,TechnicalManual,Annotated internal ROM disassembly primary Technical Manual source
-Chassis/Firmware/Binary/Maxxrom.64,TechnicalManual,Internal 8 KB 6502 ROM binary image ($0000-$1FFF)
 Chassis/Manual/MaxxSteeleManual.pdf,MechanicalManual|TechnicalManual,Factory owner manual operation and keypad (not ROM layout)
 Chassis/Manual/MaxxSteeleReferenceGuide.pdf,MechanicalManual|TechnicalManual,Factory reference guide modes speech and programming overview
 Chassis/Photos/autopsy/Arm-Balance-Spring.jpg,MechanicalManual,Arm balance spring detail — Opened chassis mainboard base arm spring and backoff views
@@ -88,6 +86,8 @@ Chassis/Sounds/maxx-song-5.wma,TechnicalManual,PLAY 5 opcode $81 05 Game mode tu
 Chassis/Sounds/maxx-song-6.wma,TechnicalManual,PLAY 6 opcode $81 06 Reveille internal ROM tune table tune 6 factory demo
 Chassis/Sounds/maxx-song-7.wma,TechnicalManual,PLAY 7 opcode $81 07 Power-down tune internal ROM tune table tune 7
 Chassis/Sounds/maxx-song-8.wma,TechnicalManual,PLAY 8 opcode $81 08 Taps internal ROM tune table tune 8
+Mainboard/Firmware/Assembly/maxx_internal_ROM.dsm,TechnicalManual,Annotated internal ROM disassembly primary Technical Manual source
+Mainboard/Firmware/Binary/Maxxrom.64,TechnicalManual,Internal 8 KB 6502 ROM binary image ($0000-$1FFF)
 Mainboard/Schematic/Maxx_Steele_Schematic.jpg,TechnicalManual,Mainboard raster schematic scan original
 Mainboard/Schematic/Maxx_Steele_Schematic_enh-v1.1.png,TechnicalManual,Mainboard raster schematic enhanced v1.1
 Mainboard/Schematic/v1.1/Maxx_Steele_Schematic.svg,TechnicalManual,Mainboard vector schematic SVG v1.1

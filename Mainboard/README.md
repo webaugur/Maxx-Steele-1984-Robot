@@ -4,10 +4,10 @@
 
 | Path | Description |
 |------|-------------|
+| [`Firmware/`](Firmware/) | Masked internal 6502 ROM binary and disassembly (`$E000`–`$FFFF`) |
 | [`KiCAD/`](KiCAD/) | KiCad project (placeholder) |
 | [`Schematic/`](Schematic/) | Raster scans and vector schematic sources |
 
-Internal 6502 ROM: [`Chassis/Firmware/`](../Chassis/Firmware/).  
 Chassis photos: [`Chassis/Photos/`](../Chassis/Photos/).
 
 Shared KiCad symbols: [`libraries/`](../libraries/).

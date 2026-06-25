@@ -80,7 +80,7 @@ SCAN_ROOTS = (
 
 SKIP_REL = {
     "Cartridge/Model3D/Pasted image.png",
-    "Chassis/Firmware/Assembly/maxx_internal_ROM.dsm.pdf",
+    "Mainboard/Firmware/Assembly/maxx_internal_ROM.dsm.pdf",
     "Cartridge/Examples/CBSDemo/Firmware/Assembly/maxx_demo_ROM_532.dsm.pdf",
 }
 
@@ -139,7 +139,7 @@ def assign_manual(path: Path) -> str:
     if r.startswith("Chassis/Sounds/"):
         return "TechnicalManual"
 
-    if r.startswith("Chassis/Firmware/"):
+    if r.startswith("Mainboard/Firmware/"):
         return "TechnicalManual"
 
     if r.startswith("Chassis/References/"):
@@ -205,7 +205,7 @@ def describe(path: Path) -> str:
             "(not PLAY 5 see ROM phrase table $10-$20 in maxx_internal_ROM.dsm)"
         )
 
-    if r == "Chassis/Firmware/Binary/Maxxrom.64":
+    if r == "Mainboard/Firmware/Binary/Maxxrom.64":
         return "Internal 8 KB 6502 ROM binary image ($0000-$1FFF)"
 
     if r.endswith("maxx_internal_ROM.dsm"):

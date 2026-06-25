@@ -7,7 +7,7 @@ This document describes how to write programs for the 1984 CBS Toys / Ideal **Ma
 - [`Examples/CBSDemo/Firmware/Assembly/maxx_demo_ROM_532.dsm`](Examples/CBSDemo/Firmware/Assembly/maxx_demo_ROM_532.dsm) — annotated factory demo (R. Wind)
 - [`Examples/CBSDemo/Firmware/Binary/CBSDemo.532`](Examples/CBSDemo/Firmware/Binary/CBSDemo.532) — 4 KB factory demo binary
 - [`Examples/UltraMaxx/Firmware/Binary/UltraMaxx.532`](Examples/UltraMaxx/Firmware/Binary/UltraMaxx.532) — community branding fork (same program)
-- [`Chassis/Firmware/Assembly/maxx_internal_ROM.dsm`](../Chassis/Firmware/Assembly/maxx_internal_ROM.dsm) — internal 6502 interpreter (R. Wind)
+- [`Mainboard/Firmware/Assembly/maxx_internal_ROM.dsm`](../Mainboard/Firmware/Assembly/maxx_internal_ROM.dsm) — internal 6502 interpreter (R. Wind)
 - Original reference guide: [`Chassis/Manual/MaxxSteeleReferenceGuide.pdf`](../Chassis/Manual/MaxxSteeleReferenceGuide.pdf)
 
 Tools: [`tools/maxx`](../tools/maxx) (unified CLI), [`tools/maxxbas/`](../tools/maxxbas/) (Rust library), [`tools/maxx_rom.py`](../tools/maxx_rom.py) (legacy disasm/validate).
@@ -369,5 +369,5 @@ FF FF    ; end
 - GitHub archive: https://github.com/webaugur/Maxx-Steele-1984-Robot
 - R. Wind disassemblies: `maxxbot@yahoo.com` (2002–2006)
 - Demo cartridge ROM: [`Firmware/`](Firmware/)
-- Internal ROM: [`Chassis/Firmware/`](../Chassis/Firmware/)
+- Internal ROM: [`Mainboard/Firmware/`](../Mainboard/Firmware/)
 - Transmitter hardware: [`Transmitter/transmitter-bom.md`](../Transmitter/transmitter-bom.md)

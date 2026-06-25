@@ -15,7 +15,7 @@ It is modeled on the structure of the [Commodore 64 Programmer's Reference Guide
 | [`Chassis/Manual/`](../Chassis/Manual/) | Owners | Factory user / reference manuals (operation, not ROM layout) |
 | [`MechanicalManual/`](../MechanicalManual/) | Repairers | Chassis disassembly, reassembly, teardown photos |
 
-Primary sources: R. Wind disassemblies ([`maxx_internal_ROM.dsm`](../Chassis/Firmware/Assembly/maxx_internal_ROM.dsm), [`maxx_demo_ROM_532.dsm`](../Cartridge/Examples/CBSDemo/Firmware/Assembly/maxx_demo_ROM_532.dsm)), [`tools/maxx_rom.py`](../tools/maxx_rom.py).
+Primary sources: R. Wind disassemblies ([`maxx_internal_ROM.dsm`](../Mainboard/Firmware/Assembly/maxx_internal_ROM.dsm), [`maxx_demo_ROM_532.dsm`](../Cartridge/Examples/CBSDemo/Firmware/Assembly/maxx_demo_ROM_532.dsm)), [`tools/maxx_rom.py`](../tools/maxx_rom.py).
 
 ---
 
@@ -38,7 +38,7 @@ Primary sources: R. Wind disassemblies ([`maxx_internal_ROM.dsm`](../Chassis/Fir
 
 - [Chapter 6 — Input/output guide](06-Input-Output-Guide.md)
 - [Schematics](Schematics.md)
-- Annotated `.dsm` listings under [`Chassis/Firmware/`](../Chassis/Firmware/) and [`Cartridge/Examples/`](../Cartridge/Examples/)
+- Annotated `.dsm` listings under [`Mainboard/Firmware/`](../Mainboard/Firmware/) and [`Cartridge/Examples/`](../Cartridge/Examples/)
 
 Keep [Quick reference](Quick-Reference.md) and [Appendices](Appendices.md) open while coding.
 
@@ -64,7 +64,7 @@ Keep [Quick reference](Quick-Reference.md) and [Appendices](Appendices.md) open 
 
 | Image | Path |
 |-------|------|
-| Internal 8 KB ROM | [`Chassis/Firmware/Binary/Maxxrom.64`](../Chassis/Firmware/Binary/Maxxrom.64) |
+| Internal 8 KB ROM | [`Mainboard/Firmware/Binary/Maxxrom.64`](../Mainboard/Firmware/Binary/Maxxrom.64) |
 | Demo cartridge (4 KB) | [`Cartridge/Examples/CBSDemo/Firmware/Binary/CBSDemo.532`](../Cartridge/Examples/CBSDemo/Firmware/Binary/CBSDemo.532) |
 | UltraMaxx cartridge (4 KB) | [`Cartridge/Examples/UltraMaxx/Firmware/Binary/UltraMaxx.532`](../Cartridge/Examples/UltraMaxx/Firmware/Binary/UltraMaxx.532) |
 

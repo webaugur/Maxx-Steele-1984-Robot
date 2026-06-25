@@ -37,7 +37,7 @@ pub struct FirmwareResult {
 }
 
 pub fn build_memory_image(cart: Option<&CartImage>, patches: &PatchSet) -> Result<[u8; 65536], String> {
-    let rom = include_bytes!("../../../../Chassis/Firmware/Binary/Maxxrom.64");
+    let rom = include_bytes!("../../../../Mainboard/Firmware/Binary/Maxxrom.64");
     let mut mem = [0u8; 65536];
 
     if rom.len() != 8192 {

@@ -22,7 +22,7 @@ Internal ROM table **`$F878`** maps opcode indices to two-character LED segment 
 | — | PLAY, SPEE, SS, CLr | Extended |
 | — | End, beg | `$FF`, `$FE` |
 
-Full glyph bitmaps are embedded in [`maxx_internal_ROM.dsm`](../Chassis/Firmware/Assembly/maxx_internal_ROM.dsm) near label `FULL` / `$F878` references.
+Full glyph bitmaps are embedded in [`maxx_internal_ROM.dsm`](../Mainboard/Firmware/Assembly/maxx_internal_ROM.dsm) near label `FULL` / `$F878` references.
 
 ---
 
@@ -85,7 +85,7 @@ Demo bootstrap: `$02` ← `$02`, `$03` ← `$82`.
 
 ## F — Music duration table
 
-Note durations for the music IRQ path are read from **`$F15B`** (indexed 1–8 in [`maxx_internal_ROM.dsm`](../Chassis/Firmware/Assembly/maxx_internal_ROM.dsm)). Frequency/note bytes live in **`$0400`**.
+Note durations for the music IRQ path are read from **`$F15B`** (indexed 1–8 in [`maxx_internal_ROM.dsm`](../Mainboard/Firmware/Assembly/maxx_internal_ROM.dsm)). Frequency/note bytes live in **`$0400`**.
 
 Complete note name → byte mapping is not yet transcribed in this archive.
 
@@ -119,7 +119,7 @@ python3 tools/maxx_rom.py opcodes OUTPUT.json
 
 ## I — Internal ROM entry points
 
-Partial list from [`maxx_internal_ROM.dsm`](../Chassis/Firmware/Assembly/maxx_internal_ROM.dsm):
+Partial list from [`maxx_internal_ROM.dsm`](../Mainboard/Firmware/Assembly/maxx_internal_ROM.dsm):
 
 | Address | Role |
 |---------|------|
@@ -146,7 +146,7 @@ Partial list from [`maxx_internal_ROM.dsm`](../Chassis/Firmware/Assembly/maxx_in
 
 ## K — Bibliography
 
-- R. Wind — [`maxx_internal_ROM.dsm`](../Chassis/Firmware/Assembly/maxx_internal_ROM.dsm), [`maxx_demo_ROM_532.dsm`](../Cartridge/Examples/CBSDemo/Firmware/Assembly/maxx_demo_ROM_532.dsm) (2002–2006)
+- R. Wind — [`maxx_internal_ROM.dsm`](../Mainboard/Firmware/Assembly/maxx_internal_ROM.dsm), [`maxx_demo_ROM_532.dsm`](../Cartridge/Examples/CBSDemo/Firmware/Assembly/maxx_demo_ROM_532.dsm) (2002–2006)
 - Factory manual — [`Chassis/Manual/MaxxSteeleReferenceGuide.pdf`](../Chassis/Manual/MaxxSteeleReferenceGuide.pdf)
 - This repository — https://github.com/webaugur/Maxx-Steele-1984-Robot
 - C64 Programmer's Reference Guide — structural inspiration (Commodore, 1982)

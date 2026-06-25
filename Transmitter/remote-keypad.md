@@ -74,4 +74,4 @@ Indicator colors on the physical remote: **blue** (song/speech/mode group), **or
 
 - Matrix wiring: [`Photos/ReverseEngineering/keyboard-matrix-reference-1.png`](Photos/ReverseEngineering/keyboard-matrix-reference-1.png)
 - Opcode mapping: [`Cartridge/PROGRAMMING.md`](../Cartridge/PROGRAMMING.md) §7–8, [`TechnicalManual/06-Input-Output-Guide.md`](../TechnicalManual/06-Input-Output-Guide.md)
-- Internal ROM key table: `$E6B5` in [`maxx_internal_ROM.dsm`](../Chassis/Firmware/Assembly/maxx_internal_ROM.dsm)
+- Internal ROM key table: `$E6B5` in [`maxx_internal_ROM.dsm`](../Mainboard/Firmware/Assembly/maxx_internal_ROM.dsm)

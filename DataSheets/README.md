@@ -13,7 +13,7 @@ Do not duplicate datasheet PDFs elsewhere in the archive — link here from modu
 | [`National-COP411L.pdf`](National-COP411L.pdf) | National COP411L 4-bit MCU | U1 | [`Transmitter-27MHz.kicad_sch`](../Transmitter/KiCAD/Transmitter-27MHz.kicad_sch) | [`Transmitter/`](../Transmitter/), [`transmitter-bom.md`](../Transmitter/transmitter-bom.md) |
 | [`National-COP420.pdf`](National-COP420.pdf) | National COP420 family MCU | | — | [`Mainboard/`](../Mainboard/), [`Chassis/`](../Chassis/) |
 | [`National-COPS-Programming-Manual-Feb85.pdf`](National-COPS-Programming-Manual-Feb85.pdf) | National COPS programming manual | | — | COP400 family |
-| [`MOS-6502.pdf`](MOS-6502.pdf) | MOS 6502 CPU | | — | [`Mainboard/`](../Mainboard/), [`Chassis/Firmware/`](../Chassis/Firmware/) |
+| [`MOS-6502.pdf`](MOS-6502.pdf) | MOS 6502 CPU | | — | [`Mainboard/`](../Mainboard/) |
 | [`Maxx-Steele-CPU-Pinout.pdf`](Maxx-Steele-CPU-Pinout.pdf) | Robot CPU pinout (PDF, project doc) | | — | [`Mainboard/`](../Mainboard/) |
 | [`Maxx-Steele-CPU-Pinout.xlsx`](Maxx-Steele-CPU-Pinout.xlsx) | Robot CPU pinout (spreadsheet, project doc) | | — | [`Mainboard/`](../Mainboard/) |
 | [`Mitsubishi-KM2365.pdf`](Mitsubishi-KM2365.pdf) | Mitsubishi KM2365 EPROM (cartridge ROM) | U1 alt | [`CBSDemo.kicad_sch`](../Cartridge/Examples/CBSDemo/KiCAD/CBSDemo.kicad_sch) | [`Cartridge/`](../Cartridge/), [`Cartridge/PROGRAMMING.md`](../Cartridge/PROGRAMMING.md) |

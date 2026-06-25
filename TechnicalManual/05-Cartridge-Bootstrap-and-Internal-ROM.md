@@ -15,8 +15,8 @@ At power-on the **MOS 6502** CPU executes firmware in **`$E000`–`FFFF`** (8 KB
 
 User programs are **not** generally written in 6502. They are bytecode tables interpreted by this ROM.
 
-Source listing: [`Chassis/Firmware/Assembly/maxx_internal_ROM.dsm`](../Chassis/Firmware/Assembly/maxx_internal_ROM.dsm)  
-Binary: [`Chassis/Firmware/Binary/Maxxrom.64`](../Chassis/Firmware/Binary/Maxxrom.64)
+Source listing: [`Mainboard/Firmware/Assembly/maxx_internal_ROM.dsm`](../Mainboard/Firmware/Assembly/maxx_internal_ROM.dsm)  
+Binary: [`Mainboard/Firmware/Binary/Maxxrom.64`](../Mainboard/Firmware/Binary/Maxxrom.64)
 
 ---
 

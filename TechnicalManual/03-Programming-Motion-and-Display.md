@@ -65,7 +65,7 @@ Demo sequence: `0A 01` … delay … `0A 00`.
 
 ## LED segment display
 
-During program entry and execution, the internal ROM fetches a **two-byte display code** from table **`$F878`** indexed by the current opcode (see `LDA $F878,Y` in [`maxx_internal_ROM.dsm`](../Chassis/Firmware/Assembly/maxx_internal_ROM.dsm)). This drives the shift-register display at **`$1200`**.
+During program entry and execution, the internal ROM fetches a **two-byte display code** from table **`$F878`** indexed by the current opcode (see `LDA $F878,Y` in [`maxx_internal_ROM.dsm`](../Mainboard/Firmware/Assembly/maxx_internal_ROM.dsm)). This drives the shift-register display at **`$1200`**.
 
 Display names in [Chapter 2](02-Opcode-Vocabulary.md) match that table (e.g. **L**, **F**, **PLAY**, **d**).
 

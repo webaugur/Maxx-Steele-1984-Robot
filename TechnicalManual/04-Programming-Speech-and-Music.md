@@ -19,7 +19,7 @@ Speech uses a parallel phoneme interface at **`$1400`**. The speech driver subro
 
 ## ROM phrases (`$82` / `$0E`)
 
-Phrases are indexed phoneme strings in internal ROM. The driver at **`$F3D5`** outputs sounds with index **X** (see `JSR $F3D5` in [`maxx_internal_ROM.dsm`](../Chassis/Firmware/Assembly/maxx_internal_ROM.dsm)).
+Phrases are indexed phoneme strings in internal ROM. The driver at **`$F3D5`** outputs sounds with index **X** (see `JSR $F3D5` in [`maxx_internal_ROM.dsm`](../Mainboard/Firmware/Assembly/maxx_internal_ROM.dsm)).
 
 Phoneme code tables reside at **`$F567`** / **`$F4DB`** (140 entries). Until the full **`$F4DB`** table is transcribed, treat phrase indices as opaque IDs.
 
