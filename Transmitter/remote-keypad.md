@@ -32,7 +32,7 @@ Each matrix position has an internal scan label (**A–Y**). Orange digits **0�
 | **R** | **CLOCK** / **STATUS** | — | **CLOCK** above, **STATUS:** below |
 | **S** | **SPEECH** | — | Blue indicator |
 | **T** | **MOTION** | — | Blue indicator |
-| **U** | **GAME** | — | Blue indicator; sets mode `$0D` = 3 |
+| **U** | **GAME** | — | Blue indicator; sets mode `$0D` = 4 (game) |
 | **V** | **PROGRAM** | — | Blue indicator; sets mode `$0D` = 2 |
 | **W** | **LEARN** | — | Blue indicator; sets mode `$0D` = 1 |
 | **X** | **EXECUTE** | — | Blue indicator; runs stored program |

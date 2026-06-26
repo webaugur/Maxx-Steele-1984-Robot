@@ -53,7 +53,7 @@ Keep [Quick reference](Quick-Reference.md) and [Appendices](Appendices.md) open 
 | Learn key sequences | 1 | Records into program RAM |
 | Enter program steps | 2 | Keypad maps to opcodes via `$E6B5` table |
 | Run stored program | 3 | Bytecode at `$0200`, terminator `FF FF` |
-| Built-in games | 4 | `JMP ($0094)` → `$F8CE`; game 1/2 at `$F8E9` / `$FAA4` |
+| Built-in games (Moon Ball / Force Field) | 4 | `JMP ($0094)` → `$F8CE`; `$F8E9` / `$FAA4` — see Ch 5 + [User Manual Ch 6](../UserManual/06-Games-And-Other-Modes.md) |
 | Factory demo | 3 + cart | [`CBSDemo.532`](../Cartridge/Examples/CBSDemo/Firmware/Binary/CBSDemo.532) bootstrap |
 | Custom cartridge | 3 + cart | 4 KB EPROM image; see Ch 5–7 + cartridge manual |
 | UltraMaxx BASIC authoring | 3 + cart | Ch 7; [`tools/maxx`](../tools/maxx) `compile` → `.532` |

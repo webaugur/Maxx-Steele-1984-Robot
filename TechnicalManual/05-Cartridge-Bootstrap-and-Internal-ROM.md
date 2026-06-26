@@ -147,13 +147,88 @@ Trap addresses for debugging: `$E161` (learn loop), `$E17B` (immediate decode), 
 
 ### Game (mode 4) — `$F8CE`
 
-- Vector at **`$94`** → **`$F8CE`**
-- Prompt: *"Please choose game"* (phrase `$12`)
-- **Game 1** (`$F8E9`): reflex/timing style loop
-- **Game 2** (`$FAA4`): extended play with difficulty selection (`$F9E8`)
-- Win/lose speech via **`$F40F`**; replay prompt at **`$FA67`**
+Player-facing rules for the two built-in games are in [User Manual Ch 6 — Games](../UserManual/06-Games-And-Other-Modes.md) (*Moon Ball* and *Force Field*). This section maps that behavior to ROM entry points and zero-page state.
 
-Game internals (scoring, IRQ timing at `$FB8C`–`$FC6C`) are not fully reverse-engineered in this archive.
+**Mode entry:** **`$94`** → **`$F8CE`**. The **GAME** remote key sets **`$0D` ← 4** via **`$E0D1`** (not mode 3 — execute is mode 3). Display label **`PLAy`** comes from the mode string table at **`$F684`** (`$0D` + 5 → index).
+
+#### Shared entry flow (`$F8CE`–`$F8E6`)
+
+| Step | Address | Action |
+|------|---------|--------|
+| 1 | `$EBDC` | HOME arms/wrist/claw (game preamble) |
+| 2 | `$EF63` | Wait for motor talkback (`$2B` = 0) |
+| 3 | `$F9EA` | Say phrase **`$12`** — *"Please choose game."* |
+| 4 | `$E9FE` | Wait for digit + **ENTER**; operand **`$20`** in **`$13`**, selector **`$05`** in A |
+| 5 | `$F8E4` | Operand **0** → Moon Ball (`$F8E9`); non-zero → Force Field (`$FAA4`) |
+
+Both games call **`$F9DE`** (zero **`$A6`–`$AD`**) and **`$F9E8`** (difficulty picker: phrase **`$11`**, accept **0–3**, return index in X).
+
+#### Moon Ball — game 1 (`$F8E9`)
+
+Reflex game: reflect the headlamp into the photo transistor between the eyes when the lamp flashes.
+
+| User Manual rule | ROM implementation |
+|------------------|-------------------|
+| Difficulty 0–3 | **`$F9E8`** → **`$A6`** |
+| Ready: reflect light within ~20 s | **`$27` ← `$14`** IRQ countdown; **`BIT $1200`** / **`BVS`** at `$F91D`–`$F920` |
+| Say *"I'm ready."* | Phrase **`$20`** at `$F90C` |
+| 3 misses → game over | **`$AC` ← 3** at `$F8FB`; **`DEC $AC`** on timeout at `$F98F` |
+| *"Good play"* + score on display | Phrase **`$13`** at `$F99C`; BCD add **`$A6`** → **`$A7`/`$A8`**; **`$FA01`** copies to **`$24`/`$25`** |
+| Difficulty ramps (shorter window, dodge, more points) | Tables **`$FA90`–`$FAA0`**: seconds (`$FA90`), dodge delay (`$FA94`), points per return (`$FAA0`); **`$A6`** incremented after **`$A9`** rounds expire |
+| Game over + replay | **`$F9C6`**: phrase **`$1B`**; **`$FA67`**: phrase **`$1C`**, wait for **ENTER** (`$27` ← `$10`); timeout → immediate via **`JMP ($007A)`** |
+
+Main play loop: **`$F92C`** (random drive + flash) → **`$F996`** (hit) or miss path → **`$F9C6`** when **`$AC`** underflows.
+
+Photo input uses the display/MMIO path at **`$1200`** (see [Chapter 6](06-Input-Output-Guide.md)); the faceplate photo transistor sits in the light-return path described in the User Manual.
+
+#### Force Field — game 2 (`$FAA4`)
+
+Two-player-style duel: player shield/laser on the remote vs. Maxx shield/laser (siren + warble + headlamp).
+
+| User Manual rule | ROM implementation |
+|------------------|-------------------|
+| Difficulty 0–3 | **`$F9E8`** → **`$A6` ← X × 4** at `$FAAD`–`$FAAF` |
+| Shield = hold **`<0>`**, laser = hold **`<3>`** | **`$FA0C`** reads keypad; mask table **`$FA98`**; **`$FB8C`** shield/laser state machine |
+| Scores: player left, Maxx right on display | BCD **`$A7`** (player) / **`$A8`** (Maxx) → **`$24`/`$25`** at `$FC34`–`$FC3C` |
+| 1-in-4 ricochet off Maxx shield | **`$FBB1`/`$FBB5`**: compare **`$66`/`$69`** to **1** or **4**; penalty via **`$FC12`** (subtract from **`$A7`**) |
+| First to **25** points wins | **`CMP #$25`** at **`$FC30`** |
+| ~20 s levels + intermission tune | Level timer **`$28`** (scaled by **`$A6`** at `$FB4B`); **`$FBCE`** intermission; **`$2A`** stun countdown |
+| Win / lose speech | Phrase **`$18`** (*Maxx Steele wins*) or **`$19`** (*Congratulations, you win*) at `$FC4A`–`$FC50` |
+| Replay | **`$FA67`** after win sequence at `$FC69` |
+
+IRQ-driven timing for level ticks lives in **`$FB8C`–`$FC6C`** and the game slice of the IRQ handler at **`$FC6F`** / **`$FDCD`**.
+
+#### Game state variables (`$A6`–`$AD`)
+
+| ZP | Moon Ball | Force Field |
+|----|-----------|-------------|
+| **`$A6`** | Difficulty index; also **points added** per successful return (ramps to 3) | Difficulty × 4; level index incremented between rounds |
+| **`$A7`** | Player score (BCD low) | Player score (display left / **`$24`**) |
+| **`$A8`** | Player score (BCD high) | Maxx score (display right / **`$25`**) |
+| **`$A9`** | Rounds-until-ramp counter (starts 3) | Phase/level sub-counter |
+| **`$AA`** | — | Sub-phase timer (shield down, laser burst) |
+| **`$AB`** | — | Keypad-derived shield/laser flags |
+| **`$AC`** | Misses remaining (starts 3) | — |
+| **`$AD`** | Cleared by **`$F9DE`**; role TBD | Cleared by **`$F9DE`**; role TBD |
+
+Full ZP catalog: [Appendix D — Zero-page registers](Appendices.md#d-zero-page-registers).
+
+#### Game speech phrases (ROM index ↔ factory manual #)
+
+Factory manual lists phrases **16–32**; ROM stores them at **`$F640`** with indices **`$10`–`$20`**. Game-related entries:
+
+| Manual # | ROM index | Text |
+|----------|-----------|------|
+| 17 | **`$12`** | Please choose game. |
+| 18 | **`$11`** | Please choose how tough. |
+| 19 | **`$13`** | Good play. |
+| 24 | **`$18`** | Maxx Steele wins. |
+| 25 | **`$19`** | Congratulations, you win. |
+| 27 | **`$1B`** | Game over. |
+| 28 | **`$1C`** | Choose enter to play again. |
+| 32 | **`$20`** | I'm ready. |
+
+Say path: **`$F40F`** (index in X). Greeting uses **`$F475`** for phrase **`$10`** at main loop entry.
 
 ---
 
@@ -311,7 +386,8 @@ EPROM type: Mitsubishi KM2365 family — [`DataSheets/Mitsubishi-KM2365.pdf`](..
 
 ## Known gaps
 
-- **Game internals** — scoring, `$A6`–`$AD` game state, IRQ paths `$FB8C`–`$FC6C` need deeper RE
+- **Game IRQ / timing tables** — decode **`$FA90`–`$FAA0`** bytes to seconds and motor arcs; trace **`$FB8C`–`$FC6C`** and **`$FDCD`** game tick to headlamp/motor **`$EF2E`** commands
+- **`$F9FE` / `$E9FE`** — keypad wait helper spans display-init bytes in the `.dsm`; re-anchor entry for game-select operand **`$05`**
 - **Full zero page** — only programmer-facing locations are catalogued ([Appendix D](Appendices.md#d-zero-page-registers))
 - **I/O bitfields** — provisional tables in Ch 6 + MMIO pin map; glue IC refdes still TBD
 - **Motor talkback** — `$EF63` / `$2B` not traced to **MoCOP Done** / COP41xL pin yet

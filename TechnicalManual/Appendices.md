@@ -62,7 +62,15 @@ Full glyph bitmaps are embedded in [`maxx_internal_ROM.dsm`](../Mainboard/Firmwa
 | `$24`/`$25` | Executor pointer | Working address; displayed for extended opcodes |
 | `$2B` | Talkback busy | Non-zero while motors/speech pending; `$EF63` waits |
 | `$26` | Timer prescale | IRQ countdown; reset to `$F4` at `$E99` |
-| `$27` | Second timer | Game delays, enter-key timeout |
+| `$27` | Second timer | Game delays, enter-key timeout (Moon Ball ready ≈ `$14` s; replay wait `$10` s) |
+| `$A6` | Game difficulty / points | Moon Ball: level 0–3 and BCD points per return; Force Field: level × 4 |
+| `$A7` | Game score A | Moon Ball: player BCD low; Force Field: player score → display `$24` |
+| `$A8` | Game score B | Moon Ball: player BCD high; Force Field: Maxx score → display `$25` |
+| `$A9` | Game counter | Moon Ball: rounds until difficulty ramp; Force Field: level phase count |
+| `$AA` | Game sub-timer | Force Field: shield-down / laser-burst phases |
+| `$AB` | Game keypad flags | Force Field: shield/laser state from `$FA0C` + mask `$FA98` |
+| `$AC` | Miss counter | Moon Ball: starts at 3 |
+| `$AD` | Game scratch | Cleared by `$F9DE`; purpose not fully traced |
 | `$39`–`$3C` | Music state | Pointers/flags during note entry (`$EF76` region) |
 | `$56` | IRQ phase | Selects handler in IRQ jump table |
 | `$57` | Speech timing | Used during `$1400` nybble output |
@@ -181,8 +189,19 @@ Curated catalog from [`maxx_internal_ROM.dsm`](../Mainboard/Firmware/Assembly/ma
 | `$E434` | Execute mode runner |
 | `$E905` | Status housekeeping (called each loop) |
 | `$F8CE` | Game mode entry (`JMP ($0094)`) |
-| `$F8E9` | Game 1 main |
-| `$FAA4` | Game 2 main |
+| `$F8E9` | Moon Ball (game 1) main |
+| `$F9DE` | Zero `$A6`–`$AD` |
+| `$F9E8` | Difficulty picker (phrase `$11`, 0–3) |
+| `$F9C6` | Moon Ball game over |
+| `$FA01` | Copy `$A7`/`$A8` → `$24`/`$25` for display |
+| `$FA0C` | Game keypad read (Force Field shield/laser) |
+| `$FA67` | Replay prompt (phrase `$1C`) + ENTER wait |
+| `$FAA4` | Force Field (game 2) main |
+| `$FB8C` | Force Field shield/laser IRQ helper |
+| `$FBCE` | Force Field intermission between levels |
+| `$FC12` | Force Field score adjust (hit / ricochet penalty) |
+| `$FC30` | Force Field win check (`CMP #$25`) |
+| `$FC6F` | Game IRQ slice (called from `$FDCD`) |
 
 ### Keypad and program I/O
 
@@ -254,7 +273,27 @@ Curated catalog from [`maxx_internal_ROM.dsm`](../Mainboard/Firmware/Assembly/ma
 
 ---
 
-## J — Messages and errors
+## J — Built-in speech phrases (game subset)
+
+ROM table at **`$F640`**; say via **`$F40F`** / **`$F475`**. Factory User Manual numbers phrases **16–32** (decimal); ROM uses **`$10`–`$20`** (hex).
+
+| Manual # | ROM (hex) | Phrase | Game use |
+|----------|-----------|--------|----------|
+| 16 | `$10` | Hello. I am Maxx Steele. | Power-on greeting |
+| 17 | `$12` | Please choose game. | Game mode entry |
+| 18 | `$11` | Please choose how tough. | After game selected |
+| 19 | `$13` | Good play. | Moon Ball successful return |
+| 24 | `$18` | Maxx Steele wins. | Force Field — Maxx wins |
+| 25 | `$19` | Congratulations, you win. | Force Field — player wins |
+| 27 | `$1B` | Game over. | Moon Ball end |
+| 28 | `$1C` | Choose enter to play again. | Both games replay prompt |
+| 32 | `$20` | I'm ready. | Moon Ball ready phase |
+
+Player rules: [User Manual Ch 6](../UserManual/06-Games-And-Other-Modes.md). ROM mapping: [Chapter 5 — Game mode](05-Cartridge-Bootstrap-and-Internal-ROM.md#game-mode-4--f8ce).
+
+---
+
+## K — Messages and errors
 
 | Message / flag | Cause |
 |----------------|-------|
@@ -265,7 +304,7 @@ Curated catalog from [`maxx_internal_ROM.dsm`](../Mainboard/Firmware/Assembly/ma
 
 ---
 
-## K — Bibliography
+## L — Bibliography
 
 - R. Wind — [`maxx_internal_ROM.dsm`](../Mainboard/Firmware/Assembly/maxx_internal_ROM.dsm), [`maxx_demo_ROM_532.dsm`](../Cartridge/Examples/CBSDemo/Firmware/Assembly/maxx_demo_ROM_532.dsm) (2002–2006)
 - Factory manual — [`Chassis/Manual/MaxxSteeleReferenceGuide.pdf`](../Chassis/Manual/MaxxSteeleReferenceGuide.pdf)
@@ -291,7 +330,7 @@ ROM access listing: [`MMIO-ROM-Crossref.md`](../Mainboard/Schematic/MMIO-ROM-Cro
 
 ---
 
-## L — Glossary
+## N — Glossary
 
 | Term | Meaning |
 |------|---------|
