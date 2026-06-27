@@ -625,6 +625,28 @@ fn complete_e60d_rts_to_cart(
     true
 }
 
+/// Skip `LDX $75` at `$E6AC` when the GUI already latched a digit (avoids stale bus reads).
+fn bypass_ldx75_when_pending(
+    mem: &mut [u8; 65536],
+    pending: Option<u8>,
+    cpu: &mut CPU<LiveBus, Cmos6502>,
+) -> bool {
+    if cpu.registers.program_counter != 0xE6AC {
+        return false;
+    }
+    let Some(key) = pending else {
+        return false;
+    };
+    if key >= 0x20 {
+        return false;
+    }
+    mem[0x75] = key;
+    mem[0x15] = key;
+    cpu.registers.index_x = key;
+    cpu.registers.program_counter = 0xE6AE;
+    true
+}
+
 /// While a GUI key is pending, mirror it into X for post-poll dispatch at `$E61A`.
 fn sync_keypad_x_from_latch(
     _mem: &[u8; 65536],
@@ -907,6 +929,9 @@ impl InteractiveFirmware {
             if complete_e60d_rts_to_cart(&self.mem, pc, self.bus_state.pending_digit, &mut self.cpu) {
                 continue;
             }
+            if bypass_ldx75_when_pending(&mut self.mem, self.bus_state.pending_digit, &mut self.cpu) {
+                continue;
+            }
             let pc_before = self.cpu.registers.program_counter;
             if self.trace_enabled {
                 self.trace.record(
@@ -956,9 +981,14 @@ impl InteractiveFirmware {
             }
             // `$E6AC` may have read the wire this instruction; ensure `$15` caught it.
             if pc_before == 0xE6AC {
-                if let Some(k) = self.bus_state.radio_pending {
-                    if k < 0x80 && self.mem[0x15] == 0 {
+                let wire_key = self
+                    .bus_state
+                    .pending_digit
+                    .or(self.bus_state.radio_pending);
+                if let Some(k) = wire_key {
+                    if k < 0x20 {
                         self.mem[0x15] = k;
+                        self.mem[0x75] = k;
                     }
                 }
             }
@@ -1032,14 +1062,20 @@ impl InteractiveFirmware {
     pub fn trace_text(&self) -> String {
         let st = self.status();
         let irq_vec = super::firmware::irq_vector(&self.mem);
+        let pending = self
+            .bus_state
+            .pending_digit
+            .map(|k| format!("{k:02X}"))
+            .unwrap_or_else(|| "--".into());
         let mut header = format!(
-            "; sim {} | PC=${:04X} | $78=${:04X} | LED=[{}] | $75=${:02X} $15=${:02X} | cycles={}\n",
+            "; sim {} | PC=${:04X} | $78=${:04X} | LED=[{}] | $75=${:02X} $15=${:02X} | pending={pending} $35=${:02X} | cycles={}\n",
             env!("CARGO_PKG_VERSION"),
             st.pc,
             irq_vec,
             self.led_chars(),
             st.key_ready,
             st.last_key,
+            self.mem[0x35],
             st.cycles
         );
         header.push_str(&self.trace.format_lines(&self.mem));
@@ -1329,6 +1365,46 @@ mod tests {
         fw.mem[0x15] = 0x80;
         apply_radio_wire(&mut fw.mem, &fw.bus_state.radio_pending, fw.bus_state.pending_digit);
         assert_eq!(fw.mem[0x75], 5, "GUI pending key must stay on $75 for LDX $75");
+    }
+
+    /// Exact live GUI flow: warmup, poll, press 6, digest 160 frames.
+    #[test]
+    fn live_gui_digest_arms6_leaves_poll() {
+        let cart = CartImage::from_bytes(MAXXOS.to_vec()).unwrap();
+        let mut fw = InteractiveFirmware::new(cart, "MaxxOS").unwrap();
+        fw.set_auto_submit_enter(true);
+        fw.warmup(180);
+        for _ in 0..8000 {
+            fw.step_frame();
+            if in_keypad_spin(fw.status().pc) {
+                break;
+            }
+        }
+        assert!(in_keypad_spin(fw.status().pc), "never reached poll");
+        fw.press_key(RemoteKey::Arms6);
+        fw.digest_keypress(160);
+        assert!(
+            fw.mem[0x35] == 6 || !in_keypad_spin(fw.status().pc),
+            "gui digest stuck (pc=${:04X} $35={} pending={:?} queue={} $75=${:02X})",
+            fw.status().pc,
+            fw.mem[0x35],
+            fw.bus_state.pending_digit,
+            fw.queue_auto_enter,
+            fw.mem[0x75]
+        );
+    }
+
+    #[test]
+    fn bypass_ldx75_when_pending_skips_idle_read() {
+        let cart = CartImage::from_bytes(MAXXOS.to_vec()).unwrap();
+        let mut fw = InteractiveFirmware::new(cart, "MaxxOS").unwrap();
+        fw.bus_state.pending_digit = Some(6);
+        fw.mem[0x75] = 0x80;
+        fw.cpu.registers.program_counter = 0xE6AC;
+        fw.step(1);
+        assert_eq!(fw.cpu.registers.index_x, 6);
+        assert_ne!(fw.cpu.registers.program_counter, 0xE6AC);
+        assert_eq!(fw.mem[0x15], 6);
     }
 
     /// ROM `LDX $75` at `$E6AC` must see GUI `pending_digit` even when mem was cleared to `$80`.

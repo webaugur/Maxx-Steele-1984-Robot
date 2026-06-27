@@ -73,7 +73,8 @@ impl eframe::App for LiveSimApp {
 
         if let Some(key) = self.queued_key.take() {
             self.firmware.press_key(key);
-            self.keypress_frames_remaining = KEYPRESS_DIGEST_FRAMES;
+            self.firmware.digest_keypress(KEYPRESS_DIGEST_FRAMES);
+            self.keypress_frames_remaining = 0;
             ctx.request_repaint();
             return;
         }
