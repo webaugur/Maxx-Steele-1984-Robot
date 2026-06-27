@@ -6,6 +6,7 @@ use clap::{Parser, Subcommand};
 use maxxbas::{
     compile_to_output, decode_cart, default_output, format_listing, format_rom_listing,
     format_simulation, input_kind, parse_source, program_bytes, resolve_input, run_gui,
+    run_live_gui,
     run_simulation, run_upload, upload_command, validate_cart_image, CartImage, Copyright,
     InputKind, SimulationOptions, CART_SIZE,
 };
@@ -310,6 +311,9 @@ fn cmd_simulate(
     if gui {
         if json {
             eprintln!("note: --json ignored when --gui is set");
+        }
+        if !no_firmware {
+            return run_live_gui(cart, file.display().to_string());
         }
         return run_gui(report);
     }

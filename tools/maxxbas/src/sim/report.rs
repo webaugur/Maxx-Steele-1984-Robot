@@ -49,6 +49,7 @@ pub fn run_simulation(
                 max_cycles: options.max_cycles,
                 inject_key: options.inject_key,
                 run_cart_bootstrap: options.cart_bootstrap,
+                cart: Some(cart.clone()),
             },
         ))
     } else {

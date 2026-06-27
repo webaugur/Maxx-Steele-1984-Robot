@@ -25,6 +25,7 @@ from project_paths import project_root
 CRATE_DIR = project_root() / "tools" / "maxxbas"
 RELEASE_BIN = CRATE_DIR / "target" / "release" / "maxx"
 DEBUG_BIN = CRATE_DIR / "target" / "debug" / "maxx"
+BIN_INSTALL = project_root() / "tools" / "bin" / "maxx"
 
 
 def find_maxx_binary() -> Path | None:
@@ -32,6 +33,41 @@ def find_maxx_binary() -> Path | None:
         if candidate.is_file():
             return candidate
     return None
+
+
+def binary_version(path: Path) -> str:
+    proc = subprocess.run(
+        [str(path), "--version"],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    return (proc.stdout or proc.stderr or "").strip()
+
+
+def install_release_binary(source: Path) -> None:
+    """Keep tools/bin/maxx in sync with target/release/maxx (PATH may prefer tools/bin)."""
+    if not source.is_file():
+        return
+    BIN_INSTALL.parent.mkdir(parents=True, exist_ok=True)
+    data = source.read_bytes()
+    try:
+        BIN_INSTALL.write_bytes(data)
+        BIN_INSTALL.chmod(0o755)
+        return
+    except OSError:
+        pass
+    staging = BIN_INSTALL.with_name("maxx.new")
+    staging.write_bytes(data)
+    staging.chmod(0o755)
+    try:
+        staging.replace(BIN_INSTALL)
+    except OSError:
+        print(
+            f"note: could not update {BIN_INSTALL} (is the sim GUI still running?). "
+            f"Using {source} directly.",
+            file=sys.stderr,
+        )
 
 
 def build_maxx(release: bool = True) -> Path:
@@ -48,10 +84,15 @@ def build_maxx(release: bool = True) -> Path:
     path = RELEASE_BIN if release else DEBUG_BIN
     if not path.is_file():
         raise RuntimeError(f"build succeeded but {path} not found")
+    if release:
+        install_release_binary(path)
     return path
 
 
 def ensure_maxx() -> Path:
+    if RELEASE_BIN.is_file():
+        install_release_binary(RELEASE_BIN)
+        return RELEASE_BIN
     found = find_maxx_binary()
     if found is not None:
         return found
@@ -81,6 +122,20 @@ def main(argv: list[str] | None = None) -> int:
     env = os.environ.copy()
     tools_dir = str(project_root() / "tools")
     env["PATH"] = f"{tools_dir}{os.pathsep}{env.get('PATH', '')}"
+
+    if rest[:2] == ["simulate", "--gui"] or (len(rest) >= 2 and rest[0] == "simulate" and "--gui" in rest[1:]):
+        ver = binary_version(binary)
+        if ver:
+            print(f"using {ver} ({binary})", file=sys.stderr)
+        if RELEASE_BIN.is_file() and BIN_INSTALL.is_file() and binary.resolve() != BIN_INSTALL.resolve():
+            inst_ver = binary_version(BIN_INSTALL)
+            rel_ver = binary_version(RELEASE_BIN)
+            if inst_ver != rel_ver:
+                print(
+                    f"note: {BIN_INSTALL} is {inst_ver} but release is {rel_ver}; "
+                    "close the GUI and re-run to refresh PATH.",
+                    file=sys.stderr,
+                )
 
     result = subprocess.run([str(binary), *rest], env=env)
     return result.returncode

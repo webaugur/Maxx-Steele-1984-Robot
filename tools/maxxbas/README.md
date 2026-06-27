@@ -49,12 +49,21 @@ maxx simulate program.bas
 maxx simulate cart.532 --json              # program + robot + firmware report
 maxx simulate cart.532 --plain             # text only (no ASCII art)
 maxx simulate cart.532 --no-firmware       # robot model only
-maxx simulate cart.532 --gui              # interactive step playback
+maxx simulate cart.532 --gui              # live 65C02 + remote keypad GUI
+maxx simulate cart.532 --gui --no-firmware  # step-playback only (no CPU)
 maxx simulate cart.532 --image-out sim.bin # 64 KB image for masswerk virtual6502
 maxx simulate hello.532 --cycles 30000     # more cycles to reach key-loop trap
 ```
 
-`--gui` opens an egui window with step controls, program list, plan/front robot views, and opcode/action labels. The first build pulls in `eframe`/`wgpu` dependencies.
+`--gui` (default, with firmware) opens a **live simulator**: patched internal ROM runs in an embedded 65C02, with an on-screen **remote transmitter** (layout from `Transmitter/Photos/Product/Remote-Front.svg`). Key presses are modeled as a direct wire to zero-page `$75`; the ROM keypad path (`$E617` / `$E6A4`) latches into `$15` as on hardware. LED writes to `$1200` update the robot face display.
+
+`--gui --no-firmware` keeps the older step-playback window (program list + kinematic preview, no live CPU).
+
+The first GUI build pulls in `eframe`/`wgpu` dependencies.
+
+```bash
+maxx simulate Cartridge/Examples/MaxxOS/Firmware/Binary/MaxxOS.532 --gui
+```
 
 `maxx list --json` emits program-only JSON for tools that do not need firmware CPU state.
 

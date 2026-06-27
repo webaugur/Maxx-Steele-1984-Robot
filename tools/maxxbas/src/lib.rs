@@ -26,7 +26,7 @@ pub use input::{
 pub use parse::{parse_source, program_bytes, Instruction};
 pub use upload::{picorom_size_token, run_upload, upload_command, PICOROM_SIZES};
 pub use sim::{
-    format_human as format_simulation, run_gui, run_simulation, SimulationOptions,
+    format_human as format_simulation, run_gui, run_live_gui, run_simulation, SimulationOptions,
     SimulationReport,
 };
 pub use validate::{validate_cart, validate_cart_image};

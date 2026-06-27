@@ -4,6 +4,7 @@ use mos6502::memory::Bus;
 use serde::Serialize;
 
 use super::patches::{apply_patches, PatchSet};
+use crate::cart::BASE_ADDR;
 use crate::CartImage;
 
 const INTERNAL_ROM_BASE: usize = 0xE000;
@@ -15,6 +16,7 @@ pub struct FirmwareOptions {
     pub max_cycles: u64,
     pub inject_key: Option<u8>,
     pub run_cart_bootstrap: bool,
+    pub cart: Option<CartImage>,
 }
 
 #[derive(Debug, Clone, Serialize, PartialEq)]
@@ -69,7 +71,9 @@ pub fn run_firmware(
     }
 
     if options.run_cart_bootstrap {
-        bootstrap_cart(mem);
+        if let Some(ref cart) = options.cart {
+            maybe_bootstrap_cart_tables(mem, cart);
+        }
     }
 
     let traps = patches.trap_addrs();
@@ -119,8 +123,56 @@ pub fn run_firmware(
     }
 }
 
-/// Replicate the cart bootstrap stub at `$A013` (copy tables, set status, enter ROM).
-fn bootstrap_cart(mem: &mut [u8; 65536]) {
+/// ROM copyright bytes at `$E000` (17 bytes) — warm reset checks `$0100` against this.
+const WARM_SIGNATURE_LEN: usize = 17;
+
+/// RAM vector table copied from ROM `$E01C` on warm start (`$72`–`$96`, 37 bytes).
+const IRQ_VECTOR_TABLE_LEN: usize = 37;
+
+/// Match warm-reset RAM so ROM copies the `$72` vector table instead of cold-zeroing ZP.
+pub fn seed_warm_start_signature(mem: &mut [u8; 65536]) {
+    for i in 0..WARM_SIGNATURE_LEN {
+        mem[0x0100 + i] = mem[0xE000 + i];
+    }
+}
+
+/// Install IRQ/NMI/dispatch vectors at `$72` before the CPU can take an interrupt.
+///
+/// Cold start leaves `$0078` at `$0000`; the hardware IRQ stub at `$FDC5` does `JMP ($0078)`,
+/// which traps the CPU at `$0000` executing `BRK` forever.
+pub fn bootstrap_irq_vectors(mem: &mut [u8; 65536]) {
+    for i in 0..IRQ_VECTOR_TABLE_LEN {
+        mem[0x72 + i] = mem[0xE01C + i];
+    }
+}
+
+pub fn irq_vector(mem: &[u8; 65536]) -> u16 {
+    u16::from_le_bytes([mem[0x78], mem[0x79]])
+}
+
+pub fn ensure_irq_vectors(mem: &mut [u8; 65536]) {
+    if irq_vector(mem) != IRQ_VECTOR_FDC8 {
+        bootstrap_irq_vectors(mem);
+    }
+}
+
+/// ROM keypad poll loop — safe recovery target if PC falls into zero page.
+pub const ROM_KEYPAD_POLL: u16 = 0xE617;
+
+/// IRQ handler pointer installed at `$0078` on warm start.
+pub const IRQ_VECTOR_FDC8: u16 = 0xFDC8;
+
+pub fn prepare_interactive_memory(mem: &mut [u8; 65536], cart: &CartImage) {
+    maybe_bootstrap_cart_tables(mem, cart);
+    seed_warm_start_signature(mem);
+    bootstrap_irq_vectors(mem);
+}
+
+/// Factory cart bootstrap copies bytecode tables before `JMP $E0B6`.
+pub fn maybe_bootstrap_cart_tables(mem: &mut [u8; 65536], cart: &CartImage) {
+    if !cart_returns_to_main_loop(cart) {
+        return;
+    }
     mem[0x02] = 0x02;
     mem[0x03] = 0x82;
 
@@ -130,6 +182,17 @@ fn bootstrap_cart(mem: &mut [u8; 65536]) {
         mem[0x0500 + i] = mem[CART_BASE + 0x081 + i];
         mem[0x0400 + i] = mem[CART_BASE + 0x0BB + i];
     }
+}
+
+pub fn cart_returns_to_main_loop(cart: &CartImage) -> bool {
+    let off = cart.entry_vector().wrapping_sub(BASE_ADDR) as usize;
+    if off >= cart.data.len() {
+        return false;
+    }
+    let end = (off + 64).min(cart.data.len());
+    cart.data[off..end]
+        .windows(3)
+        .any(|w| w == [0x4C, 0xB6, 0xE0])
 }
 
 fn count_program_steps(prog: &[u8]) -> usize {
