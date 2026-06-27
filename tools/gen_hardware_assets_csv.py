@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate MechanicalManual/Hardware-Assets.csv — hardware media inventory."""
+"""Generate Docs/Mechanical/Hardware-Assets.csv — hardware media inventory."""
 
 from __future__ import annotations
 
@@ -7,8 +7,10 @@ import csv
 import re
 from pathlib import Path
 
+from manual_paths import MECHANICAL_MANUAL, USER_MANUAL
+
 REPO = Path(__file__).resolve().parents[1]
-OUT = REPO / "MechanicalManual" / "Hardware-Assets.csv"
+OUT = REPO / MECHANICAL_MANUAL / "Hardware-Assets.csv"
 
 RASTER_EXT = {".jpg", ".jpeg", ".png", ".gif", ".webp", ".JPG", ".JPEG", ".PNG"}
 VECTOR_EXT = {".svg", ".SVG"}
@@ -71,7 +73,7 @@ TUNE_DESCRIPTIONS: dict[int, str] = {
 
 SCAN_ROOTS = (
     "Chassis",
-    "UserManual",
+    "Docs/User",
     "Transmitter",
     "Receiver",
     "Mainboard",
@@ -138,61 +140,61 @@ def assign_manual(path: Path) -> str:
     r = rel(path)
 
     if r.startswith("Chassis/Sounds/"):
-        return "TechnicalManual"
+        return "Technical"
 
     if r.startswith("Mainboard/Firmware/"):
-        return "TechnicalManual"
+        return "Technical"
 
     if r.startswith("Chassis/References/"):
-        return "MechanicalManual|TechnicalManual"
+        return "Mechanical|Technical"
 
     if r.startswith("Chassis/Manual/"):
-        return "MechanicalManual|TechnicalManual|UserManual"
+        return "Mechanical|Technical|User"
 
-    if r.startswith("UserManual/"):
-        return "UserManual"
+    if r.startswith("Docs/User/"):
+        return "User"
 
     if r.startswith("Chassis/Photos/autopsy/"):
         if "Main-Board" in path.name or "Board" in path.name:
-            return "MechanicalManual|TechnicalManual"
-        return "MechanicalManual"
+            return "Mechanical|Technical"
+        return "Mechanical"
 
     if r.startswith("Chassis/"):
-        return "MechanicalManual"
+        return "Mechanical"
 
     if r.startswith("Mainboard/Schematic/"):
-        return "TechnicalManual"
+        return "Technical"
 
     if r.startswith("Transmitter/Photos/ReverseEngineering/"):
-        return "TechnicalManual"
+        return "Technical"
 
     if r.startswith("Transmitter/Photos/Product/"):
-        return "MechanicalManual|TechnicalManual"
+        return "Mechanical|Technical"
 
     if r.startswith("Transmitter/ReverseEngineering/"):
-        return "TechnicalManual"
+        return "Technical"
 
     if r.startswith("Transmitter/Stickers/"):
-        return "MechanicalManual"
+        return "Mechanical"
 
     if r.startswith("Transmitter/KiCAD/") and path.suffix == ".pdf":
-        return "TechnicalManual"
+        return "Technical"
 
     if r.startswith("Receiver/KiCAD/") and path.suffix == ".pdf":
-        return "TechnicalManual"
+        return "Technical"
 
     if r.startswith("Cartridge/Photos/"):
-        return "MechanicalManual|TechnicalManual"
+        return "Mechanical|Technical"
 
     if r.startswith("Cartridge/Examples/") and (
         path.suffix in {".532", ".dsm"} or "KiCAD/reference" in r or path.name.endswith("-schematic.pdf")
     ):
-        return "TechnicalManual"
+        return "Technical"
 
     if r.startswith("PaddleMirror/"):
-        return "MechanicalManual"
+        return "Mechanical"
 
-    return "MechanicalManual|TechnicalManual"
+    return "Mechanical|Technical"
 
 
 def describe(path: Path) -> str:
@@ -228,7 +230,7 @@ def describe(path: Path) -> str:
     if r == "Chassis/Manual/MaxxSteeleManual.pdf":
         return "Archival factory owner manual PDF scan (image-only)"
 
-    if r == "UserManual/Maxx-Steele-User-Manual.pdf":
+    if r == "Docs/User/Maxx-Steele-User-Manual.pdf":
         return "Community owner manual operation games maintenance rebuilt from factory scan"
 
     if r == "Chassis/Manual/MaxxSteeleReferenceGuide.pdf":
@@ -321,7 +323,7 @@ def iter_assets() -> list[Path]:
             r = rel(path)
             if r in SKIP_REL:
                 continue
-            if r.startswith("UserManual/Sources/"):
+            if r.startswith("Docs/User/Sources/"):
                 continue
             found.append(path)
     return found
@@ -336,7 +338,7 @@ def main() -> None:
 
     with OUT.open("w", newline="", encoding="utf-8") as f:
         w = csv.writer(f, lineterminator="\n")
-        w.writerow(["filename", "MechanicalManual|TechnicalManual", "description"])
+        w.writerow(["filename", "User|Technical|Mechanical", "description"])
         w.writerows(rows)
 
     print(f"wrote {OUT.relative_to(REPO)} ({len(rows)} assets)")

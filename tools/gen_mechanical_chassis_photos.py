@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
-"""Generate MechanicalManual/03-Chassis-Photos.md from Chassis/ image inventory."""
+"""Generate Docs/Mechanical/03-Chassis-Photos.md from Chassis/ image inventory."""
 
 from __future__ import annotations
 
 from pathlib import Path
 
+from manual_paths import MECHANICAL_MANUAL
+
 REPO = Path(__file__).resolve().parents[1]
 CHASSIS = REPO / "Chassis"
-OUT = REPO / "MechanicalManual" / "03-Chassis-Photos.md"
+OUT = REPO / MECHANICAL_MANUAL / "03-Chassis-Photos.md"
 
 RASTER_EXT = {".jpg", ".jpeg", ".png", ".gif", ".webp", ".JPG", ".JPEG", ".PNG"}
 VECTOR_EXT = {".svg", ".SVG"}
@@ -50,7 +52,7 @@ def rel_chassis(path: Path) -> str:
 
 
 def link(path: Path) -> str:
-    return f"../Chassis/{rel_chassis(path)}"
+    return f"../../Chassis/{rel_chassis(path)}"
 
 
 def is_raster(path: Path) -> bool:
@@ -85,7 +87,7 @@ def main() -> None:
     lines = [
         "# Chapter 3 — Chassis photo reference",
         "",
-        "All photos and artwork under [`Chassis/`](../Chassis/), grouped by source folder.",
+        "All photos and artwork under [`Chassis/`](../../Chassis/), grouped by source folder.",
         "",
     ]
 
@@ -93,7 +95,9 @@ def main() -> None:
         images = list_images(folder)
         lines.append(f"## {title}")
         lines.append("")
-        lines.append(f"{blurb} Archive: [`Chassis/{rel_chassis(folder)}/`](../Chassis/{rel_chassis(folder)}/).")
+        lines.append(
+            f"{blurb} Archive: [`Chassis/{rel_chassis(folder)}/`](../../Chassis/{rel_chassis(folder)}/)."
+        )
         lines.append("")
         if not images:
             lines.append("_No images in this folder._")

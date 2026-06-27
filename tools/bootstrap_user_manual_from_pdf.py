@@ -2,7 +2,7 @@
 """Optional one-shot bootstrap: factory PDF → page scans → OCR → chapter markdown.
 
 Use only when re-seeding from Chassis/Manual/MaxxSteeleManual.pdf. Normal edits
-should change UserManual/*.md directly and run build_user_manual_pdf.py.
+should change Docs/User/*.md directly and run build_user_manual_pdf.py.
 """
 
 from __future__ import annotations
@@ -33,7 +33,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument(
         "--include-readme",
         action="store_true",
-        help="Also regenerate UserManual/README.md from the generator template",
+        help="Also regenerate Docs/User/README.md from the generator template",
     )
     ap.add_argument(
         "--yes",
@@ -43,7 +43,7 @@ def main(argv: list[str] | None = None) -> int:
     args = ap.parse_args(argv)
 
     print(
-        "This overwrites chapter markdown under UserManual/ from OCR.\n"
+        "This overwrites chapter markdown under Docs/User/ from OCR.\n"
         "Hand-edited prose will be lost unless you have committed or backed it up.",
         file=sys.stderr,
     )

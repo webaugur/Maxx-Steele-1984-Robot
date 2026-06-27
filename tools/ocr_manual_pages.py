@@ -10,8 +10,10 @@ from pathlib import Path
 
 from project_paths import project_root
 
-DEFAULT_PAGES = Path("UserManual/Sources/pages")
-DEFAULT_TEXT = Path("UserManual/Sources/text")
+from manual_paths import USER_MANUAL
+
+DEFAULT_PAGES = USER_MANUAL / "Sources/pages"
+DEFAULT_TEXT = USER_MANUAL / "Sources/text"
 
 
 def ocr_page(image: Path, out_txt: Path, *, tesseract: str) -> None:

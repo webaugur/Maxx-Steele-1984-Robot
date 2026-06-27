@@ -1,6 +1,6 @@
 # MMIO pin map (partial schematic)
 
-Block-level map from **6502 CPU pins** through **address decode** to **peripheral MMIO** addresses documented in internal ROM. This is not a full KiCad netlist — it is the minimum hardware layer needed to explain OS drivers in [Technical Manual Ch 5–6](../../TechnicalManual/05-Cartridge-Bootstrap-and-Internal-ROM.md).
+Block-level map from **6502 CPU pins** through **address decode** to **peripheral MMIO** addresses documented in internal ROM. This is not a full KiCad netlist — it is the minimum hardware layer needed to explain OS drivers in [Technical Manual Ch 5–6](../../Docs/Technical/05-Cartridge-Bootstrap-and-Internal-ROM.md).
 
 **Confidence:** decode equations are **provisional** (consistent with all six MMIO bases in ROM); CPU-pin names are from [`Maxx-Steele-CPU-Pinout.pdf`](../../DataSheets/Maxx-Steele-CPU-Pinout.pdf) (known to contain errors — verify against raster schematic).
 
@@ -152,5 +152,5 @@ Regenerate: `python3 tools/gen_mmio_crossref.py --md`
 ## Related docs
 
 - [IC-Inventory.md](IC-Inventory.md) — chip list with refdes confidence
-- [Technical Manual Ch 6](../../TechnicalManual/06-Input-Output-Guide.md) — programmer-facing bitfield summary
-- [Technical Manual Ch 5](../../TechnicalManual/05-Cartridge-Bootstrap-and-Internal-ROM.md) — driver entry points
+- [Technical Manual Ch 6](../../Docs/Technical/06-Input-Output-Guide.md) — programmer-facing bitfield summary
+- [Technical Manual Ch 5](../../Docs/Technical/05-Cartridge-Bootstrap-and-Internal-ROM.md) — driver entry points

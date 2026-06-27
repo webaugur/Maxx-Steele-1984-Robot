@@ -13,8 +13,7 @@ Much of the information in this archive has unknown ownership or uses licensed n
 | **Top-level hardware modules** | `CamelCase` (no spaces or hyphens) | `Transmitter/`, `Mainboard/`, `PaddleMirror/`, `Cartridge/` |
 | **Top-level shared folders** | `lowercase` | `tools/`, `libraries/` |
 | **Third-party datasheets** | **`DataSheets/`** (overrides lowercase rule) | Vendor PDFs as `OEM-PartNumber.pdf`; see [`DataSheets/README.md`](DataSheets/README.md) |
-| **Technical manual** | **`TechnicalManual/`** (overrides lowercase rule) | C64-style programming manual; see [`TechnicalManual/README.md`](TechnicalManual/README.md) |
-| **Mechanical manual** | **`MechanicalManual/`** (overrides lowercase rule) | Disassembly / reassembly guide; see [`MechanicalManual/README.md`](MechanicalManual/README.md) |
+| **Community manuals** | **`Docs/`** + CamelCase subfolders | [`Docs/User/`](Docs/User/), [`Docs/Technical/`](Docs/Technical/), [`Docs/Mechanical/`](Docs/Mechanical/) |
 | **Subfolders inside modules** | `CamelCase` | `Photos/`, `Firmware/`, `KiCAD/`, `PCBoard/`, `Model3D/`, `Photos/Product/`, `Photos/ReverseEngineering/` |
 | **Subfolders inside shared folders** | `lowercase` | `tools/rfcap/`, `tools/rfcap/captures/` |
 | **All filenames** | shell-safe: `[A-Za-z0-9._-]` only | `Remote-Front.jpg`, `maxx-song-1.wma`, `Maxx-Steele-Transmitter-Reverse-Engineered-Notes.pdf` |
@@ -41,16 +40,18 @@ Each module has a [`KiCAD/`](Transmitter/KiCAD/) subfolder for schematic/PCB wor
 | [`Power/`](Power/) | Planned | `Power/KiCAD/` |
 | [`Mainboard/`](Mainboard/) | Planned | `Mainboard/KiCAD/` |
 | [`Face/`](Face/) | Planned | `Face/KiCAD/` |
-| [`Cartridge/`](Cartridge/) | ROM, firmware, [programming manual](Cartridge/PROGRAMMING.md), [technical manual](TechnicalManual/README.md) | [`CBSDemo.kicad_pro`](Cartridge/Examples/CBSDemo/KiCAD/CBSDemo.kicad_pro) (active); UltraMaxx planned |
+| [`Cartridge/`](Cartridge/) | ROM, firmware, [programming manual](Cartridge/PROGRAMMING.md), [technical manual](Docs/Technical/README.md) | [`CBSDemo.kicad_pro`](Cartridge/Examples/CBSDemo/KiCAD/CBSDemo.kicad_pro) (active); UltraMaxx planned |
 | [`PaddleMirror/`](PaddleMirror/) | Archive | `PaddleMirror/KiCAD/` (planned) |
 | [`Chassis/`](Chassis/) | Body, manuals, photos | `Chassis/KiCAD/` (mechanical, planned) |
 
-### Tools & shared assets
+### Documentation & tools
 
 | Path | Description |
 |------|-------------|
-| [`TechnicalManual/`](TechnicalManual/) | Technical manual (bytecode, opcodes, I/O, appendices) — [README](TechnicalManual/README.md), [PDF](TechnicalManual/Maxx-Steele-Technical-Manual.pdf) |
-| [`MechanicalManual/`](MechanicalManual/) | Mechanical manual (disassembly, reassembly, teardown photos) — [README](MechanicalManual/README.md), [PDF](MechanicalManual/Maxx-Steele-Mechanical-Manual.pdf) |
+| [`Docs/`](Docs/) | Community manuals — [index](Docs/README.md) |
+| [`Docs/User/`](Docs/User/) | Owner manual (setup, operation, games) — [PDF](Docs/User/Maxx-Steele-User-Manual.pdf) |
+| [`Docs/Technical/`](Docs/Technical/) | Technical manual (bytecode, ROM, I/O) — [PDF](Docs/Technical/Maxx-Steele-Technical-Manual.pdf) |
+| [`Docs/Mechanical/`](Docs/Mechanical/) | Mechanical manual (disassembly, photos) — [PDF](Docs/Mechanical/Maxx-Steele-Mechanical-Manual.pdf) |
 | [`DataSheets/`](DataSheets/) | Third-party component datasheets (indexed in [`DataSheets/README.md`](DataSheets/README.md)) |
 | [`tools/`](tools/) | [`tools/bin/`](tools/bin/) shell commands (`maxx`, `maxx-rom`, `picorom-cart`), [`maxxbas/`](tools/maxxbas/) Rust library + `maxx simulate`, Python modules, KiCad helpers, [`rfcap/`](tools/rfcap/) GNU Radio OOK flowgraphs |
 | [`libraries/`](libraries/) | Shared KiCad symbol libraries |

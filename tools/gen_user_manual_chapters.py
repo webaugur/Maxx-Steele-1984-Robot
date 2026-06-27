@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Generate UserManual chapter markdown from OCR text and factory page scans.
+"""Generate Docs/User chapter markdown from OCR text and factory page scans.
 
 By default this script does nothing — chapter .md files are edited directly.
-Pass --from-sources to overwrite chapters from UserManual/Sources/text (bootstrap
+Pass --from-sources to overwrite chapters from Docs/User/Sources/text (bootstrap
 or re-OCR only). See tools/bootstrap_user_manual_from_pdf.py for the full chain.
 """
 
@@ -15,9 +15,10 @@ import sys
 from pathlib import Path
 
 from display_codes import wrap_display_codes
+from manual_paths import USER_MANUAL
 from project_paths import project_root
 
-MANUAL_DIR = Path("UserManual")
+MANUAL_DIR = USER_MANUAL
 TEXT_DIR = MANUAL_DIR / "Sources/text"
 PAGES_DIR = MANUAL_DIR / "Sources/pages"
 OUTLINE = MANUAL_DIR / "Sources/outline.json"
@@ -392,20 +393,20 @@ def chapter_preamble(filename: str) -> str:
     extras = {
         "02-Setup.md": (
             "Cross-reference: factory keypad labels and matrix map in "
-            "[`Transmitter/remote-keypad.md`](../Transmitter/remote-keypad.md).\n\n"
+            "[`Transmitter/remote-keypad.md`](../../Transmitter/remote-keypad.md).\n\n"
         ),
         "04-Immediate-Mode.md": (
             "The five factory operating modes correspond to the internal ROM mode "
             "table documented in "
-            "[`TechnicalManual/05-Cartridge-Bootstrap-and-Internal-ROM.md`]"
-            "(../TechnicalManual/05-Cartridge-Bootstrap-and-Internal-ROM.md).\n\n"
+            "[`Docs/Technical/05-Cartridge-Bootstrap-and-Internal-ROM.md`]"
+            "(../Technical/05-Cartridge-Bootstrap-and-Internal-ROM.md).\n\n"
         ),
         "09-Compliance.md": (
             "Archival scan of the factory booklet: "
-            "[`Chassis/Manual/MaxxSteeleManual.pdf`](../Chassis/Manual/MaxxSteeleManual.pdf). "
+            "[`Chassis/Manual/MaxxSteeleManual.pdf`](../../Chassis/Manual/MaxxSteeleManual.pdf). "
             "Programmer quick reference: "
             "[`Chassis/Manual/MaxxSteeleReferenceGuide.pdf`]"
-            "(../Chassis/Manual/MaxxSteeleReferenceGuide.pdf).\n\n"
+            "(../../Chassis/Manual/MaxxSteeleReferenceGuide.pdf).\n\n"
         ),
     }
     return extras.get(filename, "")
@@ -442,18 +443,18 @@ def write_readme(manual_dir: Path, outline: dict) -> Path:
     )
     text = f"""# Maxx Steele User Manual
 
-Community edition of the 1984 CBS Toys / Ideal **Electronic Maxx Steele® Personal Robot** factory *User's Guide to Operations*, transcribed from [`Chassis/Manual/MaxxSteeleManual.pdf`](../Chassis/Manual/MaxxSteeleManual.pdf).
+Community edition of the 1984 CBS Toys / Ideal **Electronic Maxx Steele® Personal Robot** factory *User's Guide to Operations*, transcribed from [`Chassis/Manual/MaxxSteeleManual.pdf`](../../Chassis/Manual/MaxxSteeleManual.pdf).
 
-**PDF (latest):** [`Maxx-Steele-User-Manual.pdf`](Maxx-Steele-User-Manual.pdf) — rebuilt when `.md` or cover images change ([`tools/build_user_manual_pdf.py`](../tools/build_user_manual_pdf.py) locally; GitHub Actions on push to `main`).
+**PDF (latest):** [`Maxx-Steele-User-Manual.pdf`](Maxx-Steele-User-Manual.pdf) — rebuilt when `.md` or cover images change ([`tools/build_user_manual_pdf.py`](../../tools/build_user_manual_pdf.py) locally; GitHub Actions on push to `main`).
 
 ## What this guide covers
 
 | Document | Audience | Focus |
 |----------|----------|-------|
 | **This guide** | Owners | Setup, remote control, five operating modes, games, maintenance |
-| [`TechnicalManual/`](../TechnicalManual/) | Programmers | Bytecode, ROM, I/O, cartridge authoring |
-| [`MechanicalManual/`](../MechanicalManual/) | Repairers | Disassembly, reassembly, chassis photos |
-| [`Chassis/Manual/MaxxSteeleReferenceGuide.pdf`](../Chassis/Manual/MaxxSteeleReferenceGuide.pdf) | Owners | Six-page factory programmer quick reference |
+| [`Docs/Technical/`](../Technical/) | Programmers | Bytecode, ROM, I/O, cartridge authoring |
+| [`Docs/Mechanical/`](../Mechanical/) | Repairers | Disassembly, reassembly, chassis photos |
+| [`Chassis/Manual/MaxxSteeleReferenceGuide.pdf`](../../Chassis/Manual/MaxxSteeleReferenceGuide.pdf) | Owners | Six-page factory programmer quick reference |
 
 ## How to use this manual
 
@@ -467,11 +468,11 @@ Community edition of the 1984 CBS Toys / Ideal **Electronic Maxx Steele® Person
 python3 tools/build_user_manual_pdf.py
 ```
 
-GitHub Actions runs the same build on push when `UserManual/**` changes.
+GitHub Actions runs the same build on push when `Docs/User/**` changes.
 
 ## Bootstrap from factory PDF (optional)
 
-Archival scan: [`Chassis/Manual/MaxxSteeleManual.pdf`](../Chassis/Manual/MaxxSteeleManual.pdf). To re-seed markdown from that PDF (overwrites chapter text from OCR):
+Archival scan: [`Chassis/Manual/MaxxSteeleManual.pdf`](../../Chassis/Manual/MaxxSteeleManual.pdf). To re-seed markdown from that PDF (overwrites chapter text from OCR):
 
 ```bash
 python3 tools/bootstrap_user_manual_from_pdf.py
@@ -485,7 +486,7 @@ Or step-by-step: `extract_manual_pages.py` → `ocr_manual_pages.py` → `gen_us
 | [`Sources/text/`](Sources/text/) | Per-page OCR text (bootstrap input only) |
 | [`Sources/outline.json`](Sources/outline.json) | Page-to-chapter map for the generator |
 
-For keypad matrix names and faceplate art, see [`Transmitter/remote-keypad.md`](../Transmitter/remote-keypad.md).
+For keypad matrix names and faceplate art, see [`Transmitter/remote-keypad.md`](../../Transmitter/remote-keypad.md).
 """
     out = manual_dir / "README.md"
     out.write_text(text, encoding="utf-8")
@@ -510,7 +511,7 @@ def main(argv: list[str] | None = None) -> int:
 
     if not args.from_sources:
         print(
-            "No action taken. Chapter markdown is edited directly under UserManual/.\n"
+            "No action taken. Chapter markdown is edited directly under Docs/User/.\n"
             "To rebuild the PDF: python3 tools/build_user_manual_pdf.py\n"
             "To re-generate chapters from OCR: add --from-sources\n"
             "Full bootstrap from factory PDF: python3 tools/bootstrap_user_manual_from_pdf.py",

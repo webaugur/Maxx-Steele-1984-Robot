@@ -8,7 +8,7 @@
 | [`Model3D/`](Model3D/) | Mechanical model |
 | [`Photos/`](Photos/) | Cartridge card photo |
 | [`PROGRAMMING.md`](PROGRAMMING.md) | Cartridge programming manual (bytecode, speech, music) |
-| [`TechnicalManual/`](../TechnicalManual/) | Full technical manual — [PDF](../TechnicalManual/Maxx-Steele-Technical-Manual.pdf) |
+| [`Docs/Technical/`](../Docs/Technical/) | Full technical manual — [PDF](../Docs/Technical/Maxx-Steele-Technical-Manual.pdf) |
 
 Shared KiCad symbols: [`libraries/`](../libraries/).
 

@@ -10,7 +10,7 @@
 
 Referenced by:
 
-- [Technical Manual Ch 5 — Internal ROM OS](../TechnicalManual/05-Cartridge-Bootstrap-and-Internal-ROM.md) (boot, modes, drivers)
-- [Appendices D and I](../TechnicalManual/Appendices.md) (zero page, entry points)
+- [Technical Manual Ch 5 — Internal ROM OS](../Docs/Technical/05-Cartridge-Bootstrap-and-Internal-ROM.md) (boot, modes, drivers)
+- [Appendices D and I](../Docs/Technical/Appendices.md) (zero page, entry points)
 - [`Cartridge/PROGRAMMING.md`](../Cartridge/PROGRAMMING.md)
 - [`tools/maxxbas/`](../../tools/maxxbas/) — `maxx simulate` firmware model and [`patches.json`](../../tools/maxxbas/patches.json) trap table

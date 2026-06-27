@@ -1,0 +1,51 @@
+E. GLOSSARY OF
+PROMPTS AND
+DISPLAY MESSAGES
+
+“Ctr” [CLEARING A PROGRAM STEP]: Indicates the program step
+about to be cleared (see 4.27 and 4.61D Clearing Mistakes).
+
+“CLrP" [CLEARED PROGRAM): Shows that the entire program has
+been cleared (see 4.28 Clearing an Entire Program and 4.61E
+Clearing an Entire Song).
+
+“d__." [PROGRAM DELAY}: Indicates that Maxx expects a number
+specifying how may seconds you want a particular program
+delayed (see 4.26 Programming a Delay).
+
+“EboF’/"Ebon’’ [EXECUTE BACKWARDS MODE]: “Ebof" indicates
+that Maxx’'s Execute Backward Mode is OFF. “Ebon” indicates that
+Maxx’'s Execute Backward Mode is ON (see 5.4 FORWARD AND
+BACKWARD PROGRAM EXECUTION).
+
+“Edon’’/"EdoF" [EDIT MODE]: “Edon”™ indicates that Maxx's Edit
+Mode is ON, "EdoF” indicates that Maxx's Edit Mode is OFF (see
+5.4] Using the Edit Made),
+
+“F__"'/"b__" [BODY MOVEMENT]; Indicates how far forward or
+backward Maxx should move (see 4.24 Programming Body
+Movements).
+
+FULL” [PROGRAM MEMORY FULL]: Indicates that Maxx's memory
+is full (see 4.6 OTHER OPERATING MODES).
+
+“HL” [HEADLAMP ON/OFF}: Indicates that Maxx expects a
+number to turn on or off the headlamp (see 4.25 Programming the
+Headlamp).
+
+“notE” [NOTE]: Indicates that Maxx is in the Note-Playing Mode
+(see 4.14 Music).
+
+“PAr’ [PARALLEL PROGRAM EXECUTION MODE]: Indicates that
+Parallel Program Execution Mode is active (see 5.21 Starting o
+Parallel Program).
+
+“PdoF"/"Pdon” [AUTO PO'WER-DOWN|: “Pdof" indicates that
+Maxx's Auto Power-Down feature is OFF. “Pdon" indicates that
+Maxx's Auto Power-Down feature is ON (see 5.3 AUTOMATIC
+POWER-DOWN).
+
+“PS__" [PROGRAM SPEECH MODE]: Indicates that Maxx expects a
+
+number corresponding to the sentence you want him to speak (see
+4.63 Program Speech Mode}.

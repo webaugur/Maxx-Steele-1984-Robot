@@ -1,0 +1,78 @@
+4.21-4.22 DALEK
+
+4.21 PROGRAMMING ARM MOVEMENTS (CON’T)
+
+step 000
+
+Command - Press the <HOME> key and the <ENTER> key.
+
+Operation - Maxx will move his arms, wrist and claw to their initial starting, or
+home, position when the program ts executed.
+Step 001
+
+Command - Press the <ARMS UP> key. Then press the <I> key, the <0> and the
+<ENTER> key,
+
+Operation- Maxx will raise his arms when the program is executed.
+step 002
+
+Command - Press the <ARMS DOWN> key. Then press the <5> key and the
+<ENTER> key.
+
+Operation - Maxx will lower his arms when the program is executed.
+step 003
+
+Command- Press the <ARMS UP> key. Then press the <4> key, the <5> key and
+the <ENTER> key.
+
+OQperation- Maxx will raise his arms when the program is executed.
+Step O04
+
+Command - Press the <ARMS DOWN>key. Then press the <2> key, the <0> key
+and the <ENTER> key.
+
+Operation- Maxx will lower his arms when the program is executed.
+EXECUTE
+
+Command- After the program is entered, press the <EXECUTE> key.
+
+Operation - Maxx will run through the operations you have just programmed.
+
+4,22 PROGRAMMING Maxxs wrist can be set to rotate in any one of approximately 169
+WRIST MOVEMENTS positions, about 2.1 degress at a time.
+
+PROMPT FOR WRIST
+
+MOVEMENT UP
+
+FROMPT FOR WRIST
+MOVEMENT DOWN
+
+NOTE: Since the maximum notation of any single move is limited to 99,
+
+a movement that requires o number higher than 99 will require
+multiple program steps.
+
+*lo Program Wrist Movement:
+1, Press the <PROGRAM> key to enter the Program Mode.
+2. Press the < WRIST UP> or <WRIST DOWN key.
+3. The display will read “Uu_—_" [wrist up} or 'Ud__"' [wrist down]. This is
+a PROMPT indicating that Maxx expects a number, from 0 to 99,
+specifying how much the wrist should be moved. Experiment with
+diferent numbers and observe how far the wrist moves.
+4. After the number keys have been pressed, press the CENTER> key to
+complete and store the program step,
+5. The display will now show the number of the next program step,
+indicating that Maxx is ready for further programming.
+
+*Here's A Program That Will Demonstrate Maxx's Wrist Movement
+
+Abilities:
+
+Preliminary Steps
+
+|. Press the <POWER/STOP> key. This will activate Maxx. He will play
+his Immediate Mode tune and say “I'm ready.”
+
+2. Press the <PROGRAM> key, Maxx will play his Program Mode tune
+and say ‘Please program me."

@@ -8,13 +8,15 @@ import sys
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
-MANUAL_DIRS = (REPO / "TechnicalManual", REPO / "MechanicalManual", REPO / "UserManual")
+from manual_paths import MANUAL_DIRS as _MANUAL_REL_DIRS
+
+MANUAL_DIRS = tuple(REPO / d for d in _MANUAL_REL_DIRS)
 
 PATH_RE = re.compile(
     r"(?<![(\[`])"
     r"(?:\.\./)?"
-    r"(?:tools|Cartridge|Chassis|DataSheets|Transmitter|Receiver|Mainboard|"
-    r"MechanicalManual|TechnicalManual|UserManual|Power|PaddleMirror)/"
+    r"(?:Docs/(?:User|Technical|Mechanical)|tools|Cartridge|Chassis|DataSheets|"
+    r"Transmitter|Receiver|Mainboard|Power|PaddleMirror)/"
     r"[\w./-]+"
     r"|"
     r"(?:\.\./)?Face/(?:KiCAD|Photos|README\.md)"

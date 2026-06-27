@@ -1,0 +1,69 @@
+sata AA SK
+
+®How to Start A Session With Maxx:
+1. Take controller and pull out antenna,
+2. Press the <POWER/STOP> key. The LED light on the controller will
+turn on, indicating that the controller is active,
+MOTE: The controller will shut off a short time after the last keystroke if
+no other buttons are pressed. To reactivate the controller, press the
+<POWER/STOP> key.
+3. Make sure that Maxx's POWER SWITCH, located inside his chest
+storage compartment in the lower left corner, is UP in the ON position.
+4. Press the <CPOWER/STOP> key again. Maxx will respond by playing
+the Immediate Mode tune and say “I'm ready.” This puts Moxx in the
+immediate Made. In this mode, Maxx will “immediately” perform each
+action you choose. Pressing the keys on the controller will select the
+specific action you want performed.
+5. If you want to choose a different operating mode: press the
+<SONG> key to play music, the <SPEECH> key to have Maxx speak
+words or phrases, the <GAME> key to play games, the <PROGRAM>
+key to program a series of actions, or the <LEARN> key to “teach”
+Maxx. All of these modes and functions are explained later in this
+manual,
+6. Upon completion of your session with Maxx, press the <HOME>
+key, lower the antenna on the controller and return it to the recessed
+compartment on the top of his head. Maxx will automatically shut off
+(Power-Down) after approximately 13 minutes.
+NOTE: Moxx can be set to Power-Down manually, if you do not want
+to wait 13 minutes before he goes into his Auto Power-Down
+procedure (see 5.32 Manual Power-Down).
+
+4, MODES OF OPERATION
+
+Maxx has five major operating modes. They are: the Immediate Mode
+(see section 4.1), the Program Mode {see 4.2}, the Learn Mode {see 4.3),
+the Execute Mode (see 4.4), and the Game-Playing Mode (see 4.5).
+
+4.1 IMMEDIATE MODE
+
+When the controller is turned on, by pressing the <POWER/STOP>
+key, you are in the Immediate Mode. Maxx will play his Immediate
+Mode tune ond say “I'm ready." Pressing other keys after that will
+select the specific action you want performed, such as setting the time,
+the alarm, auto-execution features, making Maxx move, speak and
+play music. Maxx will immediately perform each action as you press
+the keys.
+
+4.11 TIME
+
+Built into Maxx is a LED digital clock/alarm. He can wake you up,
+activate himself te run your programs at a preset time, or remind you
+of things to do,
+
+4.11A SETTING THE TIME
+
+PM INDICATOR
+
+Setting the time is an operation that you may want to do the first time
+Maxx is switched on. Once set, the clock will stay accurate until the
+battery runs down or the POWER SWITCH is turned OFF. The clock
+has a 12-hour display. The decimal point (.) located in the upper left of
+Maxx’'s display indicates PM when lit,
+
+NOTE: Each of the following functions is performed in the Immediate
+Mode, after Maxx says “I'm ready.”
+
+®To Set The Clack:
+1. Press the <CLOCK> key. Maxx’'s display will show “CLoC”,
+indicating that he expects the clack to be set.
+2. To advance the hours, press the <0> key and hold down. Release the

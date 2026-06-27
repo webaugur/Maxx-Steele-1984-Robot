@@ -5,13 +5,13 @@ Robot body, packaging, manuals, and material not tied to a single PCB module.
 | Path | Description |
 |------|-------------|
 | [`Manual/`](Manual/) | Archival factory PDFs (owner + reference) |
-| [`UserManual/`](../UserManual/) | Community owner manual (markdown + PDF) |
-| [`Photos/`](Photos/) | Exterior, teardown, workshop, and collection photos (indexed in [`MechanicalManual/03-Chassis-Photos.md`](../MechanicalManual/03-Chassis-Photos.md)) |
-| [`Artwork/`](Artwork/) | Logos and body artwork (listed in [`MechanicalManual/03-Chassis-Photos.md`](../MechanicalManual/03-Chassis-Photos.md)) |
+| [`Docs/User/`](../Docs/User/) | Community owner manual (markdown + PDF) |
+| [`Photos/`](Photos/) | Exterior, teardown, workshop, and collection photos (indexed in [`Docs/Mechanical/03-Chassis-Photos.md`](../Docs/Mechanical/03-Chassis-Photos.md)) |
+| [`Artwork/`](Artwork/) | Logos and body artwork (listed in [`Docs/Mechanical/03-Chassis-Photos.md`](../Docs/Mechanical/03-Chassis-Photos.md)) |
 | [`References/`](References/) | Third-party articles and workshop notes |
 | [`Photos/Disassembly/`](Photos/Disassembly/) | Teardown workshop photos (`IMG_2116`–`IMG_2131`) |
-| [`MechanicalManual/`](../MechanicalManual/) | Disassembly / reassembly manual (text + PDF) |
-| [`Sounds/`](Sounds/) | Sample speech and song audio (indexed in [`MechanicalManual/Hardware-Assets.csv`](../MechanicalManual/Hardware-Assets.csv); `maxx-song-N` → `PLAY N`) |
+| [`Docs/Mechanical/`](../Docs/Mechanical/) | Disassembly / reassembly manual (text + PDF) |
+| [`Sounds/`](Sounds/) | Sample speech and song audio (indexed in [`Docs/Mechanical/Hardware-Assets.csv`](../Docs/Mechanical/Hardware-Assets.csv); `maxx-song-N` → `PLAY N`) |
 | [`Model3D/`](Model3D/) | Mechanical CAD (placeholder) |
 | [`KiCAD/`](KiCAD/) | Mechanical / enclosure CAD (placeholder) |
 

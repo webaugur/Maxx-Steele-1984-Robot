@@ -1,4 +1,4 @@
-"""Shared booklet PDF build for TechnicalManual and MechanicalManual."""
+"""Shared booklet PDF build for Docs/Technical and Docs/Mechanical."""
 
 from __future__ import annotations
 

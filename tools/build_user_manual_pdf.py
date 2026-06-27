@@ -7,10 +7,11 @@ import argparse
 import sys
 from pathlib import Path
 
+from manual_paths import USER_MANUAL
 from manual_pdf import ManualSpec, build_pdf
 from project_paths import project_root, resolve_from_root
 
-MANUAL_DIR = Path("UserManual")
+MANUAL_DIR = USER_MANUAL
 OUTPUT_NAME = "Maxx-Steele-User-Manual.pdf"
 
 CHAPTERS = (

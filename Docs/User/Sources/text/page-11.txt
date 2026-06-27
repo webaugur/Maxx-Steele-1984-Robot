@@ -1,0 +1,89 @@
+button when the correct hour appears in Maxx’s display.
+
+3. To advance the minutes, press <1> key and hold down. Release the
+button when the correct minutes appear in Moxx’s display.
+
+4. When the clock has been set, the colon (:) between the hours and
+minutes digits will blink every second.
+
+MOTE: Once you have finished setting the clock, you must press the
+<POWER/STOP> key or another function key [CSONG> or
+<SPEECH>] to exit the Time Mode. When you press the last key, the
+time will go into Maxx's memory. He will continue keeping the time
+until a new setting is entered, or until his batteries run down or the
+
+POWER SWITCH is turned OFF.
+
+i
+oe 2
+
+CLOCK INDICATOR
+
+To Set The Alarm:
+
+l. Press the <CLOCK> key. Maxx’s display will show "“CLoC”,
+indicating that he expects the alarm to be set.
+
+2. To advance the alarm hours, press the <2> key and hold down.
+Release the button when the correct hour appears in Maxx’s display.
+3. To advance the alarm minutes, press the <3> key and hold down,
+Release the button when the correct minutes appear in Maxx’s display,
+4. The decimal point (.) located in the lower left of Maxx's display
+indicates that the alarm is on when lit,
+
+5. To turn on or off the alarm you have set, press the <CLOCK> key (if
+you are not already in the Clock Mode) and then press the <6> key.
+The LED ALARM INDICATOR will go on or off, indicating that the
+alarm is on or off.
+
+6. Maxx can be programmed to automatically execute o program
+when the alarm goes off (see 5.1] AUTO—EXECUTE).
+
+7. Tosimply display the alarm time, press the <CLOCK> key [if you are
+not already in the Clock Mode) and then press the <5> key.
+
+8. If you want the alarm to go off again, 24 hours later, you must turn it
+on again, by pressing the <6> key. The alarm time need not be
+re-entered unless you wish to change it.
+
+NOTE: Once you have finished setting the alarm, you must press the
+<POWER/STOP> key or onother function key [SONG or SPEECH]
+to exit the time mode.
+
+®Summary Of Clock And Alarm Features:
+
+1. When in the Immediate Mode, press the <CLOCK> key. Maxx’s
+display will show “CLoC™.
+
+2. When Maxx’s display shows “CLoC” and you want to know the time
+displayed, press the <4> key.
+
+3. A decimal point located in the upper left of Maxx’'s display will
+indicate PM when lit,
+
+4. When Maxx's display shows “CLoC’ and you want to know the
+alarm time displayed, press the <S> key.
+
+9. To turn the alarm on or off, press the <6> key.
+
+6. A decimal point (.) located in the lower left of Maxx’'s display will
+indicate that the alarm is on when lit.
+
+7. The time or alarm need not be reset unless desired or if the battery is
+allowed to run down,
+
+8. If power is interrupted, Maxx’'s display will blink 12:00".
+
+4.716 SETTING
+THE ALARM
+
+ALARM INDICATOR
+
+NOTE: Moke sure that Maxx is moving around in a clear area, free
+from hazards or obstacles. Practice the motion commands carefully
+until you are familiar with varying speed and changing directions. Be
+especially careful if Maxx may encounter uneven surfaces.
+
+MOTE: All functions that follow are entered in the Immediate Mode.
+
+4.12 MOTION

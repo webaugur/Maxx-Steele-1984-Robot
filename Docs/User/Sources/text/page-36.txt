@@ -1,0 +1,67 @@
+IMPORTANT: TURN OFF POWER SWITCH BEFORE PERFORMING
+AMY MAINTENANCE
+
+BULB REPLACEMENT
+*To Replace Moxx's Chest Lights:
+1. With arms in “home” position,, remove any cartridges that
+may be in Moxx’s CARTRIDGE/EXPANSION SLOT.
+2. Press down at top ends of CHEST PANEL and snap out.
+
+3. Unscrew faulty BULB(S) and replace with new 6v, 0.1 amp bulb,
+commonly available os bicycle tail lamp.
+
+4, Replace CHEST PANEL by hooking in bottom of PANEL first and
+then snapping top into place,
+
+#To Replace Maxx's Headlamp:
+1. Remove HEADLAMP ASSEMBLY by “pinching” top and bottom
+between thumb and forefinger. Snap out.
+2. Turn locking TAB clockwise and remove,
+3. Remove and replace faulty BULB [#PR 12],
+4. Replace TAB and lock into position by turning counter-clockwise.
+3. Replace HEADLAMP ASSEMBLY by “pinching” top and bottom
+between thumb and forefinger. Put bottom of unit in first, then snap in
+top.
+CLEANING
+Maxx must be periodically inspected for dust and fibers on his wheel
+axles and in areas where moving parts are exposed,
+
+*To Clean Maxx's Wheels:
+1. With arms in “Home” position, put Maxx into the “Sleep Mode” by
+pressing the <CLOCK> key twice and then pressing the <6> key.
+2. Carefully lay Maxx on his back.
+3. Remove dust, dirt and fibers from around WHEELS. Make sure the
+rubber treads ore centered on wheels,
+4. Remove MEASURING WHEEL, located in center of base, by
+snapping out of plastic GROOVES.
+3. Caretully inspect both sides of 4 MAGNETS, located inside
+MEASURING WHEEL and remove any dust, dirt or pieces of metal.
+6. Replace MEASURING WHEEL exactly as removed by snapping
+back into GROOVES. Spin wheel to make sure it moves freely.
+CHANGING CRYSTALS
+MOTE: If more than one Maxx is being operated at the same time in the
+same location, it is necessary to use different sets of crystals (available
+at most electronics and hobby stores) in the controller (transmitter) and
+in Moxx (receiver), This is to avoid “jamming” the signals.
+Listed below are ail of the frequencies and the identification colors
+which can be used with Maxx. The set of crystals that have been put
+into the controller and Maxx at the factory is marked with an asterisk
+(*). When changing crystals, make sure that both come from the same
+set{i.e., with the same frequency and identification color) and that the
+crystal marked Tx is placed in the transmitter (controller) and the
+crystal marked Rx is placed in the receiver (Maxx).
+
+ed FLAG
+26.995 Brown
+27.045 Red
+27.095" Orange*
+27.145 Yellow
+27.195 Green
+
+BULBS REPLACEMENT
+
+HEADLAMP ASSEMBLY
+
+HEADLAMP BULB
+
+MEASURING WHEEL

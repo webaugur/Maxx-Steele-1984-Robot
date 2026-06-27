@@ -1,0 +1,79 @@
+«x LUISA
+
+J. SUMMARY OF
+CONTROLLER
+FUNCTIONS
+AND SPECIAL KEYS
+
+Key : Clear (see 4.32 Clearing a Program Step and 4.33 Clearing an
+Entire Program}
+
+Key : Enter (see 4.1 IMMEDIATE MODE, 4.2 PROGRAM MODE, 4.3
+LEARN MODE, 4.4 EXECUTE MODE, 4.5 GAME-PLAYING MODE, 4.6
+OTHER OPERATING MODES and 5. ADVANCED FEATURES)
+
+Key : Song or Notes (see 4.14, 4.61, and 4.62 Learn Song Mode}
+Key : Clock or Status (4.11 and 5. ADVANCED FEATURES)
+
+Key : Speech (see 4.13 Speech and 4.63 Program Speech Mode)
+
+Key : Back Step (see 5.4 PROGRAM EDITING)
+
+Key : Game (see 4.5 GAME-PLAYING MODE)
+
+Key : Program (see 4.2 PROGRAM MODE)
+
+Key : Learn (see 4.3 LEARN MODE}
+
+Key ; Execute (see 4.4 EXECUTE MODE)
+
+Keybar: Power/Stop (see. |. CAUTIONS)
+
+Special Keys:
+
+The <POWER/STOP®> key is used to return Maxx to the Immediate
+Mode and stop any motors that may be running. You can also use the
+STOP BUTTON on Maxx's head. Both of these keys are useful as
+‘panic’ buttons and to exit the Program, Learn, Execute and Game
+Modes.
+
+The <CLEAR> key is used in the Program and Learn Modes to delete
+only the previous command from memory. Pressing the <CLEAR>
+key and then pressing the <PROGRAM> key will erase the entire
+program when you are in the Program Mode or Learn Mode (see 4.27
+Clearing Program Steps and 4.28 Clearing An Entire Program).
+
+The <ENTER> key is pressed to indicate the end of the command
+codes entered. For example, to play pre-programmed song number
+one, press <SONG>, <1>, <ENTER>. To get Maxx to speak phrase
+20, press <SPEECH>, <2>, <0>, <ENTER>.
+
+Pressing the <HOME> key causes Maxx to move to his initial starting
+position.
+
+While some keys may have a single purpose, others can be used for
+more than one operation. For example, the <WAIT> key also
+functions as the <NOTE REST> key when in the music mode (see 4.148
+Using the Controller as a Musical Instrument, 4.26 Programming a
+Delay, and 4.43 Pausing During Program Execution). The <SONG>
+key also functions as the <NOTE> key (see 4.14 Music, 4.6] Program
+Song Mode and 4.62 Learn Sang Mode). In the same manner, the
+=<CLOCK/STATUS> key can either be used for setting the clock or for
+using Maxx's advanced features (see 4.11 Time and 5. ADVANCED
+FEATURES).
+
+The LED display panel at the top of Maxx’s head will show you the
+commands or program instructions that have been given to Maxx, The
+LED display will also show the number of the next program step to be
+entered,
+
+K. F.C.c. WARNING ON
+CLASS B PRODUCTS
+
+This equipment generates and uses radio frequency energy and if not
+used properly, that is, in strict accordance with the manufacturer's
+instructions, may cause interference to radio and television reception.
+It has been verified and found to comply with the limits for a Class B
+computing device in accordance with the specifications in Subpart J of
+Part 15 of F.C.C. Rules, which are designed to provide reasonable
+protection against such interference in a residential installation.

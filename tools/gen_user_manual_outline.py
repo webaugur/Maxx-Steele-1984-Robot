@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build or validate UserManual/Sources/outline.json from OCR section headers."""
+"""Build or validate Docs/User/Sources/outline.json from OCR section headers."""
 
 from __future__ import annotations
 
@@ -11,8 +11,10 @@ from pathlib import Path
 
 from project_paths import project_root
 
-TEXT_DIR = Path("UserManual/Sources/text")
-OUTLINE = Path("UserManual/Sources/outline.json")
+from manual_paths import USER_MANUAL
+
+TEXT_DIR = USER_MANUAL / "Sources/text"
+OUTLINE = USER_MANUAL / "Sources/outline.json"
 
 SECTION_RE = re.compile(
     r"^("

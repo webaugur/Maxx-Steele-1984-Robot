@@ -1,6 +1,6 @@
 # Maxx Steele Cartridge Programming Manual
 
-> **Full reference:** [`TechnicalManual/`](../TechnicalManual/) — [PDF](../TechnicalManual/Maxx-Steele-Technical-Manual.pdf), numbered chapters, appendices, and quick-reference card (C64 Programmer's Reference style). UltraMaxx BASIC: [Chapter 7](../TechnicalManual/07-UltraMaxx-BASIC-Language.md).
+> **Full reference:** [`Docs/Technical/`](../Docs/Technical/) — [PDF](../Docs/Technical/Maxx-Steele-Technical-Manual.pdf), numbered chapters, appendices, and quick-reference card (C64 Programmer's Reference style). UltraMaxx BASIC: [Chapter 7](../Docs/Technical/07-UltraMaxx-BASIC-Language.md).
 
 This document describes how to write programs for the 1984 CBS Toys / Ideal **Maxx Steele** robot using plug-in ROM cartridges. It is derived from:
 
@@ -30,7 +30,7 @@ The interpreter executes a bytecode program stored in RAM. Cartridges do not run
 | 3 | Execute | Run stored program at `$0200` |
 | 4 | Game | Built-in games via `JMP ($0094)` → `$F8CE` |
 
-Full OS flow: [Technical Manual Ch 5](../TechnicalManual/05-Cartridge-Bootstrap-and-Internal-ROM.md).
+Full OS flow: [Technical Manual Ch 5](../Docs/Technical/05-Cartridge-Bootstrap-and-Internal-ROM.md).
 
 ---
 
@@ -319,7 +319,7 @@ Reference images: [`Remote-Front.jpg`](../Transmitter/Photos/Product/Remote-Fron
 
 ### Option A — UltraMaxx BASIC (recommended)
 
-See [Technical Manual Chapter 7](../TechnicalManual/07-UltraMaxx-BASIC-Language.md) for the full language reference.
+See [Technical Manual Chapter 7](../Docs/Technical/07-UltraMaxx-BASIC-Language.md) for the full language reference.
 
 Write a `.bas` or `.maxx` source file and compile to a 4096-byte image:
 

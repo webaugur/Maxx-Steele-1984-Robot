@@ -1,0 +1,74 @@
+ANN
+
+A. TECHNICAL DATA BATTERY
+SPECIFICATIONS Time between battery charge: 14% to 4 hours, depending upon usage.
+
+Arms, wheels, wrist ond claw use more current than speech and music.
+Battery Charge Time: approximately 14 hours, depending on con-
+ditions. (See LABEL on inside of Maxx's chest compartment.)
+COMPUTER
+Microprocessor: 65C02 (CMOS)
+Internal Memory: 2K RAM (CMOS), 8K ROM
+CONTROLLER
+Keyboard: 25 multi-function keys
+Battery Life of Controller: 20 hours
+Range: approximately 25’, depending on local conditions
+Frequency: 27.095 Mhz
+Power: 300mw
+USER-PROGRAMMABLE MEMORY
+Program Steps: 255
+Music: 127 notes
+speech: 16 sentences of 15 words (maximum) each
+Maximum Continuous Speech: 478 words
+GENERAL INFORMATION
+Base Vocabulary: approximately 140 words or word particles
+Music Range: Two octaves (chromatic scale}
+Serial Port on Controller
+Expansion Interface Port on Maxx (in chest compartment)
+Range of Operating Temperatures: 50° to 90° F,
+
+B. GLOSSARY OF Edit: To change a step or steps in a program, such as clearing or
+
+TECHNICAL TERMS inserting program steps.
+
+Execute: To carry out or perform an instruction or series of instructions.
+Initialize: To move Maxx to his initial starting (or Home) position.
+
+K: Used to denote memory capacity of a computer in bytes; 1 K = 219
+bytes or 1024 in decimal notation.
+
+Memory: The capacity to store and recall commands and information.
+Mode: A way of doing something; a particular function.
+
+Parameter: A number specifying increments (in degrees or inches) of
+movement.
+
+Pre-Program: A set of step-by-step instructions that are permanently in
+Maxx's memory.
+
+Prompt: A displayed indication that tells you a number is to be entered.
+Program: (noun) A set of step-by-step instructions for Maxx to execute.
+(verb) To create a set of step-by-step instructions.
+
+RAM: Random Access Memory; a memory containing data which can
+be read and modified. When you create a program or song or speech,
+it is stored in RAM.
+
+ROM: Read-Only Memory; a memory containing data installed at the
+factory that can be read but not modified, such as Maxx's pre-
+programmed songs,
+
+Cc. PRE-PROGRAMMED
+SONGS
+
+Song number 0 is a blank place for you to program your own song (see
+4.41 Program Song Mode and 4.62 Learn Song Mode). In addition,
+Maxx will play eight pre-programmed songs, numbered 1 to 8, under
+the conditions listed below or when you select them.
+
+|. Immediate Mode tune. [When Maxx goes into the Immediate
+Mode or is reset when you press the STOP BUTTON on his head.]
+
+2. Learn Mode tune. [When Maxx goes into the Learn Mode.]
+
+3. Program Mode tune. [When Maxx goes into the Program Mode. ]

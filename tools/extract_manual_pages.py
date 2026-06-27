@@ -11,7 +11,9 @@ from pathlib import Path
 from project_paths import project_root, resolve_from_root
 
 DEFAULT_PDF = Path("Chassis/Manual/MaxxSteeleManual.pdf")
-DEFAULT_OUT = Path("UserManual/Sources/pages")
+from manual_paths import USER_MANUAL
+
+DEFAULT_OUT = USER_MANUAL / "Sources/pages"
 
 
 def require_tool(name: str) -> str:
