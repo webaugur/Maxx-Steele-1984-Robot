@@ -1135,13 +1135,14 @@ impl InteractiveFirmware {
             .map(|k| format!("{k:02X}"))
             .unwrap_or_else(|| "--".into());
         let mut header = format!(
-            "; sim {} | PC=${:04X} | $78=${:04X} | LED=[{}] | $75=${:02X} $15=${:02X} | pending={pending} latched={latched} $35=${:02X} | cycles={}\n",
+            "; sim {} | PC=${:04X} | $78=${:04X} | LED=[{}] | $75=${:02X} $15=${:02X} | pending={pending} latched={latched} keys={} $35=${:02X} | cycles={}\n",
             env!("CARGO_PKG_VERSION"),
             st.pc,
             irq_vec,
             self.led_chars(),
             st.key_ready,
             st.last_key,
+            st.keys_pressed,
             self.mem[0x35],
             st.cycles
         );
@@ -1432,6 +1433,36 @@ mod tests {
         fw.mem[0x15] = 0x80;
         apply_radio_wire(&mut fw.mem, &fw.bus_state.radio_pending, fw.bus_state.pending_digit);
         assert_eq!(fw.mem[0x75], 5, "GUI pending key must stay on $75 for LDX $75");
+    }
+
+    /// Toolbar queue: press_key in one tick, digest over subsequent ticks.
+    #[test]
+    fn toolbar_queue_press_then_digest_arms6() {
+        let cart = CartImage::from_bytes(MAXXOS.to_vec()).unwrap();
+        let mut fw = InteractiveFirmware::new(cart, "MaxxOS").unwrap();
+        fw.options.cycles_per_frame = 16_000;
+        fw.set_auto_submit_enter(true);
+        fw.warmup(180);
+        for _ in 0..8000 {
+            fw.step_frame();
+            if in_keypad_spin(fw.status().pc) {
+                break;
+            }
+        }
+        assert!(in_keypad_spin(fw.status().pc));
+        fw.press_key(RemoteKey::Arms6);
+        assert_eq!(fw.keys_pressed, 1);
+        assert_eq!(fw.bus_state.latched_digit, Some(6));
+        for _ in 0..400 {
+            fw.step_frame();
+        }
+        assert!(
+            fw.mem[0x35] == 6 || !in_keypad_spin(fw.status().pc),
+            "toolbar path stuck (pc=${:04X} $35={} keys={})",
+            fw.status().pc,
+            fw.mem[0x35],
+            fw.keys_pressed
+        );
     }
 
     /// Mimic egui: `logic` steps, `ui` queues key, next `logic` applies + digests.
