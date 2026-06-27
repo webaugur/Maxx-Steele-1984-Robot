@@ -13,11 +13,11 @@ const SIM_VERSION: &str = env!("CARGO_PKG_VERSION");
 /// Frames stepped synchronously before the window opens (ROM boot + first LED prompt).
 const STARTUP_WARMUP_FRAMES: u64 = 180;
 
-/// One `step_frame` per egui logic tick — no fast-forward bursts.
+/// One `step_frame` per egui logic tick.
 const FRAMES_PER_TICK: u32 = 1;
 
-/// Spread keypad digestion across logic ticks (~1 s at real-time speed).
-const KEYPRESS_DIGEST_FRAMES: u32 = 64;
+/// CPU frames to run after a remote key (cart dispatch + auto-ENTER).
+const KEYPRESS_DIGEST_FRAMES: u32 = 400;
 
 pub fn run_live_gui(cart: CartImage, label: impl Into<String>) -> Result<(), String> {
     let label = label.into();
@@ -32,7 +32,7 @@ pub fn run_live_gui(cart: CartImage, label: impl Into<String>) -> Result<(), Str
         cart_label: cart_name,
         sim_version: SIM_VERSION.to_string(),
         trace_display,
-        keypress_frames_remaining: 0,
+        pending_key: None,
     };
     let options = eframe::NativeOptions {
         viewport: egui::ViewportBuilder::default()
@@ -50,8 +50,8 @@ struct LiveSimApp {
     sim_version: String,
     /// Cached trace text for the egui text area (refreshed each frame).
     trace_display: String,
-    /// Extra CPU frames to run after a keypad click (incremental digest after immediate press).
-    keypress_frames_remaining: u32,
+    /// Key clicked in `ui()` — consumed at the start of the next `logic()` tick.
+    pending_key: Option<super::keypad::RemoteKey>,
 }
 
 fn short_label(label: &str) -> String {
@@ -64,15 +64,11 @@ fn short_label(label: &str) -> String {
 
 impl eframe::App for LiveSimApp {
     fn logic(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
-        // Finish digesting a keypad click before ordinary stepping.
-        if self.keypress_frames_remaining > 0 {
-            self.firmware.step_frame();
-            self.keypress_frames_remaining -= 1;
-            if self.keypress_frames_remaining == 0
-                || (!self.firmware.in_keypad_poll() && !self.firmware.status().key_pending)
-            {
-                self.keypress_frames_remaining = 0;
-            }
+        // egui runs logic() before ui(): apply the key queued last frame first.
+        if let Some(key) = self.pending_key.take() {
+            self.firmware.press_key(key);
+            self.firmware.digest_keypress(KEYPRESS_DIGEST_FRAMES);
+            self.trace_display = self.firmware.trace_text();
             ctx.request_repaint();
             return;
         }
@@ -99,7 +95,7 @@ impl eframe::App for LiveSimApp {
                 }
                 if ui.button("Reset").clicked() {
                     let _ = self.firmware.reset();
-                    self.keypress_frames_remaining = 0;
+                    self.pending_key = None;
                 }
                 ui.separator();
                 ui.label(egui::RichText::new(&self.cart_label).strong());
@@ -115,6 +111,18 @@ impl eframe::App for LiveSimApp {
                 ui.monospace(format!("PC ${:04X}", st.pc));
                 ui.monospace(format!("$75={:02X}", st.key_ready));
                 ui.monospace(format!("$15={:02X}", st.last_key));
+                ui.monospace(format!(
+                    "pending={}",
+                    st.pending_raw
+                        .map(|k| format!("{k:02X}"))
+                        .unwrap_or_else(|| "--".into())
+                ));
+                ui.monospace(format!(
+                    "latched={}",
+                    st.latched_raw
+                        .map(|k| format!("{k:02X}"))
+                        .unwrap_or_else(|| "--".into())
+                ));
                 if st.answer < 0x0A {
                     ui.monospace(format!("$35={}", st.answer));
                 }
@@ -163,9 +171,7 @@ impl eframe::App for LiveSimApp {
                     .auto_shrink([false, false])
                     .show(ui, |ui| {
                         if let Some(key) = remote_panel::remote_panel(ui) {
-                            // Latch now; logic() digests one frame per tick (no bulk fast-forward).
-                            self.firmware.press_key(key);
-                            self.keypress_frames_remaining = KEYPRESS_DIGEST_FRAMES;
+                            self.pending_key = Some(key);
                             ui.ctx().request_repaint();
                         }
                     });
@@ -235,7 +241,7 @@ impl eframe::App for LiveSimApp {
                 let tip = if !st.running {
                     "CPU is paused — click Run CPU, then press an orange digit key."
                 } else if st.keypad_waiting {
-                    "Press an orange digit (0–9). The simulator auto-presses ENTER for you. \
+                    "Press an orange digit (0–9). Toolbar must show latched=NN after click. \
                      Yellow ENTER submits manually; orange CLEAR erases."
                 } else {
                     "Wait for green \"waiting for digit\" in the toolbar, then press a digit."

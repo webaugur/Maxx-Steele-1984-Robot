@@ -44,6 +44,9 @@ pub struct FirmwareStatus {
     pub key_pending: bool,
     /// `$35` holds a digit but cart `input_loop` is still waiting (needs ENTER).
     pub needs_enter: bool,
+    /// Raw sim latch bytes (for toolbar — not masked like `$75`/`$15`).
+    pub pending_raw: Option<u8>,
+    pub latched_raw: Option<u8>,
 }
 
 /// Heap-backed keypad/IRQ hooks — `LiveBus` holds a raw pointer that must survive `Self` moves.
@@ -550,10 +553,11 @@ fn finish_e60d_keypad_wait(
         return false;
     }
     let sp = cpu.registers.stack_pointer.0;
-    if !in_keypad_read_path(mem, sp, pc) {
+    let cart_waiting = stack_has_cart_e60d_return(mem, sp);
+    if !cart_waiting {
         return false;
     }
-    if !stack_has_cart_e60d_return(mem, sp) {
+    if !in_keypad_read_path(mem, sp, pc) && !cart_waiting {
         return false;
     }
     if !unwind_keypad_stack_to_cart(cpu, mem) {
@@ -819,9 +823,6 @@ impl InteractiveFirmware {
             self.bus_state.pending_digit = Some(code);
             self.bus_state.latched_digit = Some(code);
             self.mem[0x15] = code;
-            self.display = LedDisplay::default();
-            self.display.mirror_answer_digit(&self.mem, code);
-            self.last_answer_digit = code;
             if self.auto_submit_enter {
                 self.queue_auto_enter = true;
             }
@@ -840,7 +841,11 @@ impl InteractiveFirmware {
             return;
         }
         let pc = self.cpu.registers.program_counter;
-        if !self.in_keypad_poll() {
+        let sp = self.cpu.registers.stack_pointer.0;
+        let deliverable = self.in_keypad_poll()
+            || stack_has_cart_e60d_return(&self.mem, sp)
+            || self.effective_keypad_waiting();
+        if !deliverable {
             return;
         }
         if finish_e60d_keypad_wait(
@@ -1087,6 +1092,8 @@ impl InteractiveFirmware {
             answer,
             key_pending,
             needs_enter,
+            pending_raw: self.bus_state.pending_digit,
+            latched_raw: self.bus_state.latched_digit,
         }
     }
 
@@ -1418,6 +1425,37 @@ mod tests {
         fw.mem[0x15] = 0x80;
         apply_radio_wire(&mut fw.mem, &fw.bus_state.radio_pending, fw.bus_state.pending_digit);
         assert_eq!(fw.mem[0x75], 5, "GUI pending key must stay on $75 for LDX $75");
+    }
+
+    /// Mimic egui: `logic` steps, `ui` queues key, next `logic` applies + digests.
+    #[test]
+    fn live_sim_app_frame_loop_arms6() {
+        let cart = CartImage::from_bytes(MAXXOS.to_vec()).unwrap();
+        let mut fw = InteractiveFirmware::new(cart, "MaxxOS").unwrap();
+        fw.options.cycles_per_frame = 16_000;
+        fw.set_auto_submit_enter(true);
+        fw.warmup(180);
+        let mut key_queued = false;
+        for _ in 0..12_000 {
+            if key_queued {
+                fw.press_key(RemoteKey::Arms6);
+                fw.digest_keypress(400);
+                break;
+            }
+            fw.step_frame();
+            if in_keypad_spin(fw.status().pc) {
+                key_queued = true;
+            }
+        }
+        assert!(key_queued, "never reached $E617 poll (pc=${:04X})", fw.status().pc);
+        assert!(
+            fw.mem[0x35] == 6 || !in_keypad_spin(fw.status().pc),
+            "frame loop stuck (pc=${:04X} $35={} pending={:?} latched={:?})",
+            fw.status().pc,
+            fw.mem[0x35],
+            fw.bus_state.pending_digit,
+            fw.bus_state.latched_digit
+        );
     }
 
     /// Exact live GUI flow: warmup, poll, press 6, digest 160 frames.

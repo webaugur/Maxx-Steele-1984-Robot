@@ -1873,7 +1873,7 @@ checksum = "0ceec5bc11778974d1bcb055b18002eba7f4b3518b6a0081b3af5f21666da9ad"
 
 [[package]]
 name = "maxxbas"
-version = "0.2.25"
+version = "0.2.26"
 dependencies = [
  "clap",
  "eframe",
