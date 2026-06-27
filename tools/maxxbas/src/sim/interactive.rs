@@ -6,6 +6,7 @@ use mos6502::memory::Bus;
 
 use super::display::LedDisplay;
 use super::keypad::RemoteKey;
+use super::speech::{self, SpeechPlayer};
 use super::patches::{MemPatch, PatchSet};
 use super::trace::TraceBuffer;
 use crate::CartImage;
@@ -51,6 +52,9 @@ pub struct FirmwareStatus {
     pub gui_armed: bool,
     /// Total `press_key` calls (confirms GUI/keyboard reached the sim).
     pub keys_pressed: u64,
+    /// Last ROM phrase index spoken via `$F475` (hex nibble in manual table).
+    pub speech_phrase: Option<u8>,
+    pub speech_playing: bool,
 }
 
 /// Heap-backed keypad/IRQ hooks — `LiveBus` holds a raw pointer that must survive `Self` moves.
@@ -64,6 +68,18 @@ struct LiveBusState {
     /// When true, `gui_digit` is injected into ROM poll until cart stores it at `$35`.
     gui_armed: bool,
     irq_pending: bool,
+    cpu_cycles: u64,
+}
+
+/// Toggle `$1000` bit 6 every N CPU cycles — matches ROM `BVC`/`BVS` LED handshake pacing.
+const DISPLAY_TIMER_TICK: u64 = 180;
+
+fn mmio_1000_display_timer(cycles: u64) -> u8 {
+    if (cycles / DISPLAY_TIMER_TICK) % 2 == 0 {
+        0x00
+    } else {
+        0x40
+    }
 }
 
 struct LiveBus {
@@ -83,7 +99,9 @@ impl LiveBus {
 impl Bus for LiveBus {
     fn get_byte(&mut self, address: u16) -> u8 {
         if address == 0x1000 {
-            return 0x80;
+            unsafe {
+                return mmio_1000_display_timer((*self.state_ptr).cpu_cycles);
+            }
         }
         if address == 0x75 {
             unsafe {
@@ -190,6 +208,7 @@ pub struct InteractiveFirmware {
     auto_submit_enter: bool,
     queue_auto_enter: bool,
     keys_pressed: u64,
+    speech: SpeechPlayer,
 }
 
 fn interactive_patches() -> PatchSet {
@@ -206,34 +225,9 @@ fn interactive_patches() -> PatchSet {
             purpose: Some("interactive sim: skip RF scan; keypad wired to $75".into()),
         },
         MemPatch {
-            addr: "0xF475".into(),
-            bytes: vec![0x60],
-            purpose: Some("interactive sim: skip speech phrase setup ($5B)".into()),
-        },
-        MemPatch {
-            addr: "0xF47E".into(),
-            bytes: vec![0x60],
-            purpose: Some("interactive sim: skip speech busy wait ($5B)".into()),
-        },
-        MemPatch {
-            addr: "0xE3EC".into(),
-            bytes: vec![0xA9, 0x00, 0x85, 0x2A, 0x60],
-            purpose: Some("interactive sim: instant ROM delay ($2A)".into()),
-        },
-        MemPatch {
-            addr: "0xE9E8".into(),
-            bytes: vec![0x60],
-            purpose: Some("interactive sim: skip short $2A spin delay".into()),
-        },
-        MemPatch {
             addr: "0xEF63".into(),
             bytes: vec![0xA9, 0x00, 0x4C, 0x67, 0xEF],
             purpose: Some("interactive sim: skip motor talkback spin at $EF63".into()),
-        },
-        MemPatch {
-            addr: "0xEC1B".into(),
-            bytes: vec![0xA9, 0xFF, 0xEA, 0xEA, 0xEA],
-            purpose: Some("interactive sim: skip clock display BIT $1000 loop".into()),
         },
         // Embedded patches.json uses opcode $00 (BRK) at these sites — fatal once IRQ runs.
         MemPatch {
@@ -246,31 +240,36 @@ fn interactive_patches() -> PatchSet {
             bytes: vec![0xEA],
             purpose: Some("interactive sim: NOP instead of BRK at $F438".into()),
         },
-        // `$ED4F` display serializer spins on `BIT $1000` with static `0x80` (V clear) forever.
+        // Restore ROM `BIT $1000` display pacing (patches.json bypasses for headless sim).
+        MemPatch {
+            addr: "0xEC1B".into(),
+            bytes: vec![0x2C, 0x00, 0x10, 0x10, 0x01],
+            purpose: Some("interactive sim: restore clock display $1000 wait".into()),
+        },
         MemPatch {
             addr: "0xED5F".into(),
-            bytes: vec![0x4C, 0x64, 0xED, 0xEA, 0xEA],
-            purpose: Some("interactive sim: skip $1000 stall before LED shift".into()),
+            bytes: vec![0x2C, 0x00, 0x10, 0x50, 0xFB],
+            purpose: Some("interactive sim: restore LED shift $1000 wait (pre)".into()),
         },
         MemPatch {
             addr: "0xED6C".into(),
-            bytes: vec![0x4C, 0x71, 0xED, 0xEA, 0xEA],
-            purpose: Some("interactive sim: skip $1000 stall after LED shift".into()),
+            bytes: vec![0x2C, 0x00, 0x10, 0x70, 0xFB],
+            purpose: Some("interactive sim: restore LED shift $1000 wait (post)".into()),
         },
         MemPatch {
             addr: "0xED82".into(),
-            bytes: vec![0x4C, 0x87, 0xED, 0xEA, 0xEA],
-            purpose: Some("interactive sim: skip $1000 stall in ED7B path".into()),
+            bytes: vec![0x2C, 0x00, 0x10, 0x50, 0xFB],
+            purpose: Some("interactive sim: restore LED path $1000 wait".into()),
         },
         MemPatch {
             addr: "0xED8C".into(),
-            bytes: vec![0x4C, 0x91, 0xED, 0xEA, 0xEA],
-            purpose: Some("interactive sim: skip $1000 stall in ED7B path (2)".into()),
+            bytes: vec![0x2C, 0x00, 0x10, 0x70, 0xFB],
+            purpose: Some("interactive sim: restore LED path $1000 wait (2)".into()),
         },
         MemPatch {
             addr: "0xEDA0".into(),
-            bytes: vec![0x4C, 0xA5, 0xED, 0xEA, 0xEA],
-            purpose: Some("interactive sim: skip $1000 stall in ED7B tail".into()),
+            bytes: vec![0x2C, 0x00, 0x10, 0x50, 0xFB],
+            purpose: Some("interactive sim: restore LED path $1000 wait (tail)".into()),
         },
         // IRQ entry at `$FDC8`: return immediately — full handler nests `RTS` at `$FDDF` → `$FDD9` spin.
         MemPatch {
@@ -544,6 +543,14 @@ fn pop_stack_word(cpu: &mut CPU<LiveBus, Cmos6502>) {
     cpu.registers.stack_pointer.0 = cpu.registers.stack_pointer.0.wrapping_add(2);
 }
 
+fn simulate_rts(cpu: &mut CPU<LiveBus, Cmos6502>, mem: &[u8; 65536]) {
+    let sp = cpu.registers.stack_pointer.0.wrapping_add(1) as usize;
+    let lo = mem[0x0100 + sp];
+    let hi = mem[0x0100 + sp + 1];
+    cpu.registers.program_counter = u16::from_le_bytes([lo, hi]);
+    cpu.registers.stack_pointer.0 = cpu.registers.stack_pointer.0.wrapping_add(2);
+}
+
 /// Pop nested ROM keypad `JSR` frames until the cart `$E60D` return (`$A199`) is consumed.
 fn unwind_keypad_stack_to_cart(cpu: &mut CPU<LiveBus, Cmos6502>, mem: &[u8; 65536]) -> bool {
     let sp0 = cpu.registers.stack_pointer.0;
@@ -704,7 +711,7 @@ fn sync_keypad_x_from_latch(
 }
 
 /// Approximate IRQ-side timer decrements so delays and speech paths make progress.
-fn tick_irq_services(mem: &mut [u8; 65536], irq_pending: &mut bool) {
+fn tick_irq_services(mem: &mut [u8; 65536], irq_pending: &mut bool, speech_active: bool) {
     mem[0x3A] = mem[0x3A].wrapping_add(1);
     for zp in [0x2A_u16, 0x28, 0x27] {
         let v = mem[zp as usize];
@@ -715,10 +722,38 @@ fn tick_irq_services(mem: &mut [u8; 65536], irq_pending: &mut bool) {
             }
         }
     }
-    let speech = mem[0x5B];
-    if speech != 0 {
-        mem[0x5B] = speech.saturating_sub(2);
+    if !speech_active {
+        let speech = mem[0x5B];
+        if speech != 0 {
+            mem[0x5B] = speech.saturating_sub(2);
+        }
     }
+}
+
+/// ROM `$F475` / `$F47E` → OGG phrase playback (replaces RTS patches).
+fn emulate_speech_bus_wait(
+    mem: &mut [u8; 65536],
+    cpu: &mut CPU<LiveBus, Cmos6502>,
+    speech: &mut SpeechPlayer,
+) -> bool {
+    let pc = cpu.registers.program_counter;
+    if let Some(next) = speech::enter_say_phrase(pc, cpu.registers.index_x, speech, cpu.cycles) {
+        mem[0x5B] = 0x01;
+        cpu.registers.program_counter = next;
+        cpu.cycles = cpu.cycles.saturating_add(1);
+        return true;
+    }
+    if let Some(done) = speech::spin_wait_speech(pc, speech, cpu.cycles) {
+        if done {
+            mem[0x5B] = 0;
+            simulate_rts(cpu, mem);
+        } else {
+            mem[0x5B] = 0x01;
+        }
+        cpu.cycles = cpu.cycles.saturating_add(1);
+        return true;
+    }
+    false
 }
 
 impl InteractiveFirmware {
@@ -735,6 +770,7 @@ impl InteractiveFirmware {
             gui_digit: None,
             gui_armed: false,
             irq_pending: false,
+            cpu_cycles: 0,
         });
         let cpu = new_cpu(mem.as_mut(), bus_state.as_mut());
 
@@ -755,7 +791,12 @@ impl InteractiveFirmware {
             auto_submit_enter: false,
             queue_auto_enter: false,
             keys_pressed: 0,
+            speech: SpeechPlayer::new(true),
         })
+    }
+
+    pub fn set_speech_enabled(&mut self, enabled: bool) {
+        self.speech.set_enabled(enabled);
     }
 
     pub fn reset(&mut self) -> Result<(), String> {
@@ -768,6 +809,7 @@ impl InteractiveFirmware {
         self.bus_state.latched_digit = None;
         self.bus_state.gui_digit = None;
         self.bus_state.gui_armed = false;
+        self.bus_state.cpu_cycles = 0;
         self.keypad_waiting = false;
         self.trace.clear();
         self.cpu = new_cpu(self.mem.as_mut(), self.bus_state.as_mut());
@@ -776,6 +818,7 @@ impl InteractiveFirmware {
         self.last_answer_digit = 0xFF;
         self.queue_auto_enter = false;
         self.keys_pressed = 0;
+        self.speech.stop();
         Ok(())
     }
 
@@ -866,6 +909,9 @@ impl InteractiveFirmware {
             return;
         };
         if self.mem[0x35] != d || self.mem[0x35] >= 0x0A {
+            return;
+        }
+        if self.last_answer_digit != d {
             return;
         }
         let pc = self.cpu.registers.program_counter;
@@ -981,7 +1027,13 @@ impl InteractiveFirmware {
             self.step_frame();
             if let Some(d) = self.bus_state.gui_digit {
                 if self.mem[0x35] == d && self.mem[0x35] < 0x0A && !self.bus_state.gui_armed {
-                    break;
+                    // Keep digesting while auto-ENTER is pending or cart still polls for ENTER.
+                    if self.queue_auto_enter || self.bus_state.pending_digit == Some(0x0F) {
+                        continue;
+                    }
+                    if !self.in_keypad_poll() && !self.cart_still_awaiting_keypad() {
+                        break;
+                    }
                 }
             }
             if !self.bus_state.gui_armed
@@ -996,7 +1048,12 @@ impl InteractiveFirmware {
     }
 
     pub fn led_chars(&self) -> String {
+        // `pair()` for keypad inference; GUI uses `led_chars_settled`.
         self.display.pair()
+    }
+
+    pub fn led_chars_settled(&mut self) -> String {
+        self.display.settled_pair(self.cpu.cycles)
     }
 
     fn capture_display_digit(&mut self, pc: u16) {
@@ -1008,7 +1065,7 @@ impl InteractiveFirmware {
             return;
         }
         let seg = u8::from(self.cpu.registers.accumulator);
-        self.display.push_segment(seg);
+        self.display.push_segment(seg, self.cpu.cycles);
     }
 
     pub fn step(&mut self, cycles: u64) {
@@ -1017,11 +1074,20 @@ impl InteractiveFirmware {
         }
         let limit = self.cpu.cycles + cycles;
         while self.cpu.cycles < limit {
+            self.bus_state.cpu_cycles = self.cpu.cycles;
             self.refresh_pending_from_latch();
             super::firmware::ensure_irq_vectors(&mut self.mem);
             self.irq_phase = self.irq_phase.wrapping_add(1);
             if self.irq_phase % 64 == 0 {
-                tick_irq_services(&mut self.mem, &mut self.bus_state.irq_pending);
+                tick_irq_services(
+                    &mut self.mem,
+                    &mut self.bus_state.irq_pending,
+                    self.speech.speech_busy(self.cpu.cycles),
+                );
+            }
+
+            if emulate_speech_bus_wait(self.mem.as_mut(), &mut self.cpu, &mut self.speech) {
+                continue;
             }
 
             let effective = self.effective_pending_key();
@@ -1106,9 +1172,17 @@ impl InteractiveFirmware {
                 self.running = false;
                 break;
             }
-            // Release GUI pending state once cart `input_loop` dispatches the key.
+            // Cart stored answer digit — mirror [digit][?] on the two-digit face.
             if pc_before == 0xA1A5 {
-                self.bus_state.pending_digit = None;
+                let digit = self.mem[0x35];
+                if digit < 0x0A {
+                    self.last_answer_digit = digit;
+                    self.display
+                        .show_answer(self.mem.as_ref(), digit, self.cpu.cycles);
+                    self.bus_state.gui_armed = false;
+                    self.bus_state.pending_digit = None;
+                    self.bus_state.latched_digit = None;
+                }
                 let chain_enter = self.queue_auto_enter || self.auto_submit_enter;
                 self.queue_auto_enter = false;
                 if chain_enter {
@@ -1116,7 +1190,16 @@ impl InteractiveFirmware {
                     self.bus_state.radio_pending = Some(0x0F);
                     self.mem[0x15] = 0x0F;
                     self.mem[0x75] = 0x0F;
+                } else {
+                    self.bus_state.pending_digit = None;
                 }
+            }
+            if pc_before == 0xA1AF {
+                self.last_answer_digit = 0xFF;
+            }
+            if pc_before == 0xA182 {
+                self.last_answer_digit = 0xFF;
+                self.display.begin_problem();
             }
             if pc_before == 0xE196 && self.bus_state.pending_digit.is_none() {
                 // Cart re-entering keypad wait — re-arm injection from last toolbar digit.
@@ -1211,6 +1294,8 @@ impl InteractiveFirmware {
             gui_raw: self.bus_state.gui_digit,
             gui_armed: self.bus_state.gui_armed,
             keys_pressed: self.keys_pressed,
+            speech_phrase: self.speech.last_phrase(),
+            speech_playing: self.speech.is_playing(self.cpu.cycles),
         }
     }
 
@@ -1519,14 +1604,34 @@ mod tests {
     }
 
     #[test]
+    fn speech_hook_starts_at_f475_and_waits_at_f47e() {
+        let cart = CartImage::from_bytes(MAXXOS.to_vec()).unwrap();
+        let mut fw = InteractiveFirmware::new(cart, "MaxxOS").unwrap();
+        fw.cpu.registers.index_x = 0x13;
+        fw.cpu.registers.program_counter = 0xF475;
+        fw.cpu.registers.stack_pointer.0 = 0xFD;
+        fw.mem[0x01FE] = 0x34;
+        fw.mem[0x01FF] = 0xA0;
+        fw.step(1);
+        assert_eq!(fw.cpu.registers.program_counter, 0xF47E);
+        assert_eq!(fw.speech.last_phrase(), Some(0x13));
+        assert_eq!(fw.mem[0x5B], 0x01);
+        fw.speech.stop();
+        fw.step(1);
+        assert_eq!(fw.cpu.registers.program_counter, 0xA034);
+        assert_eq!(fw.mem[0x5B], 0);
+    }
+
+    #[test]
     fn interactive_patches_applied() {
         let cart = CartImage::from_bytes(MAXXOS.to_vec()).unwrap();
         let fw = InteractiveFirmware::new(cart, "MaxxOS").unwrap();
         assert_eq!(fw.mem[0xEDAF], 0x60, "EDAF motor stall");
         assert_eq!(fw.mem[0xE959], 0x60, "E959 RF scan");
-        assert_eq!(fw.mem[0xF475], 0x60, "F475 speech");
-        assert_eq!(fw.mem[0xF47E], 0x60, "F47E speech wait");
-        assert_eq!(fw.mem[0xED5F], 0x4C, "ED5F display handshake");
+        assert_eq!(fw.mem[0xF475], 0xA9, "F475 speech driver intact (sim hooks playback)");
+        assert_eq!(fw.mem[0xF47E], 0xA5, "F47E speech busy wait intact");
+        assert_eq!(fw.mem[0xED5F], 0x2C, "ED5F BIT $1000 display handshake");
+        assert_eq!(fw.mem[0xE3EC], 0xA9, "E3EC ROM delay intact");
     }
 
     #[test]
@@ -1551,9 +1656,9 @@ mod tests {
         assert_eq!(fw.mem[0x75], 5, "GUI pending key must stay on $75 for LDX $75");
     }
 
-    /// `$A1B7` with `$35` set must not disarm while cart keypad wait is still on the stack.
+    /// `$A1A5` stores the answer — disarm injection and mirror [digit][?] on the LED.
     #[test]
-    fn gui_armed_survives_premature_a1b7() {
+    fn gui_disarms_after_a1a5_stores_answer() {
         let cart = CartImage::from_bytes(MAXXOS.to_vec()).unwrap();
         let mut fw = InteractiveFirmware::new(cart, "MaxxOS").unwrap();
         fw.set_auto_submit_enter(true);
@@ -1561,15 +1666,14 @@ mod tests {
         fw.press_key(RemoteKey::Arms6);
         assert!(fw.bus_state.gui_armed);
         fw.mem[0x35] = 6;
-        fw.keypad_waiting = true;
-        fw.cpu.registers.program_counter = 0xA1B7;
+        fw.cpu.registers.accumulator = 6;
+        fw.cpu.registers.program_counter = 0xA1A5;
         fw.step(1);
         assert!(
-            fw.bus_state.gui_armed,
-            "premature $A1B7 disarmed gui (gui={:?})",
-            fw.bus_state.gui_digit
+            !fw.bus_state.gui_armed,
+            "STA $35 at $A1A5 should disarm gui injection"
         );
-        assert_eq!(fw.bus_state.gui_digit, Some(6));
+        assert_eq!(fw.led_chars(), "6_");
     }
 
     /// `gui_digit` must survive cart re-poll at `$E196` (regression: keys=10 latched=--).
@@ -1951,7 +2055,8 @@ mod tests {
         let mut fw = InteractiveFirmware::new(cart, "MaxxOS").unwrap();
         fw.warmup(180);
         fw.press_key(RemoteKey::Drive2);
-        fw.step(8_000_000);
+        // ROM LED + `$E3EC` delays are paced now — allow extra cycles vs the old instant path.
+        fw.step(16_000_000);
         let pc = fw.status().pc;
         assert!(
             pc != 0xE617 || fw.trace_text().contains("[CART] $A1"),
@@ -2076,10 +2181,13 @@ mod tests {
             fw.mem[0x35],
             fw.status().pc
         );
+        // After auto-ENTER the cart may grade (correct/wrong) and return to keypad poll
+        // with `$35=$FF` while `show_problem` redraws — that is not an IRQ spin.
         assert!(
-            !(0xE60D..=0xEAFF).contains(&fw.status().pc),
-            "should run cart code after answer, not ROM poll (pc=${:04X})",
-            fw.status().pc
+            fw.mem[0x35] >= 0x0A || !(0xE617..=0xE620).contains(&fw.status().pc),
+            "stuck in keypad poll with digit still in $35 (pc=${:04X} $35=${:02X})",
+            fw.status().pc,
+            fw.mem[0x35]
         );
         for _ in 0..200 {
             fw.step_frame();

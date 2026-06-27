@@ -12,14 +12,20 @@ const ED48_PREFIX: [u8; 2] = [0xE3, 0xF3];
 pub struct LedDisplay {
     /// Completed segment patterns (newest at end).
     digits: Vec<u8>,
+    /// Last pair shown in the GUI after the shift-register stream settles.
+    settled: String,
+    last_push_cycle: u64,
 }
+
+/// Hold the last decoded pair this many CPU cycles after the final `$ED4F` of a burst.
+const SETTLE_CYCLES: u64 = 1_200;
 
 /// MaxxOS answer digit + `?` prompt glyphs (see cart `$A1F0`).
 const MAXXOS_PROMPT_SEG: u8 = 0xEE;
 
 impl LedDisplay {
     /// Record a completed digit from `$ED4F` (A = segment pattern on entry).
-    pub fn push_segment(&mut self, seg: u8) {
+    pub fn push_segment(&mut self, seg: u8, cycles: u64) {
         if ED48_PREFIX.contains(&seg) {
             return;
         }
@@ -27,17 +33,38 @@ impl LedDisplay {
         if self.digits.len() > 9 {
             self.digits.remove(0);
         }
+        self.last_push_cycle = cycles;
     }
 
-    /// MaxxOS `disp_answer` — digit from ROM `$F8BE` table plus `?`.
-    pub fn mirror_answer_digit(&mut self, mem: &[u8; 65536], digit: u8) {
+    /// Reset for a new quiz prompt (`show_problem`).
+    pub fn begin_problem(&mut self) {
+        self.digits.clear();
+        self.settled.clear();
+        self.last_push_cycle = 0;
+    }
+
+    /// MaxxOS answer entry — two-digit face shows [digit][?], not stacked history.
+    pub fn show_answer(&mut self, mem: &[u8; 65536], digit: u8, cycles: u64) {
         if digit >= 10 {
             return;
         }
+        self.digits.clear();
         let seg = mem[0xF8BE + digit as usize];
-        let prompt = mem[0xA1F2];
-        self.push_segment(seg);
-        self.push_segment(if prompt == 0 { MAXXOS_PROMPT_SEG } else { prompt });
+        let prompt = mem[0xA1F3];
+        self.push_segment(seg, cycles);
+        self.push_segment(
+            if prompt == 0 { MAXXOS_PROMPT_SEG } else { prompt },
+            cycles,
+        );
+        self.settled = self.pair();
+    }
+
+    /// Pair held on the robot face after the COP411 shift register finishes a burst.
+    pub fn settled_pair(&mut self, cycles: u64) -> String {
+        if cycles.saturating_sub(self.last_push_cycle) >= SETTLE_CYCLES || self.settled.is_empty() {
+            self.settled = self.pair();
+        }
+        self.settled.clone()
     }
 
     pub fn pair(&self) -> String {
@@ -85,25 +112,37 @@ mod tests {
     use super::*;
 
     #[test]
-    fn mirror_answer_shows_digit() {
+    fn show_answer_replaces_history() {
         let mut mem = [0u8; 65536];
         mem[0xF8BE + 7] = 0xE0;
-        mem[0xA1F2] = 0xEE;
+        mem[0xA1F3] = 0xEE;
         let mut d = LedDisplay::default();
-        d.mirror_answer_digit(&mem, 7);
+        d.push_segment(0xB6, 0); // prior quiz operand "5"
+        d.push_segment(0xB6, 0); // duplicate would have shown [55]
+        d.show_answer(&mem, 7, 100);
         assert_eq!(d.pair(), "7?");
     }
 
     #[test]
     fn maxxos_prompt_pair() {
         let mut d = LedDisplay::default();
-        d.push_segment(0xDA); // 3
-        d.push_segment(0x2A); // +
-        d.push_segment(0xE2); // space (skipped)
-        d.push_segment(0xB6); // 5
-        d.push_segment(0xEE); // ?
-        d.push_segment(0x10); // blank (skipped)
-        d.push_segment(0xE2); // space (skipped)
+        d.push_segment(0xDA, 0); // 3
+        d.push_segment(0x2A, 0); // +
+        d.push_segment(0xE2, 0); // space (skipped)
+        d.push_segment(0xB6, 0); // 5
+        d.push_segment(0xEE, 0); // ?
+        d.push_segment(0x10, 0); // blank (skipped)
+        d.push_segment(0xE2, 0); // space (skipped)
         assert_eq!(d.pair(), "5?");
+    }
+
+    #[test]
+    fn settled_pair_holds_through_burst() {
+        let mut d = LedDisplay::default();
+        d.push_segment(0xB6, 100);
+        assert_eq!(d.settled_pair(500), "5_");
+        d.push_segment(0xEE, 900);
+        assert_eq!(d.settled_pair(1_000), "5_");
+        assert_eq!(d.settled_pair(2_200), "5?");
     }
 }
