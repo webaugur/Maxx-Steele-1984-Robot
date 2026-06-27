@@ -47,6 +47,8 @@ pub struct FirmwareStatus {
 struct LiveBusState {
     radio_pending: Option<u8>,
     pending_digit: Option<u8>,
+    /// GUI digit held until cart `$35` stores it (survives premature `pending_digit` clears).
+    latched_digit: Option<u8>,
     irq_pending: bool,
 }
 
@@ -82,6 +84,11 @@ impl Bus for LiveBus {
                         return k;
                     }
                 }
+                if let Some(k) = state.latched_digit {
+                    if k < 10 && (*self.mem_ptr)[0x35] >= 0x0A {
+                        return k;
+                    }
+                }
                 return (*self.mem_ptr)[0x75];
             }
         }
@@ -100,8 +107,14 @@ impl Bus for LiveBus {
             }
             // ROM clears the RF wire after `$E6AC`; keep the GUI key visible until consumed.
             if address == 0x75 && value >= 0x80 {
-                if let Some(k) = (*self.state_ptr).pending_digit {
+                let state = &*self.state_ptr;
+                if let Some(k) = state.pending_digit {
                     if k < 0x20 {
+                        return;
+                    }
+                }
+                if let Some(k) = state.latched_digit {
+                    if k < 10 && (*self.mem_ptr)[0x35] >= 0x0A {
                         return;
                     }
                 }
@@ -691,6 +704,7 @@ impl InteractiveFirmware {
         let mut bus_state = Box::new(LiveBusState {
             radio_pending: None,
             pending_digit: None,
+            latched_digit: None,
             irq_pending: false,
         });
         let cpu = new_cpu(mem.as_mut(), bus_state.as_mut());
@@ -721,6 +735,7 @@ impl InteractiveFirmware {
         self.display = LedDisplay::default();
         self.bus_state.radio_pending = None;
         self.bus_state.pending_digit = None;
+        self.bus_state.latched_digit = None;
         self.keypad_waiting = false;
         self.trace.clear();
         self.cpu = new_cpu(self.mem.as_mut(), self.bus_state.as_mut());
@@ -747,6 +762,29 @@ impl InteractiveFirmware {
         let pc = self.cpu.registers.program_counter;
         let led = self.led_chars();
         self.keypad_waiting || infer_keypad_ready(self.cpu.cycles, pc, &led)
+    }
+
+    /// Wire key for ROM poll: `pending_digit`, else sticky GUI latch while `$35` is still empty.
+    fn effective_pending_key(&self) -> Option<u8> {
+        if let Some(k) = self.bus_state.pending_digit {
+            if k < 0x20 {
+                return Some(k);
+            }
+        }
+        if let Some(k) = self.bus_state.latched_digit {
+            if k < 10 && self.mem[0x35] >= 0x0A {
+                return Some(k);
+            }
+        }
+        None
+    }
+
+    fn clear_latched_if_answer_stored(&mut self) {
+        if let Some(d) = self.bus_state.latched_digit {
+            if self.mem[0x35] == d {
+                self.bus_state.latched_digit = None;
+            }
+        }
     }
 
     /// Press a remote key — RF wire presents keycode at `$75` (bit 7 clear).
@@ -776,6 +814,7 @@ impl InteractiveFirmware {
         // MaxxOS input_loop also accepts CLEAR (`$0E`) and ENTER (`$0F`) after digits.
         if code < 10 {
             self.bus_state.pending_digit = Some(code);
+            self.bus_state.latched_digit = Some(code);
             self.mem[0x15] = code;
             self.display = LedDisplay::default();
             self.display.mirror_answer_digit(&self.mem, code);
@@ -793,7 +832,7 @@ impl InteractiveFirmware {
 
     /// Synchronous keypad injection for the GUI (do not wait for the next CPU step).
     fn try_apply_pending_key_now(&mut self) {
-        let pending = self.bus_state.pending_digit;
+        let pending = self.effective_pending_key();
         if pending.is_none() {
             return;
         }
@@ -829,12 +868,18 @@ impl InteractiveFirmware {
 
     /// Run the CPU until a GUI keypress is consumed or `max_frames` is reached.
     pub fn digest_keypress(&mut self, max_frames: u32) {
+        let was_running = self.running;
+        self.running = true;
         for _ in 0..max_frames {
             self.step_frame();
-            if self.bus_state.pending_digit.is_none() && !self.queue_auto_enter && !self.in_keypad_poll() {
+            if self.effective_pending_key().is_none()
+                && !self.queue_auto_enter
+                && !self.in_keypad_poll()
+            {
                 break;
             }
         }
+        self.running = was_running;
     }
 
     pub fn led_chars(&self) -> String {
@@ -865,14 +910,15 @@ impl InteractiveFirmware {
                 tick_irq_services(&mut self.mem, &mut self.bus_state.irq_pending);
             }
 
-            apply_radio_wire(&mut self.mem, &self.bus_state.radio_pending, self.bus_state.pending_digit);
+            let effective = self.effective_pending_key();
+            apply_radio_wire(&mut self.mem, &self.bus_state.radio_pending, effective);
             let mut pc = self.cpu.registers.program_counter;
             let sp = self.cpu.registers.stack_pointer.0;
             if let Some(recover) = recover_from_brk_sled(&self.mem, sp, pc) {
                 self.cpu.registers.program_counter = recover;
                 pc = recover;
             }
-            represent_pending_digit_on_wire(&mut self.mem, sp, pc, self.bus_state.pending_digit);
+            represent_pending_digit_on_wire(&mut self.mem, sp, pc, effective);
             if pc == 0 {
                 super::firmware::bootstrap_irq_vectors(&mut self.mem);
                 pc = super::firmware::ROM_KEYPAD_POLL;
@@ -891,16 +937,16 @@ impl InteractiveFirmware {
                 &mut x,
                 keypad_waiting,
             );
-            sync_keypad_x_from_latch(&self.mem, pc, self.bus_state.pending_digit, &mut x);
+            sync_keypad_x_from_latch(&self.mem, pc, effective, &mut x);
             self.cpu.registers.index_x = x;
-            inject_pending_on_wire(&mut self.mem, sp, pc, self.bus_state.pending_digit);
+            inject_pending_on_wire(&mut self.mem, sp, pc, effective);
             if finish_e60d_keypad_wait(
                 &mut self.mem,
                 pc,
-                self.bus_state.pending_digit,
+                effective,
                 &mut self.cpu,
             ) {
-                let key = self.bus_state.pending_digit.unwrap_or(self.mem[0x15]);
+                let key = effective.unwrap_or(self.mem[0x15]);
                 self.bus_state.radio_pending = None;
                 if key == 0x0F {
                     self.bus_state.pending_digit = None;
@@ -919,17 +965,17 @@ impl InteractiveFirmware {
                 }
                 continue;
             }
-            if skip_e617_jsr_if_pending(&self.mem, pc, self.bus_state.pending_digit, &mut self.cpu) {
+            if skip_e617_jsr_if_pending(&self.mem, pc, effective, &mut self.cpu) {
                 continue;
             }
             pc = self.cpu.registers.program_counter;
-            if complete_e617_rts_to_e610(&self.mem, pc, self.bus_state.pending_digit, &mut self.cpu) {
+            if complete_e617_rts_to_e610(&self.mem, pc, effective, &mut self.cpu) {
                 continue;
             }
-            if complete_e60d_rts_to_cart(&self.mem, pc, self.bus_state.pending_digit, &mut self.cpu) {
+            if complete_e60d_rts_to_cart(&self.mem, pc, effective, &mut self.cpu) {
                 continue;
             }
-            if bypass_ldx75_when_pending(&mut self.mem, self.bus_state.pending_digit, &mut self.cpu) {
+            if bypass_ldx75_when_pending(&mut self.mem, effective, &mut self.cpu) {
                 continue;
             }
             let pc_before = self.cpu.registers.program_counter;
@@ -981,10 +1027,7 @@ impl InteractiveFirmware {
             }
             // `$E6AC` may have read the wire this instruction; ensure `$15` caught it.
             if pc_before == 0xE6AC {
-                let wire_key = self
-                    .bus_state
-                    .pending_digit
-                    .or(self.bus_state.radio_pending);
+                let wire_key = self.effective_pending_key().or(self.bus_state.radio_pending);
                 if let Some(k) = wire_key {
                     if k < 0x20 {
                         self.mem[0x15] = k;
@@ -992,6 +1035,7 @@ impl InteractiveFirmware {
                     }
                 }
             }
+            self.clear_latched_if_answer_stored();
         }
     }
 
@@ -1018,12 +1062,13 @@ impl InteractiveFirmware {
         let keypad_waiting =
             self.keypad_waiting || infer_keypad_ready(self.cpu.cycles, pc, &led);
         let answer = self.mem[0x35];
-        let needs_enter = answer < 0x0A && self.in_keypad_poll() && self.bus_state.pending_digit.is_none();
-        let key_pending = self.bus_state.pending_digit.is_some() || self.queue_auto_enter;
+        let effective = self.effective_pending_key();
+        let needs_enter = answer < 0x0A && self.in_keypad_poll() && effective.is_none();
+        let key_pending = effective.is_some() || self.queue_auto_enter;
         let (key_ready, last_key) = displayed_keypad_wire(
             &self.mem,
             &self.bus_state.radio_pending,
-            self.bus_state.pending_digit,
+            effective,
             pc,
             self.in_keypad_poll(),
             key_pending,
@@ -1067,8 +1112,13 @@ impl InteractiveFirmware {
             .pending_digit
             .map(|k| format!("{k:02X}"))
             .unwrap_or_else(|| "--".into());
+        let latched = self
+            .bus_state
+            .latched_digit
+            .map(|k| format!("{k:02X}"))
+            .unwrap_or_else(|| "--".into());
         let mut header = format!(
-            "; sim {} | PC=${:04X} | $78=${:04X} | LED=[{}] | $75=${:02X} $15=${:02X} | pending={pending} $35=${:02X} | cycles={}\n",
+            "; sim {} | PC=${:04X} | $78=${:04X} | LED=[{}] | $75=${:02X} $15=${:02X} | pending={pending} latched={latched} $35=${:02X} | cycles={}\n",
             env!("CARGO_PKG_VERSION"),
             st.pc,
             irq_vec,
@@ -1400,6 +1450,23 @@ mod tests {
         let mut fw = InteractiveFirmware::new(cart, "MaxxOS").unwrap();
         fw.bus_state.pending_digit = Some(6);
         fw.mem[0x75] = 0x80;
+        fw.cpu.registers.program_counter = 0xE6AC;
+        fw.step(1);
+        assert_eq!(fw.cpu.registers.index_x, 6);
+        assert_ne!(fw.cpu.registers.program_counter, 0xE6AC);
+        assert_eq!(fw.mem[0x15], 6);
+    }
+
+    /// Sticky `latched_digit` survives premature `pending_digit` clears (live GUI frame order).
+    #[test]
+    fn latched_digit_bypasses_ldx75_when_pending_cleared() {
+        let cart = CartImage::from_bytes(MAXXOS.to_vec()).unwrap();
+        let mut fw = InteractiveFirmware::new(cart, "MaxxOS").unwrap();
+        fw.bus_state.pending_digit = None;
+        fw.bus_state.latched_digit = Some(6);
+        fw.mem[0x35] = 0xFF;
+        fw.mem[0x75] = 0x80;
+        fw.mem[0x15] = 0x80;
         fw.cpu.registers.program_counter = 0xE6AC;
         fw.step(1);
         assert_eq!(fw.cpu.registers.index_x, 6);

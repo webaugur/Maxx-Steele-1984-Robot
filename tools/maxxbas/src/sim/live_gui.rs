@@ -33,7 +33,6 @@ pub fn run_live_gui(cart: CartImage, label: impl Into<String>) -> Result<(), Str
         sim_version: SIM_VERSION.to_string(),
         trace_display,
         keypress_frames_remaining: 0,
-        queued_key: None,
     };
     let options = eframe::NativeOptions {
         viewport: egui::ViewportBuilder::default()
@@ -51,10 +50,8 @@ struct LiveSimApp {
     sim_version: String,
     /// Cached trace text for the egui text area (refreshed each frame).
     trace_display: String,
-    /// Extra CPU frames to run after a keypad click (egui `logic` runs before `ui`).
+    /// Extra CPU frames to run after a keypad click (incremental digest after immediate press).
     keypress_frames_remaining: u32,
-    /// Key clicked in `ui()` last frame — applied at the start of `logic()`.
-    queued_key: Option<super::keypad::RemoteKey>,
 }
 
 fn short_label(label: &str) -> String {
@@ -67,18 +64,6 @@ fn short_label(label: &str) -> String {
 
 impl eframe::App for LiveSimApp {
     fn logic(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
-        if !self.firmware.status().running {
-            return;
-        }
-
-        if let Some(key) = self.queued_key.take() {
-            self.firmware.press_key(key);
-            self.firmware.digest_keypress(KEYPRESS_DIGEST_FRAMES);
-            self.keypress_frames_remaining = 0;
-            ctx.request_repaint();
-            return;
-        }
-
         // Finish digesting a keypad click before ordinary stepping.
         if self.keypress_frames_remaining > 0 {
             self.firmware.step_frame();
@@ -89,6 +74,10 @@ impl eframe::App for LiveSimApp {
                 self.keypress_frames_remaining = 0;
             }
             ctx.request_repaint();
+            return;
+        }
+
+        if !self.firmware.status().running {
             return;
         }
 
@@ -116,7 +105,6 @@ impl eframe::App for LiveSimApp {
                 if ui.button("Reset").clicked() {
                     let _ = self.firmware.reset();
                     self.keypress_frames_remaining = 0;
-                    self.queued_key = None;
                 }
                 ui.separator();
                 ui.label(egui::RichText::new(&self.cart_label).strong());
@@ -175,8 +163,10 @@ impl eframe::App for LiveSimApp {
                     .auto_shrink([false, false])
                     .show(ui, |ui| {
                         if let Some(key) = remote_panel::remote_panel(ui) {
-                            // `logic()` already ran this frame — queue for next logic tick.
-                            self.queued_key = Some(key);
+                            // Apply immediately — egui runs `logic()` before `ui()`.
+                            self.firmware.press_key(key);
+                            self.firmware.digest_keypress(KEYPRESS_DIGEST_FRAMES);
+                            self.keypress_frames_remaining = 0;
                             ui.ctx().request_repaint();
                         }
                     });
