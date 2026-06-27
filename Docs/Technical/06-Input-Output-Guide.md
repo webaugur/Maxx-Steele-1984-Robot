@@ -137,6 +137,8 @@ Matrix wiring refs: [`keyboard-matrix-reference-1.png`](../../Transmitter/Photos
 
 Details: [`Transmitter/transmitter-architecture.md`](../../Transmitter/transmitter-architecture.md), [`tools/rfcap/`](../../tools/rfcap/).
 
+Demo: [GNU Radio flowgraph capturing OOK RF data](https://www.instagram.com/p/CLOjig8nCJS/) — screen recording of the `RemoteSpectrum` flowgraph decoding the 27 MHz link.
+
 ---
 
 ## Cartridge expansion

@@ -9,6 +9,14 @@ Flowgraphs and documentation for raw **IQ recordings** of the Maxx Steele remote
 
 The `.dat` files are **not stored in git** (several exceed GitHub's 100 MB limit). Keep them locally under `captures/`.
 
+## Flowgraph demo video
+
+Screen recording of GNU Radio Companion running `RemoteSpectrum` and plotting the demodulated **OOK Data** stream from the 27 MHz transmitter:
+
+- [GNU Radio flowgraph capturing RF data](https://www.instagram.com/p/CLOjig8nCJS/) (Instagram)
+
+The video shows the live `"OOK Data"` time sink (`RemoteSpectrum_1.grc`) while IQ packets are written to `captures/*.dat`.
+
 ## Capture setup
 
 Recorded with `RemoteSpectrum.grc` / `RemoteSpectrum.py` (David L Norris, 2021):

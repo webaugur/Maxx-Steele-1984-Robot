@@ -58,6 +58,7 @@ That keeps the transmitted envelope **phase-coherent** with the demodulated IF w
 | [`KiCAD/Transmitter-27MHz.kicad_pro`](KiCAD/Transmitter-27MHz.kicad_pro) | KiCad 10 project (Y700 → CKI, RF chain) |
 | [`transmitter-bom.md`](transmitter-bom.md) | Bill of materials |
 | [`tools/rfcap/README.md`](../tools/rfcap/README.md) | GNU Radio IQ captures of live OOK packets |
+| [GNU Radio OOK capture demo](https://www.instagram.com/p/CLOjig8nCJS/) | Screen recording of the `RemoteSpectrum` flowgraph plotting RF data |
 | [`DataSheets/National-COP411L.pdf`](../DataSheets/National-COP411L.pdf) | COP411L datasheet |
 
 ## COP411L clock notes
