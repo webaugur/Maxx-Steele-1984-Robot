@@ -349,6 +349,55 @@ Entry at **`$A013`** ([`maxx_demo_ROM_532.dsm`](../../Cartridge/Examples/CBSDemo
 
 Expected entry prologue: `A9 02 85 02` (LDA #$02 / STA $02). [`tools/maxx_rom.py validate`](../../tools/maxx_rom.py) checks this.
 
+### Extending vs replacing the OS
+
+**Full OS replacement via cartridge alone is not possible.** Reset always enters **`$E041`** in the 8 KB mask ROM (`$E000`–`$FFFF`). That ROM stays mapped; there is no documented bank-out or cartridge overlay of the OS region. Replacing the entire firmware requires a new mask ROM, a piggyback/modified ROM chip, or similar hardware work—not the stock cartridge slot.
+
+**Partial extension is possible.** Boot order matters:
+
+1. Warm start copies the vector table from ROM **`$E01C`** → RAM **`$72`–`$96`** (`$E085`–`$E08B`)
+2. Cartridge scan: on copyright match, **`JMP ($008E)`** into cart bootstrap (`$E0A9`–`$E0B3`)
+3. Cart code runs **after** vectors are in RAM but **before** the main loop at **`$E0B6`**
+
+The factory stub only loads RAM tables and returns to **`$E0B6`**. A custom bootstrap can do more in that window:
+
+| Technique | What it can change |
+|-----------|-------------------|
+| **RAM vector patch** | Repoint entries in **`$72`–`$96`** before handing off (see table below) |
+| **Extended cart 6502** | Skip **`JMP $E0B6`** and run a cart-resident loop at **`$A000`–`$AFFF`**, calling ROM drivers via **`JSR`** |
+| **Data layer (factory pattern)** | Replace program/phrases/music in RAM — bytecode interpreted by mask ROM |
+
+**RAM vectors a cart bootstrap can repoint** (defaults from ROM `$E01C`):
+
+| ZP | Default target | Role |
+|----|----------------|------|
+| `$8C`/`$8D` | `$EE32` | Opcode dispatch — **`JMP ($008C)`** at **`$EE2F`** |
+| `$7A`/`$7B` | `$E0CB` | Return to main loop (execute end, game replay timeout, …) |
+| `$94`/`$95` | `$F8CE` | Game mode entry — **`JMP ($0094)`** |
+| `$92`/`$93` | `$F3D8` | Speech output — **`JMP ($0092)`** |
+| `$78`/`$79` | `$FDC8` | IRQ handler |
+| `$76`/`$77` | `$E014` | NMI handler |
+
+Cart handlers can **`JSR`** back into mask-ROM drivers (`$EF2E` motors, `$F3D8` speech, `$ED7B` display, …) for hardware they do not reimplement.
+
+**Limits:**
+
+- Only a **few** OS paths use **`JMP ($00xx)`** through these vectors; most firmware **`JSR`/`JMP`s fixed addresses** in `$E000`–`$FFFF` (mode dispatch, keypad poll, execute loop, IRQ internals).
+- Cart space is **4 KB** per image; header and tables consume much of the factory layout.
+- **Copyright required** for bootstrap to run; without a match, firmware goes straight to **`$E0B6`**.
+- Scan walks **`$2000`–`$B000`**; the **first** matching cart wins—no second bootstrap in the same boot.
+
+| Goal | Via cart bootstrap? | Notes |
+|------|---------------------|-------|
+| Custom motion/speech/music program | **Yes** | Bytecode + tables (factory pattern) |
+| Custom game mode | **Partially** | Patch **`$94`** → cart code; mode entry/keypad still ROM |
+| Custom opcode dispatch | **Partially** | Patch **`$8C`**; many paths bypass the vector |
+| Replace keypad / mode / IRQ core | **Practically no** | Hardcoded ROM; IRQ timing critical |
+| Replace entire OS | **No** | Mask ROM always owns reset and most code paths |
+| Full custom firmware | **Hardware** | New mask ROM or piggyback; not cartridge alone |
+
+Patching **`Maxxrom.64`** itself (or simulator [`patches.json`](../../tools/maxxbas/patches.json) traps) is a separate path from cartridge bootstrap—see **6502 vs bytecode** below.
+
 ---
 
 ## 6502 vs bytecode — when to use which
@@ -357,7 +406,7 @@ Expected entry prologue: `A9 02 85 02` (LDA #$02 / STA $02). [`tools/maxx_rom.py
 |------|----------|
 | Motion/speech demo sequence | Bytecode in `$0200` |
 | Custom phrases/music in cart | Data tables + bootstrap |
-| Patch OS behavior | 6502 patch (advanced RE only) |
+| Patch OS behavior (mask ROM or cart vectors) | 6502 — see **Extending vs replacing the OS** above |
 | New cartridge program | Bootstrap stub (minimal 6502) + bytecode tables |
 | Debug firmware paths | `maxx simulate` + [`patches.json`](../../tools/maxxbas/patches.json) traps |
 
