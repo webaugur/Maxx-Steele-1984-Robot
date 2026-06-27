@@ -12,7 +12,7 @@ use crate::CartImage;
 const SIM_VERSION: &str = env!("CARGO_PKG_VERSION");
 
 /// Frames stepped synchronously before the window opens (ROM boot + first LED prompt).
-const STARTUP_WARMUP_FRAMES: u64 = 180;
+const STARTUP_WARMUP_FRAMES: u64 = 360;
 
 /// One `step_frame` per egui logic tick while idling.
 const FRAMES_PER_TICK: u32 = 1;
@@ -28,7 +28,8 @@ pub fn run_live_gui(cart: CartImage, label: impl Into<String>) -> Result<(), Str
     let cart_name = short_label(&label);
     let title = format!("Maxx Steele Live v{SIM_VERSION} — {cart_name}");
     let mut fw = InteractiveFirmware::new(cart, title.clone())?;
-    fw.set_auto_submit_enter(true);
+    // Match hardware: digit then explicit ENTER (no auto-submit).
+    fw.set_auto_submit_enter(false);
     fw.warmup(STARTUP_WARMUP_FRAMES);
     let trace_display = fw.trace_text();
     let app = LiveSimApp {
@@ -183,6 +184,14 @@ impl eframe::App for LiveSimApp {
                 ));
                 ui.monospace(format!("armed={}", u8::from(st.gui_armed)));
                 ui.monospace(format!("keys={}", st.keys_pressed));
+                if let Some(p) = st.speech_phrase {
+                    let label = super::speech::phrase_label(p).unwrap_or("…");
+                    let mark = if st.speech_playing { "🔊" } else { "speak" };
+                    ui.colored_label(
+                        egui::Color32::from_rgb(255, 200, 120),
+                        format!("{mark} ${p:02X} {label}"),
+                    );
+                }
                 if let Some(ref src) = self.last_input {
                     ui.colored_label(egui::Color32::from_rgb(120, 255, 160), src);
                 }
@@ -298,10 +307,11 @@ impl eframe::App for LiveSimApp {
         egui::CentralPanel::default().show_inside(ui, |ui| {
             ui.vertical(|ui| {
                 ui.heading("Robot");
-                ui.label(format!("LED: [{}]", self.firmware.led_chars()));
+                ui.label(format!("LED: [{}]", self.firmware.led_chars_settled()));
                 ui.label(
                     egui::RichText::new(
-                        "Success: keys increments, then $35 shows your digit. LED [6?] is the quiz only.",
+                        "Orange digit, then ENTER to submit. Answer shows as [digit][?] \
+                         (e.g. 6?) — not stacked digits.",
                     )
                     .small()
                     .weak(),
@@ -314,7 +324,7 @@ impl eframe::App for LiveSimApp {
                     egui::vec2(ui.available_width(), robot_h),
                     egui::Sense::hover(),
                 );
-                paint_live_robot(ui, rect, &self.firmware.led_chars());
+                paint_live_robot(ui, rect, &self.firmware.led_chars_settled());
             });
         });
     }

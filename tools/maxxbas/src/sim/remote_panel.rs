@@ -207,6 +207,17 @@ const POWER: KeyDef = KeyDef {
     wide: true,
 };
 
+const KEY_FACE: f32 = 16.0;
+const KEY_FACE_WIDE: f32 = 20.0;
+const KEY_MATRIX: f32 = 14.0;
+const KEY_INSET: f32 = 3.0;
+const KEY_BLACK: egui::Color32 = egui::Color32::from_rgb(0, 0, 0);
+const KEY_ORANGE: egui::Color32 = egui::Color32::from_rgb(255, 136, 0);
+const KEY_LABEL: egui::Color32 = egui::Color32::from_rgb(235, 235, 235);
+const FRAME_FACE: egui::Color32 = egui::Color32::from_rgb(28, 28, 30);
+const INSET_SHADOW: egui::Color32 = egui::Color32::from_rgb(8, 8, 10);
+const INSET_HIGHLIGHT: egui::Color32 = egui::Color32::from_rgb(58, 58, 62);
+
 /// Paint the remote and return any key pressed this frame.
 pub fn remote_panel(ui: &mut egui::Ui) -> Option<RemoteKey> {
     let mut pressed = None;
@@ -214,73 +225,112 @@ pub fn remote_panel(ui: &mut egui::Ui) -> Option<RemoteKey> {
     ui.label("RF link modeled as a direct wire to `$75`.");
     ui.add_space(4.0);
 
-    let avail = ui.available_width().min(280.0);
-    let key_w = (avail - 12.0) / 4.0;
-    let key_h = 40.0;
+    let avail = ui.available_width().min(320.0);
+    let bezel = 14.0;
+    let key_gap = 4.0;
+    let grid_w = avail - bezel * 2.0;
+    let key_w = (grid_w - key_gap * 3.0) / 4.0;
+    let key_h = 56.0;
 
-    egui::Frame::group(ui.style())
-        .fill(egui::Color32::from_gray(14))
-        .inner_margin(8.0)
+    let frame_rect = egui::Frame::group(ui.style())
+        .fill(FRAME_FACE)
+        .inner_margin(bezel)
         .show(ui, |ui| {
-            ui.set_width(avail);
+            ui.set_width(avail - bezel * 2.0);
             for row in [ROW1, ROW2, ROW3, ROW4, ROW5, ROW6] {
                 ui.horizontal(|ui| {
+                    ui.spacing_mut().item_spacing.x = key_gap;
                     for def in row {
                         if let Some(k) = paint_key(ui, def, key_w, key_h) {
                             pressed = Some(k);
                         }
                     }
                 });
-                ui.add_space(2.0);
+                ui.add_space(key_gap);
             }
-            if let Some(k) = paint_key(ui, POWER, avail - 4.0, 28.0) {
+            if let Some(k) = paint_key(ui, POWER, grid_w, 40.0) {
                 pressed = Some(k);
             }
-        });
+        })
+        .response
+        .rect;
+
+    if ui.is_rect_visible(frame_rect) {
+        paint_frame_inset(ui, frame_rect);
+    }
 
     pressed
 }
 
-fn paint_key(ui: &mut egui::Ui, def: KeyDef, w: f32, h: f32) -> Option<RemoteKey> {
-    let fill = if def.home {
-        egui::Color32::from_rgb(200, 120, 0)
-    } else if def.wide {
-        egui::Color32::from_gray(110)
-    } else {
-        egui::Color32::from_gray(130)
-    };
-
-    let orange = def
-        .orange
-        .map(|n| format!("{n}\n"))
-        .unwrap_or_default();
-    let face = if def.wide {
-        def.key.label()
-    } else {
-        def.key.faceplate()
-    };
-    let caption = format!("{orange}{face}");
-
-    let response = ui.add(
-        egui::Button::new(egui::RichText::new(caption).size(if def.wide { 10.0 } else { 8.0 }))
-            .min_size(egui::vec2(w, h))
-            .fill(fill),
+fn paint_frame_inset(ui: &egui::Ui, rect: egui::Rect) {
+    let painter = ui.painter_at(rect);
+    let lip = rect.shrink(1.0);
+    painter.rect_stroke(
+        lip,
+        6.0,
+        egui::Stroke::new(1.5, INSET_SHADOW),
+        egui::StrokeKind::Inside,
     );
+    let inner = lip.shrink(4.0);
+    painter.rect_stroke(
+        inner,
+        4.0,
+        egui::Stroke::new(1.0, INSET_HIGHLIGHT),
+        egui::StrokeKind::Inside,
+    );
+}
 
-    if ui.is_rect_visible(response.rect) {
-        let painter = ui.painter_at(response.rect);
+fn paint_key(ui: &mut egui::Ui, def: KeyDef, w: f32, h: f32) -> Option<RemoteKey> {
+    let (rect, response) = ui.allocate_exact_size(egui::vec2(w, h), egui::Sense::click());
+
+    if ui.is_rect_visible(rect) {
+        let painter = ui.painter_at(rect);
+        paint_recessed_key(&painter, rect, response.hovered(), response.is_pointer_button_down_on());
+
+        let well = rect.shrink(KEY_INSET + 1.0);
+        if let Some(digit) = def.orange {
+            painter.text(
+                well.center_top() + egui::vec2(0.0, 10.0),
+                egui::Align2::CENTER_TOP,
+                digit,
+                egui::FontId::proportional(KEY_FACE),
+                KEY_ORANGE,
+            );
+        }
+
+        let face = if def.wide {
+            def.key.label()
+        } else {
+            def.key.faceplate()
+        };
+        let face_size = if def.wide { KEY_FACE_WIDE } else { KEY_FACE };
+        let face_y = if def.orange.is_some() {
+            well.center().y + 2.0
+        } else if def.indicator.is_some() {
+            well.center().y - 4.0
+        } else {
+            well.center().y
+        };
+        painter.text(
+            egui::pos2(well.center().x, face_y),
+            egui::Align2::CENTER_CENTER,
+            face,
+            egui::FontId::proportional(face_size),
+            if def.home { egui::Color32::from_rgb(255, 200, 80) } else { KEY_LABEL },
+        );
+
         if let Some(c) = def.indicator {
             painter.circle_filled(
-                response.rect.center_bottom() + egui::vec2(0.0, -6.0),
-                3.0,
+                well.center_bottom() + egui::vec2(0.0, -10.0),
+                4.0,
                 c,
             );
         }
         painter.text(
-            response.rect.right_top() + egui::vec2(-4.0, 4.0),
+            well.right_top() + egui::vec2(-5.0, 5.0),
             egui::Align2::RIGHT_TOP,
             def.key.matrix().to_string(),
-            egui::FontId::monospace(7.0),
+            egui::FontId::monospace(KEY_MATRIX),
             egui::Color32::from_rgb(100, 200, 255),
         );
     }
@@ -290,4 +340,34 @@ fn paint_key(ui: &mut egui::Ui, def: KeyDef, w: f32, h: f32) -> Option<RemoteKey
     } else {
         None
     }
+}
+
+fn paint_recessed_key(
+    painter: &egui::Painter,
+    rect: egui::Rect,
+    hovered: bool,
+    pressed: bool,
+) {
+    let well = rect.shrink(KEY_INSET);
+    let depth = if pressed { 1.0 } else { 2.0 };
+    let inner = well.shrink(depth);
+
+    painter.rect_filled(well, 4.0, INSET_SHADOW);
+    painter.rect_filled(inner, 3.0, KEY_BLACK);
+
+    let shadow = egui::Stroke::new(1.5, egui::Color32::from_rgb(0, 0, 0));
+    let highlight = egui::Stroke::new(
+        1.0,
+        if hovered {
+            egui::Color32::from_rgb(72, 72, 78)
+        } else {
+            INSET_HIGHLIGHT
+        },
+    );
+
+    // Recessed lip: dark top/left, lighter bottom/right.
+    painter.line_segment([inner.left_top(), inner.right_top()], shadow);
+    painter.line_segment([inner.left_top(), inner.left_bottom()], shadow);
+    painter.line_segment([inner.left_bottom(), inner.right_bottom()], highlight);
+    painter.line_segment([inner.right_top(), inner.right_bottom()], highlight);
 }

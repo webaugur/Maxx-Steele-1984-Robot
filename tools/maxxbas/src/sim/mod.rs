@@ -10,6 +10,7 @@ mod patches;
 mod remote_panel;
 mod report;
 mod robot;
+mod speech;
 mod trace;
 mod visual;
 
