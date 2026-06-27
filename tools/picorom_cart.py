@@ -28,6 +28,7 @@ from project_paths import resolve_from_root
 CARTS: dict[str, Path] = {
     "ultramaxx": Path("Cartridge/Examples/UltraMaxx/Firmware/Binary/UltraMaxx.532"),
     "cbsdemo": Path("Cartridge/Examples/CBSDemo/Firmware/Binary/CBSDemo.532"),
+    "maxxos": Path("Cartridge/Examples/MaxxOS/Firmware/Binary/MaxxOS.532"),
 }
 
 # PicoROM upload size tokens (see PicoROM README — sizes in megabits)

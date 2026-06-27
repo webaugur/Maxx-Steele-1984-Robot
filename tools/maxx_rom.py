@@ -20,7 +20,8 @@ from project_paths import resolve_from_root
 
 COPYRIGHT_CBS = b"(c) 1985 CBS Toys"
 COPYRIGHT_ULTRAMAXX = b"(c) UltraMaxx    "
-COPYRIGHTS = (COPYRIGHT_CBS, COPYRIGHT_ULTRAMAXX)
+COPYRIGHT_MAXXOS = b"(c) MaxxOS       "
+COPYRIGHTS = (COPYRIGHT_CBS, COPYRIGHT_ULTRAMAXX, COPYRIGHT_MAXXOS)
 CART_SIZE = 4096
 PROG_RAM = 0x0200
 PHRASE_RAM = 0x0500
@@ -173,6 +174,15 @@ def parse_dsm_program_comments(path: Path) -> dict[tuple[int, int], str]:
     return comments
 
 
+def returns_to_main_loop(cart: CartImage) -> bool:
+    """True if bootstrap hands off to internal ROM at $E0B6 (factory pattern)."""
+    entry_off = cart.offset(cart.entry_vector)
+    if entry_off < 0 or entry_off >= CART_SIZE:
+        return False
+    chunk = cart.data[entry_off : entry_off + 64]
+    return b"\x4c\xb6\xe0" in chunk
+
+
 def validate_cart(cart: CartImage) -> list[str]:
     issues: list[str] = []
     if cart.copyright not in COPYRIGHTS:
@@ -187,13 +197,14 @@ def validate_cart(cart: CartImage) -> list[str]:
             issues.append(
                 f"unexpected entry code at ${cart.entry_vector:04X}: {chunk.hex()}"
             )
-    prog_start = find_program_table(cart.data, cart.base_addr)
-    if prog_start is None:
-        issues.append("could not locate program table")
-    else:
-        prog = decode_program(cart.data, prog_start)
-        if not prog or prog[-1][1:3] != (0xFF, 0xFF):
-            issues.append("program table missing FF FF terminator")
+    if returns_to_main_loop(cart):
+        prog_start = find_program_table(cart.data, cart.base_addr)
+        if prog_start is None:
+            issues.append("could not locate program table")
+        else:
+            prog = decode_program(cart.data, prog_start)
+            if not prog or prog[-1][1:3] != (0xFF, 0xFF):
+                issues.append("program table missing FF FF terminator")
     return issues
 
 

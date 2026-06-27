@@ -367,6 +367,8 @@ The factory stub only loads RAM tables and returns to **`$E0B6`**. A custom boot
 | **Extended cart 6502** | Skip **`JMP $E0B6`** and run a cart-resident loop at **`$A000`–`$AFFF`**, calling ROM drivers via **`JSR`** |
 | **Data layer (factory pattern)** | Replace program/phrases/music in RAM — bytecode interpreted by mask ROM |
 
+**Reference example:** [`Cartridge/Examples/MaxxOS/`](../../Cartridge/Examples/MaxxOS/) — bootstrap at **`$A013`** jumps to **`$A080`** and runs a keypad math quiz using **`$E60D`**, **`$F684`**, **`$F475`**, and **`$F8BE`** display segments. No bytecode tables; [`tools/maxx_rom.py`](../../tools/maxx_rom.py) treats images without **`JMP $E0B6`** as extended carts.
+
 **RAM vectors a cart bootstrap can repoint** (defaults from ROM `$E01C`):
 
 | ZP | Default target | Role |

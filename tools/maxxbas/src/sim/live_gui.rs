@@ -17,8 +17,11 @@ const STARTUP_WARMUP_FRAMES: u64 = 180;
 /// One `step_frame` per egui logic tick while idling.
 const FRAMES_PER_TICK: u32 = 1;
 
-/// CPU frames to run after a keypress (cart dispatch + auto-ENTER).
-const KEYPRESS_DIGEST_FRAMES: u32 = 400;
+/// CPU frames for synchronous digest after a keypress (cart dispatch + auto-ENTER).
+const KEYPRESS_DIGEST_FRAMES: u32 = 800;
+
+/// Faster stepping while digesting a key (real-time default is too few cycles/frame).
+const DIGEST_CYCLES_PER_FRAME: u64 = 16_000;
 
 pub fn run_live_gui(cart: CartImage, label: impl Into<String>) -> Result<(), String> {
     let label = label.into();
@@ -34,7 +37,6 @@ pub fn run_live_gui(cart: CartImage, label: impl Into<String>) -> Result<(), Str
         sim_version: SIM_VERSION.to_string(),
         trace_display,
         pending_key: None,
-        digest_frames_remaining: 0,
         last_input: None,
         trace_editable: false,
     };
@@ -53,11 +55,8 @@ struct LiveSimApp {
     cart_label: String,
     sim_version: String,
     trace_display: String,
-    /// Key waiting for `logic()` — set by toolbar, remote, or keyboard.
     pending_key: Option<RemoteKey>,
-    digest_frames_remaining: u32,
     last_input: Option<String>,
-    /// Trace text area steals keyboard when interactive — default off.
     trace_editable: bool,
 }
 
@@ -98,7 +97,17 @@ fn poll_keyboard(ctx: &egui::Context) -> Option<RemoteKey> {
 fn queue_key(app: &mut LiveSimApp, key: RemoteKey, source: &str) {
     app.pending_key = Some(key);
     app.last_input = Some(format!("{source}: {}", key.label()));
-    app.digest_frames_remaining = 0;
+}
+
+fn deliver_key(app: &mut LiveSimApp) {
+    let saved_cpf = app.firmware.options.cycles_per_frame;
+    app.firmware.options.cycles_per_frame = DIGEST_CYCLES_PER_FRAME;
+    if let Some(key) = app.pending_key.take() {
+        app.firmware.press_key(key);
+    }
+    app.firmware.digest_keypress(KEYPRESS_DIGEST_FRAMES);
+    app.firmware.options.cycles_per_frame = saved_cpf;
+    app.trace_display = app.firmware.trace_text();
 }
 
 impl eframe::App for LiveSimApp {
@@ -109,23 +118,8 @@ impl eframe::App for LiveSimApp {
             }
         }
 
-        if let Some(key) = self.pending_key.take() {
-            self.firmware.press_key(key);
-            self.digest_frames_remaining = KEYPRESS_DIGEST_FRAMES;
-            self.trace_display = self.firmware.trace_text();
-            ctx.request_repaint();
-            return;
-        }
-
-        if self.digest_frames_remaining > 0 {
-            self.firmware.step_frame();
-            self.digest_frames_remaining -= 1;
-            if self.digest_frames_remaining == 0
-                || (!self.firmware.in_keypad_poll() && !self.firmware.status().key_pending)
-            {
-                self.digest_frames_remaining = 0;
-            }
-            self.trace_display = self.firmware.trace_text();
+        if self.pending_key.is_some() {
+            deliver_key(self);
             ctx.request_repaint();
             return;
         }
@@ -153,7 +147,6 @@ impl eframe::App for LiveSimApp {
                 if ui.button("Reset").clicked() {
                     let _ = self.firmware.reset();
                     self.pending_key = None;
-                    self.digest_frames_remaining = 0;
                     self.last_input = None;
                 }
                 ui.separator();
@@ -182,6 +175,13 @@ impl eframe::App for LiveSimApp {
                         .map(|k| format!("{k:02X}"))
                         .unwrap_or_else(|| "--".into())
                 ));
+                ui.monospace(format!(
+                    "gui={}",
+                    st.gui_raw
+                        .map(|k| format!("{k:02X}"))
+                        .unwrap_or_else(|| "--".into())
+                ));
+                ui.monospace(format!("armed={}", u8::from(st.gui_armed)));
                 ui.monospace(format!("keys={}", st.keys_pressed));
                 if let Some(ref src) = self.last_input {
                     ui.colored_label(egui::Color32::from_rgb(120, 255, 160), src);
@@ -192,8 +192,6 @@ impl eframe::App for LiveSimApp {
                 ui.label(format!("mode={}", st.mode));
                 if !st.running {
                     ui.colored_label(egui::Color32::YELLOW, "CPU paused");
-                } else if self.digest_frames_remaining > 0 {
-                    ui.colored_label(egui::Color32::from_rgb(255, 200, 80), "digesting key…");
                 } else if st.key_pending {
                     ui.colored_label(egui::Color32::from_rgb(255, 200, 80), "key pending…");
                 } else if st.needs_enter {
@@ -224,12 +222,6 @@ impl eframe::App for LiveSimApp {
                     queue_key(self, RemoteKey::Enter, "toolbar");
                     ui.ctx().request_repaint();
                 }
-                ui.separator();
-                ui.label(
-                    egui::RichText::new("click a digit above or use keyboard 0–9")
-                        .small()
-                        .weak(),
-                );
             });
 
             ui.horizontal(|ui| {
@@ -285,13 +277,6 @@ impl eframe::App for LiveSimApp {
                         ui.ctx().copy_text(self.firmware.trace_text());
                     }
                     ui.checkbox(&mut self.trace_editable, "Edit trace");
-                    ui.label(
-                        egui::RichText::new(
-                            "Edit trace steals keyboard — use toolbar digits or keyboard 0–9",
-                        )
-                        .small()
-                        .weak(),
-                    );
                 });
                 ui.separator();
                 let trace_h = ui.available_height().max(60.0);
@@ -316,8 +301,7 @@ impl eframe::App for LiveSimApp {
                 ui.label(format!("LED: [{}]", self.firmware.led_chars()));
                 ui.label(
                     egui::RichText::new(
-                        "LED [6?] is the ROM quiz prompt — not proof your key arrived. \
-                         After input, toolbar shows keys=N latched=NN.",
+                        "Success: keys increments, then $35 shows your digit. LED [6?] is the quiz only.",
                     )
                     .small()
                     .weak(),
@@ -331,17 +315,6 @@ impl eframe::App for LiveSimApp {
                     egui::Sense::hover(),
                 );
                 paint_live_robot(ui, rect, &self.firmware.led_chars());
-
-                ui.separator();
-                let st = self.firmware.status();
-                let tip = if !st.running {
-                    "CPU is paused — click Run CPU, then use toolbar digits 0–9."
-                } else if st.keypad_waiting {
-                    "Click a toolbar digit (0–9) or press keyboard 0–9. keys= must increment."
-                } else {
-                    "Wait for green \"waiting for digit\", then use toolbar digits."
-                };
-                ui.add(egui::Label::new(tip).wrap_mode(egui::TextWrapMode::Wrap));
             });
         });
     }

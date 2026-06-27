@@ -47,6 +47,8 @@ pub struct FirmwareStatus {
     /// Raw sim latch bytes (for toolbar — not masked like `$75`/`$15`).
     pub pending_raw: Option<u8>,
     pub latched_raw: Option<u8>,
+    pub gui_raw: Option<u8>,
+    pub gui_armed: bool,
     /// Total `press_key` calls (confirms GUI/keyboard reached the sim).
     pub keys_pressed: u64,
 }
@@ -57,6 +59,10 @@ struct LiveBusState {
     pending_digit: Option<u8>,
     /// GUI digit held until cart `$35` stores it (survives premature `pending_digit` clears).
     latched_digit: Option<u8>,
+    /// Last toolbar digit — survives cart re-poll at `$E196` until answer committed.
+    gui_digit: Option<u8>,
+    /// When true, `gui_digit` is injected into ROM poll until cart stores it at `$35`.
+    gui_armed: bool,
     irq_pending: bool,
 }
 
@@ -97,6 +103,13 @@ impl Bus for LiveBus {
                         return k;
                     }
                 }
+                if state.gui_armed {
+                    if let Some(k) = state.gui_digit {
+                        if k < 10 && (*self.mem_ptr)[0x35] >= 0x0A {
+                            return k;
+                        }
+                    }
+                }
                 return (*self.mem_ptr)[0x75];
             }
         }
@@ -124,6 +137,13 @@ impl Bus for LiveBus {
                 if let Some(k) = state.latched_digit {
                     if k < 10 && (*self.mem_ptr)[0x35] >= 0x0A {
                         return;
+                    }
+                }
+                if state.gui_armed {
+                    if let Some(k) = state.gui_digit {
+                        if k < 10 && (*self.mem_ptr)[0x35] >= 0x0A {
+                            return;
+                        }
                     }
                 }
             }
@@ -526,26 +546,27 @@ fn pop_stack_word(cpu: &mut CPU<LiveBus, Cmos6502>) {
 
 /// Pop nested ROM keypad `JSR` frames until the cart `$E60D` return (`$A199`) is consumed.
 fn unwind_keypad_stack_to_cart(cpu: &mut CPU<LiveBus, Cmos6502>, mem: &[u8; 65536]) -> bool {
-    let mut found_cart = false;
-    loop {
-        let ret = stack_jsr_return_raw(mem, cpu.registers.stack_pointer.0);
-        match ret {
-            ROM_E617_JSR_E6A4_RET | ROM_E60D_JSR_E617_RET => pop_stack_word(cpu),
-            CART_JSR_E60D_RET => {
-                pop_stack_word(cpu);
-                found_cart = true;
-                break;
-            }
-            _ => break,
+    let sp0 = cpu.registers.stack_pointer.0;
+    let mut cart_depth = None;
+    for depth in 0..8 {
+        if stack_jsr_return_raw(mem, sp0.wrapping_add(depth * 2)) == CART_JSR_E60D_RET {
+            cart_depth = Some(depth);
+            break;
         }
     }
-    found_cart
+    let Some(depth) = cart_depth else {
+        return false;
+    };
+    for _ in 0..=depth {
+        pop_stack_word(cpu);
+    }
+    true
 }
 
 /// GUI digit waiting in `$15` — unwind keypad poll and return to cart `input_loop` at `$A199`.
 fn finish_e60d_keypad_wait(
     mem: &mut [u8; 65536],
-    pc: u16,
+    _pc: u16,
     pending: Option<u8>,
     cpu: &mut CPU<LiveBus, Cmos6502>,
 ) -> bool {
@@ -556,11 +577,7 @@ fn finish_e60d_keypad_wait(
         return false;
     }
     let sp = cpu.registers.stack_pointer.0;
-    let cart_waiting = stack_has_cart_e60d_return(mem, sp);
-    if !cart_waiting {
-        return false;
-    }
-    if !in_keypad_read_path(mem, sp, pc) && !cart_waiting {
+    if !stack_has_cart_e60d_return(mem, sp) {
         return false;
     }
     if !unwind_keypad_stack_to_cart(cpu, mem) {
@@ -715,6 +732,8 @@ impl InteractiveFirmware {
             radio_pending: None,
             pending_digit: None,
             latched_digit: None,
+            gui_digit: None,
+            gui_armed: false,
             irq_pending: false,
         });
         let cpu = new_cpu(mem.as_mut(), bus_state.as_mut());
@@ -747,6 +766,8 @@ impl InteractiveFirmware {
         self.bus_state.radio_pending = None;
         self.bus_state.pending_digit = None;
         self.bus_state.latched_digit = None;
+        self.bus_state.gui_digit = None;
+        self.bus_state.gui_armed = false;
         self.keypad_waiting = false;
         self.trace.clear();
         self.cpu = new_cpu(self.mem.as_mut(), self.bus_state.as_mut());
@@ -776,6 +797,10 @@ impl InteractiveFirmware {
         self.keypad_waiting || infer_keypad_ready(self.cpu.cycles, pc, &led)
     }
 
+    fn answer_slot_empty(&self) -> bool {
+        self.mem[0x35] >= 0x0A
+    }
+
     /// Wire key for ROM poll: `pending_digit`, else sticky GUI latch while `$35` is still empty.
     fn effective_pending_key(&self) -> Option<u8> {
         if let Some(k) = self.bus_state.pending_digit {
@@ -783,20 +808,84 @@ impl InteractiveFirmware {
                 return Some(k);
             }
         }
+        if !self.answer_slot_empty() {
+            return None;
+        }
         if let Some(k) = self.bus_state.latched_digit {
-            if k < 10 && self.mem[0x35] >= 0x0A {
+            if k < 0x20 {
                 return Some(k);
+            }
+        }
+        if self.bus_state.gui_armed {
+            if let Some(k) = self.bus_state.gui_digit {
+                if k < 0x20 {
+                    return Some(k);
+                }
             }
         }
         None
     }
 
-    fn clear_latched_if_answer_stored(&mut self) {
-        if let Some(d) = self.bus_state.latched_digit {
-            if self.mem[0x35] == d {
-                self.bus_state.latched_digit = None;
-            }
+    /// Re-arm `pending_digit` from sticky latch while cart `$35` is still empty.
+    fn refresh_pending_from_latch(&mut self) {
+        if self.bus_state.pending_digit.is_some() || !self.answer_slot_empty() {
+            return;
         }
+        if !self.bus_state.gui_armed {
+            return;
+        }
+        let Some(d) = self.bus_state.latched_digit.or(self.bus_state.gui_digit) else {
+            return;
+        };
+        if d >= 10 {
+            return;
+        }
+        self.bus_state.pending_digit = Some(d);
+        if self.bus_state.latched_digit.is_none() {
+            self.bus_state.latched_digit = Some(d);
+        }
+        if self.in_keypad_poll() || self.keypad_waiting {
+            self.mem[0x15] = d;
+            self.mem[0x75] = d;
+        }
+    }
+
+    fn cart_still_awaiting_keypad(&self) -> bool {
+        let sp = self.cpu.registers.stack_pointer.0;
+        self.in_keypad_poll()
+            || self.keypad_waiting
+            || stack_has_cart_e60d_return(&self.mem, sp)
+    }
+
+    /// Drop injection once cart has stored the GUI digit and left the keypad wait.
+    fn note_gui_digit_consumed(&mut self) {
+        if !self.bus_state.gui_armed {
+            return;
+        }
+        let Some(d) = self.bus_state.gui_digit else {
+            return;
+        };
+        if self.mem[0x35] != d || self.mem[0x35] >= 0x0A {
+            return;
+        }
+        let pc = self.cpu.registers.program_counter;
+        if (0xA080..=0xA200).contains(&pc) {
+            return;
+        }
+        if self.cart_still_awaiting_keypad() {
+            return;
+        }
+        self.bus_state.gui_armed = false;
+        self.bus_state.pending_digit = None;
+        self.bus_state.latched_digit = None;
+    }
+
+    /// True when a GUI keypress has been fully accepted (`$35` holds the digit).
+    pub fn answer_accepted(&self) -> bool {
+        if let Some(d) = self.bus_state.latched_digit {
+            return self.mem[0x35] == d;
+        }
+        false
     }
 
     /// Press a remote key — RF wire presents keycode at `$75` (bit 7 clear).
@@ -828,6 +917,8 @@ impl InteractiveFirmware {
         if code < 10 {
             self.bus_state.pending_digit = Some(code);
             self.bus_state.latched_digit = Some(code);
+            self.bus_state.gui_digit = Some(code);
+            self.bus_state.gui_armed = true;
             self.mem[0x15] = code;
             if self.auto_submit_enter {
                 self.queue_auto_enter = true;
@@ -884,9 +975,17 @@ impl InteractiveFirmware {
     pub fn digest_keypress(&mut self, max_frames: u32) {
         let was_running = self.running;
         self.running = true;
+        self.refresh_pending_from_latch();
+        self.try_apply_pending_key_now();
         for _ in 0..max_frames {
             self.step_frame();
-            if self.effective_pending_key().is_none()
+            if let Some(d) = self.bus_state.gui_digit {
+                if self.mem[0x35] == d && self.mem[0x35] < 0x0A && !self.bus_state.gui_armed {
+                    break;
+                }
+            }
+            if !self.bus_state.gui_armed
+                && self.effective_pending_key().is_none()
                 && !self.queue_auto_enter
                 && !self.in_keypad_poll()
             {
@@ -918,6 +1017,7 @@ impl InteractiveFirmware {
         }
         let limit = self.cpu.cycles + cycles;
         while self.cpu.cycles < limit {
+            self.refresh_pending_from_latch();
             super::firmware::ensure_irq_vectors(&mut self.mem);
             self.irq_phase = self.irq_phase.wrapping_add(1);
             if self.irq_phase % 64 == 0 {
@@ -1018,9 +1118,17 @@ impl InteractiveFirmware {
                     self.mem[0x75] = 0x0F;
                 }
             }
-            if pc_before == 0xE196 && self.bus_state.pending_digit.is_none() && !self.queue_auto_enter {
-                // New `input_loop` wait — drop stale GUI-mirrored digits from the prior answer.
+            if pc_before == 0xE196 && self.bus_state.pending_digit.is_none() {
+                // Cart re-entering keypad wait — re-arm injection from last toolbar digit.
                 self.last_answer_digit = 0xFF;
+                if self.answer_slot_empty() {
+                    if self.bus_state.gui_digit.is_some() {
+                        self.bus_state.gui_armed = true;
+                    }
+                    if !self.queue_auto_enter {
+                        self.refresh_pending_from_latch();
+                    }
+                }
             }
             if pc_before == 0xA19F && self.cpu.registers.program_counter == 0xA1B7 {
                 // ENTER accepted — do not leave a stale `$A199` stack frame for `input_done` `RTS`.
@@ -1039,6 +1147,7 @@ impl InteractiveFirmware {
                 self.mem[0x15] = 0x80;
                 self.mem[0x75] = 0x80;
             }
+            self.note_gui_digit_consumed();
             // `$E6AC` may have read the wire this instruction; ensure `$15` caught it.
             if pc_before == 0xE6AC {
                 let wire_key = self.effective_pending_key().or(self.bus_state.radio_pending);
@@ -1049,7 +1158,6 @@ impl InteractiveFirmware {
                     }
                 }
             }
-            self.clear_latched_if_answer_stored();
         }
     }
 
@@ -1100,6 +1208,8 @@ impl InteractiveFirmware {
             needs_enter,
             pending_raw: self.bus_state.pending_digit,
             latched_raw: self.bus_state.latched_digit,
+            gui_raw: self.bus_state.gui_digit,
+            gui_armed: self.bus_state.gui_armed,
             keys_pressed: self.keys_pressed,
         }
     }
@@ -1134,8 +1244,14 @@ impl InteractiveFirmware {
             .latched_digit
             .map(|k| format!("{k:02X}"))
             .unwrap_or_else(|| "--".into());
+        let gui = self
+            .bus_state
+            .gui_digit
+            .map(|k| format!("{k:02X}"))
+            .unwrap_or_else(|| "--".into());
+        let armed = if self.bus_state.gui_armed { "1" } else { "0" };
         let mut header = format!(
-            "; sim {} | PC=${:04X} | $78=${:04X} | LED=[{}] | $75=${:02X} $15=${:02X} | pending={pending} latched={latched} keys={} $35=${:02X} | cycles={}\n",
+            "; sim {} | PC=${:04X} | $78=${:04X} | LED=[{}] | $75=${:02X} $15=${:02X} | pending={pending} latched={latched} gui={gui} armed={armed} keys={} $35=${:02X} | cycles={}\n",
             env!("CARGO_PKG_VERSION"),
             st.pc,
             irq_vec,
@@ -1433,6 +1549,173 @@ mod tests {
         fw.mem[0x15] = 0x80;
         apply_radio_wire(&mut fw.mem, &fw.bus_state.radio_pending, fw.bus_state.pending_digit);
         assert_eq!(fw.mem[0x75], 5, "GUI pending key must stay on $75 for LDX $75");
+    }
+
+    /// `$A1B7` with `$35` set must not disarm while cart keypad wait is still on the stack.
+    #[test]
+    fn gui_armed_survives_premature_a1b7() {
+        let cart = CartImage::from_bytes(MAXXOS.to_vec()).unwrap();
+        let mut fw = InteractiveFirmware::new(cart, "MaxxOS").unwrap();
+        fw.set_auto_submit_enter(true);
+        fw.warmup(180);
+        fw.press_key(RemoteKey::Arms6);
+        assert!(fw.bus_state.gui_armed);
+        fw.mem[0x35] = 6;
+        fw.keypad_waiting = true;
+        fw.cpu.registers.program_counter = 0xA1B7;
+        fw.step(1);
+        assert!(
+            fw.bus_state.gui_armed,
+            "premature $A1B7 disarmed gui (gui={:?})",
+            fw.bus_state.gui_digit
+        );
+        assert_eq!(fw.bus_state.gui_digit, Some(6));
+    }
+
+    /// `gui_digit` must survive cart re-poll at `$E196` (regression: keys=10 latched=--).
+    #[test]
+    fn gui_digit_survives_e196_repoll_and_injects_at_e6ac() {
+        let cart = CartImage::from_bytes(MAXXOS.to_vec()).unwrap();
+        let mut fw = InteractiveFirmware::new(cart, "MaxxOS").unwrap();
+        fw.set_auto_submit_enter(true);
+        fw.warmup(180);
+        fw.press_key(RemoteKey::Drive3);
+        assert_eq!(fw.bus_state.gui_digit, Some(3));
+        fw.bus_state.pending_digit = None;
+        fw.bus_state.latched_digit = None;
+        fw.queue_auto_enter = false;
+        fw.cpu.registers.program_counter = 0xE196;
+        fw.step(1);
+        assert_eq!(
+            fw.bus_state.gui_digit,
+            Some(3),
+            "gui_digit cleared at $E196 re-poll"
+        );
+        assert_eq!(
+            fw.bus_state.pending_digit,
+            Some(3),
+            "pending not re-armed from gui_digit"
+        );
+        fw.mem[0x75] = 0x80;
+        fw.cpu.registers.program_counter = 0xE6AC;
+        fw.step(1);
+        assert_eq!(fw.cpu.registers.index_x, 3);
+        assert_eq!(fw.mem[0x15], 3);
+    }
+
+    /// Regression: toolbar 6 at `$E959` with nested stack, then long realtime run (user 17M cycles).
+    #[test]
+    fn arms6_at_e959_nested_stack_survives_long_run() {
+        let cart = CartImage::from_bytes(MAXXOS.to_vec()).unwrap();
+        let mut fw = InteractiveFirmware::new(cart, "MaxxOS").unwrap();
+        fw.options.cycles_per_frame = super::CYCLES_PER_FRAME_REALTIME;
+        fw.set_auto_submit_enter(true);
+        fw.warmup(180);
+        for _ in 0..8000 {
+            fw.step_frame();
+            if in_keypad_spin(fw.status().pc) {
+                break;
+            }
+        }
+        fw.cpu.registers.stack_pointer.0 = fw.cpu.registers.stack_pointer.0.wrapping_sub(2);
+        let sp = fw.cpu.registers.stack_pointer.0;
+        let slot = 0x0100usize + usize::from(sp.wrapping_add(1));
+        fw.mem[slot] = 0xA8;
+        fw.mem[slot + 1] = 0xE6;
+        fw.mem[slot + 2] = 0x19;
+        fw.mem[slot + 3] = 0xE6;
+        fw.mem[slot + 4] = 0x0F;
+        fw.mem[slot + 5] = 0xE6;
+        fw.mem[slot + 6] = 0x98;
+        fw.mem[slot + 7] = 0xA1;
+        fw.cpu.registers.program_counter = 0xE959;
+        let saved = fw.options.cycles_per_frame;
+        fw.options.cycles_per_frame = 16_000;
+        fw.press_key(RemoteKey::Arms6);
+        fw.digest_keypress(800);
+        fw.options.cycles_per_frame = saved;
+        while fw.status().cycles < 17_011_200 {
+            fw.step_frame();
+        }
+        assert_eq!(fw.keys_pressed, 1);
+        assert!(
+            fw.mem[0x35] == 6 || !in_keypad_spin(fw.status().pc),
+            "nested $E959 stack lost key (pc=${:04X} $35=${:02X} latched={:?} pending={:?})",
+            fw.status().pc,
+            fw.mem[0x35],
+            fw.bus_state.latched_digit,
+            fw.bus_state.pending_digit
+        );
+    }
+
+    /// Exact live GUI `deliver_key`: realtime idle speed, boosted digest after toolbar 6.
+    #[test]
+    fn deliver_key_arms6_leaves_e617_poll() {
+        let cart = CartImage::from_bytes(MAXXOS.to_vec()).unwrap();
+        let mut fw = InteractiveFirmware::new(cart, "MaxxOS").unwrap();
+        fw.options.cycles_per_frame = super::CYCLES_PER_FRAME_REALTIME;
+        fw.set_auto_submit_enter(true);
+        fw.warmup(180);
+        for _ in 0..8000 {
+            fw.step_frame();
+            if in_keypad_spin(fw.status().pc) {
+                break;
+            }
+        }
+        assert!(in_keypad_spin(fw.status().pc), "pc=${:04X}", fw.status().pc);
+        let saved = fw.options.cycles_per_frame;
+        fw.options.cycles_per_frame = 16_000;
+        fw.press_key(RemoteKey::Arms6);
+        assert_eq!(fw.keys_pressed, 1);
+        assert!(
+            fw.bus_state.latched_digit == Some(6) || fw.bus_state.pending_digit == Some(6),
+            "press_key did not latch 6 (latched={:?} pending={:?} pc=${:04X})",
+            fw.bus_state.latched_digit,
+            fw.bus_state.pending_digit,
+            fw.status().pc
+        );
+        fw.digest_keypress(800);
+        fw.options.cycles_per_frame = saved;
+        assert!(
+            fw.mem[0x35] == 6 || !in_keypad_spin(fw.status().pc),
+            "deliver_key stuck (pc=${:04X} $35=${:02X} latched={:?} pending={:?} $75=${:02X})",
+            fw.status().pc,
+            fw.mem[0x35],
+            fw.bus_state.latched_digit,
+            fw.bus_state.pending_digit,
+            fw.mem[0x75]
+        );
+    }
+
+    /// Realtime-speed GUI digest must still store answer (regression: keys=1 latch cleared).
+    #[test]
+    fn realtime_digest_stores_answer_after_press() {
+        let cart = CartImage::from_bytes(MAXXOS.to_vec()).unwrap();
+        let mut fw = InteractiveFirmware::new(cart, "MaxxOS").unwrap();
+        fw.options.cycles_per_frame = super::CYCLES_PER_FRAME_REALTIME;
+        fw.set_auto_submit_enter(true);
+        fw.warmup(180);
+        for _ in 0..8000 {
+            fw.step_frame();
+            if in_keypad_spin(fw.status().pc) {
+                break;
+            }
+        }
+        assert!(in_keypad_spin(fw.status().pc));
+        fw.press_key(RemoteKey::Arms6);
+        assert_eq!(fw.keys_pressed, 1);
+        let saved = fw.options.cycles_per_frame;
+        fw.options.cycles_per_frame = 16_000;
+        fw.digest_keypress(800);
+        fw.options.cycles_per_frame = saved;
+        assert!(
+            fw.mem[0x35] == 6 || fw.answer_accepted() || !in_keypad_spin(fw.status().pc),
+            "realtime digest lost key (pc=${:04X} $35={} latched={:?} pending={:?})",
+            fw.status().pc,
+            fw.mem[0x35],
+            fw.bus_state.latched_digit,
+            fw.bus_state.pending_digit
+        );
     }
 
     /// Toolbar queue: press_key in one tick, digest over subsequent ticks.
@@ -1866,15 +2149,18 @@ mod tests {
             fw.status().pc
         );
         fw.set_auto_submit_enter(true);
-        // User trace had PC=$E959 inside `$E6A4`; seed that site with a live poll stack.
+        // User trace: PC=$E959 inside `$E6A4` with `$E6A8` return still on the stack.
+        fw.cpu.registers.stack_pointer.0 = fw.cpu.registers.stack_pointer.0.wrapping_sub(2);
         let sp = fw.cpu.registers.stack_pointer.0;
         let slot = 0x0100usize + usize::from(sp.wrapping_add(1));
-        fw.mem[slot] = 0x19;
+        fw.mem[slot] = 0xA8;
         fw.mem[slot + 1] = 0xE6;
-        fw.mem[slot + 2] = 0x0F;
+        fw.mem[slot + 2] = 0x19;
         fw.mem[slot + 3] = 0xE6;
-        fw.mem[slot + 4] = 0x98;
-        fw.mem[slot + 5] = 0xA1;
+        fw.mem[slot + 4] = 0x0F;
+        fw.mem[slot + 5] = 0xE6;
+        fw.mem[slot + 6] = 0x98;
+        fw.mem[slot + 7] = 0xA1;
         fw.cpu.registers.program_counter = 0xE959;
         fw.press_key(RemoteKey::Drive2);
         assert_eq!(
