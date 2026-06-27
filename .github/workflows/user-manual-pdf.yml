@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
     paths:
-      - "UserManual/**"
+      - "Docs/User/**"
       - "tools/build_user_manual_pdf.py"
       - "tools/manual_pdf.py"
       - "tools/display_codes.py"
@@ -32,7 +32,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add UserManual/Maxx-Steele-User-Manual.pdf
+          git add Docs/User/Maxx-Steele-User-Manual.pdf
           if git diff --staged --quiet; then
             echo "PDF is already up to date."
             exit 0
