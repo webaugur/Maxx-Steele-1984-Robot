@@ -31,6 +31,23 @@ pub enum RemoteKey {
 }
 
 impl RemoteKey {
+    /// Orange digit keys 0–9 (for keyboard shortcuts in the live GUI).
+    pub fn from_digit(n: u8) -> Option<Self> {
+        match n {
+            0 => Some(RemoteKey::DriveU),
+            1 => Some(RemoteKey::Drive1),
+            2 => Some(RemoteKey::Drive2),
+            3 => Some(RemoteKey::Drive3),
+            4 => Some(RemoteKey::Wrist4),
+            5 => Some(RemoteKey::Wrist5),
+            6 => Some(RemoteKey::Arms6),
+            7 => Some(RemoteKey::Arms7),
+            8 => Some(RemoteKey::Claw8),
+            9 => Some(RemoteKey::Claw9),
+            _ => None,
+        }
+    }
+
     /// Keycode presented on the RadioIn / `$75` wire (before `$E6A4` latches into `$15`).
     pub fn keycode(self) -> u8 {
         match self {
@@ -147,5 +164,16 @@ impl RemoteKey {
             RemoteKey::Execute => 'X',
             RemoteKey::PowerStop => 'Y',
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::RemoteKey;
+
+    #[test]
+    fn from_digit_maps_orange_keys() {
+        assert_eq!(RemoteKey::from_digit(6), Some(RemoteKey::Arms6));
+        assert_eq!(RemoteKey::from_digit(10), None);
     }
 }

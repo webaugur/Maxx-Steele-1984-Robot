@@ -47,6 +47,8 @@ pub struct FirmwareStatus {
     /// Raw sim latch bytes (for toolbar — not masked like `$75`/`$15`).
     pub pending_raw: Option<u8>,
     pub latched_raw: Option<u8>,
+    /// Total `press_key` calls (confirms GUI/keyboard reached the sim).
+    pub keys_pressed: u64,
 }
 
 /// Heap-backed keypad/IRQ hooks — `LiveBus` holds a raw pointer that must survive `Self` moves.
@@ -167,6 +169,7 @@ pub struct InteractiveFirmware {
     /// Live GUI: one digit press submits answer (auto-ENTER after `$A1A5`).
     auto_submit_enter: bool,
     queue_auto_enter: bool,
+    keys_pressed: u64,
 }
 
 fn interactive_patches() -> PatchSet {
@@ -732,6 +735,7 @@ impl InteractiveFirmware {
             last_answer_digit: 0xFF,
             auto_submit_enter: false,
             queue_auto_enter: false,
+            keys_pressed: 0,
         })
     }
 
@@ -750,6 +754,7 @@ impl InteractiveFirmware {
         self.irq_phase = 0;
         self.last_answer_digit = 0xFF;
         self.queue_auto_enter = false;
+        self.keys_pressed = 0;
         Ok(())
     }
 
@@ -796,6 +801,7 @@ impl InteractiveFirmware {
 
     /// Press a remote key — RF wire presents keycode at `$75` (bit 7 clear).
     pub fn press_key(&mut self, key: RemoteKey) {
+        self.keys_pressed = self.keys_pressed.wrapping_add(1);
         let code = key.keycode();
         self.bus_state.radio_pending = Some(code);
         self.mem[0x75] = code;
@@ -1094,6 +1100,7 @@ impl InteractiveFirmware {
             needs_enter,
             pending_raw: self.bus_state.pending_digit,
             latched_raw: self.bus_state.latched_digit,
+            keys_pressed: self.keys_pressed,
         }
     }
 

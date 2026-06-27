@@ -250,48 +250,34 @@ fn paint_key(ui: &mut egui::Ui, def: KeyDef, w: f32, h: f32) -> Option<RemoteKey
         egui::Color32::from_gray(130)
     };
 
-    let (rect, resp) = ui.allocate_exact_size(egui::vec2(w, h), egui::Sense::click());
-    if ui.is_rect_visible(rect) {
-        let painter = ui.painter_at(rect);
-        painter.rect_filled(rect, 4.0, fill);
-        if resp.hovered() {
-            painter.rect_stroke(
-                rect,
-                4.0,
-                egui::Stroke::new(1.5, egui::Color32::WHITE),
-                egui::StrokeKind::Outside,
-            );
-        }
+    let orange = def
+        .orange
+        .map(|n| format!("{n}\n"))
+        .unwrap_or_default();
+    let face = if def.wide {
+        def.key.label()
+    } else {
+        def.key.faceplate()
+    };
+    let caption = format!("{orange}{face}");
 
+    let response = ui.add(
+        egui::Button::new(egui::RichText::new(caption).size(if def.wide { 10.0 } else { 8.0 }))
+            .min_size(egui::vec2(w, h))
+            .fill(fill),
+    );
+
+    if ui.is_rect_visible(response.rect) {
+        let painter = ui.painter_at(response.rect);
         if let Some(c) = def.indicator {
-            painter.circle_filled(rect.center_bottom() + egui::vec2(0.0, -6.0), 3.0, c);
-        }
-
-        if let Some(num) = def.orange {
-            painter.text(
-                rect.center_top() + egui::vec2(0.0, 10.0),
-                egui::Align2::CENTER_CENTER,
-                num,
-                egui::FontId::proportional(13.0),
-                egui::Color32::from_rgb(255, 136, 0),
+            painter.circle_filled(
+                response.rect.center_bottom() + egui::vec2(0.0, -6.0),
+                3.0,
+                c,
             );
         }
-
-        let label = if def.wide {
-            def.key.label()
-        } else {
-            def.key.faceplate()
-        };
         painter.text(
-            rect.center(),
-            egui::Align2::CENTER_CENTER,
-            label,
-            egui::FontId::proportional(if def.wide { 10.0 } else { 8.0 }),
-            egui::Color32::WHITE,
-        );
-
-        painter.text(
-            rect.right_top() + egui::vec2(-4.0, 4.0),
+            response.rect.right_top() + egui::vec2(-4.0, 4.0),
             egui::Align2::RIGHT_TOP,
             def.key.matrix().to_string(),
             egui::FontId::monospace(7.0),
@@ -299,7 +285,7 @@ fn paint_key(ui: &mut egui::Ui, def: KeyDef, w: f32, h: f32) -> Option<RemoteKey
         );
     }
 
-    if resp.clicked() {
+    if response.clicked() {
         Some(def.key)
     } else {
         None
