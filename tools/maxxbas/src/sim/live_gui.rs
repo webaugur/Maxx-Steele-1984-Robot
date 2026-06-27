@@ -13,11 +13,11 @@ const SIM_VERSION: &str = env!("CARGO_PKG_VERSION");
 /// Frames stepped synchronously before the window opens (ROM boot + first LED prompt).
 const STARTUP_WARMUP_FRAMES: u64 = 180;
 
-/// Extra CPU steps per repaint while firmware is still booting.
-const BOOT_FRAMES_PER_TICK: u32 = 16;
+/// One `step_frame` per egui logic tick — no fast-forward bursts.
+const FRAMES_PER_TICK: u32 = 1;
 
-/// CPU frames to run after a remote key click (digit + auto-ENTER needs headroom).
-const KEYPRESS_DIGEST_FRAMES: u32 = 160;
+/// Spread keypad digestion across logic ticks (~1 s at real-time speed).
+const KEYPRESS_DIGEST_FRAMES: u32 = 64;
 
 pub fn run_live_gui(cart: CartImage, label: impl Into<String>) -> Result<(), String> {
     let label = label.into();
@@ -81,12 +81,7 @@ impl eframe::App for LiveSimApp {
             return;
         }
 
-        let frames = if self.firmware.status().keypad_waiting {
-            1
-        } else {
-            BOOT_FRAMES_PER_TICK
-        };
-        for _ in 0..frames {
+        for _ in 0..FRAMES_PER_TICK {
             self.firmware.step_frame();
         }
         ctx.request_repaint();
@@ -146,12 +141,17 @@ impl eframe::App for LiveSimApp {
                 let st = self.firmware.status();
                 ui.label(format!("cycles {}", st.cycles));
                 ui.separator();
-                ui.label("CPU speed");
+                let khz = self.firmware.options.cycles_per_frame.saturating_mul(60) / 1000;
+                ui.label(format!("~{khz} kHz"));
                 ui.add(
-                    egui::Slider::new(&mut self.firmware.options.cycles_per_frame, 500..=40_000)
-                        .logarithmic(true)
-                        .show_value(false),
+                    egui::Slider::new(
+                        &mut self.firmware.options.cycles_per_frame,
+                        500..=super::interactive::CYCLES_PER_FRAME_REALTIME * 4,
+                    )
+                    .logarithmic(true)
+                    .show_value(false),
                 );
+                ui.label(egui::RichText::new("slower ← → faster").small().weak());
             });
         });
 
@@ -163,10 +163,9 @@ impl eframe::App for LiveSimApp {
                     .auto_shrink([false, false])
                     .show(ui, |ui| {
                         if let Some(key) = remote_panel::remote_panel(ui) {
-                            // Apply immediately — egui runs `logic()` before `ui()`.
+                            // Latch now; logic() digests one frame per tick (no bulk fast-forward).
                             self.firmware.press_key(key);
-                            self.firmware.digest_keypress(KEYPRESS_DIGEST_FRAMES);
-                            self.keypress_frames_remaining = 0;
+                            self.keypress_frames_remaining = KEYPRESS_DIGEST_FRAMES;
                             ui.ctx().request_repaint();
                         }
                     });

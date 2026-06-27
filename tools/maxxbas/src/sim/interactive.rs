@@ -17,10 +17,13 @@ pub struct InteractiveOptions {
     pub cycles_per_frame: u64,
 }
 
+/// 455 kHz 6502 stepped at ~60 GUI frames/s ≈ one real-time second per second.
+pub const CYCLES_PER_FRAME_REALTIME: u64 = 455_000 / 60;
+
 impl Default for InteractiveOptions {
     fn default() -> Self {
         Self {
-            cycles_per_frame: 16_000,
+            cycles_per_frame: CYCLES_PER_FRAME_REALTIME,
         }
     }
 }
@@ -1632,6 +1635,7 @@ mod tests {
     fn represent_wire_after_rom_clears_75() {
         let cart = CartImage::from_bytes(MAXXOS.to_vec()).unwrap();
         let mut fw = InteractiveFirmware::new(cart, "MaxxOS").unwrap();
+        fw.options.cycles_per_frame = 16_000;
         fw.warmup(180);
         for _ in 0..8000 {
             fw.step_frame();
@@ -1658,6 +1662,7 @@ mod tests {
     fn latched_key_exits_e617_spin_without_loop() {
         let cart = CartImage::from_bytes(MAXXOS.to_vec()).unwrap();
         let mut fw = InteractiveFirmware::new(cart, "MaxxOS").unwrap();
+        fw.options.cycles_per_frame = 16_000;
         fw.warmup(180);
         for _ in 0..8000 {
             fw.step_frame();
@@ -1691,6 +1696,7 @@ mod tests {
     fn no_fdd9_irq_spin_after_answer() {
         let cart = CartImage::from_bytes(MAXXOS.to_vec()).unwrap();
         let mut fw = InteractiveFirmware::new(cart, "MaxxOS").unwrap();
+        fw.options.cycles_per_frame = 16_000;
         fw.set_auto_submit_enter(true);
         fw.warmup(180);
         fw.press_key(RemoteKey::Drive2);
