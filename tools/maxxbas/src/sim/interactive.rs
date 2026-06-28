@@ -1069,10 +1069,15 @@ impl InteractiveFirmware {
     }
 
     pub fn step(&mut self, cycles: u64) {
+        self.step_limited(cycles, None);
+    }
+
+    fn step_limited(&mut self, cycles: u64, max_instructions: Option<u32>) {
         if !self.running {
             return;
         }
         let limit = self.cpu.cycles + cycles;
+        let mut instructions = 0u32;
         while self.cpu.cycles < limit {
             self.bus_state.cpu_cycles = self.cpu.cycles;
             self.refresh_pending_from_latch();
@@ -1172,6 +1177,12 @@ impl InteractiveFirmware {
                 self.running = false;
                 break;
             }
+            if let Some(max) = max_instructions {
+                instructions += 1;
+                if instructions >= max {
+                    break;
+                }
+            }
             // Cart stored answer digit — mirror [digit][?] on the two-digit face.
             if pc_before == 0xA1A5 {
                 let digit = self.mem[0x35];
@@ -1247,6 +1258,26 @@ impl InteractiveFirmware {
     pub fn step_frame(&mut self) {
         let n = self.options.cycles_per_frame;
         self.step(n);
+    }
+
+    /// One 6502 instruction while halted (toolbar step-in).
+    pub fn step_instruction_halted(&mut self) {
+        if self.running {
+            return;
+        }
+        self.running = true;
+        self.step_limited(256, Some(1));
+        self.running = false;
+    }
+
+    /// One emulation frame worth of cycles while halted (toolbar step-frame).
+    pub fn step_frame_halted(&mut self) {
+        if self.running {
+            return;
+        }
+        self.running = true;
+        self.step_frame();
+        self.running = false;
     }
 
     /// Run firmware ahead of the first GUI paint so boot/prompt state is ready immediately.

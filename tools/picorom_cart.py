@@ -16,12 +16,13 @@ from __future__ import annotations
 
 import argparse
 import shutil
-import subprocess
+
 import sys
 from pathlib import Path
 
 from maxx_rom import CartImage, validate_cart
 from maxx_toolchain import is_maxxbas_source, resolve_rom_input, run_maxx
+from process_util import main_guard, run
 from project_paths import resolve_from_root
 
 # Named cartridge images in this repository
@@ -153,7 +154,7 @@ def cmd_upload(args: argparse.Namespace) -> int:
 
     cmd[0] = picorom
     print(" ".join(cmd))
-    return subprocess.call(cmd)
+    return run(cmd)
 
 
 def _common_args(parser: argparse.ArgumentParser) -> None:
@@ -214,4 +215,4 @@ def main(argv: list[str] | None = None) -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    main_guard(main)

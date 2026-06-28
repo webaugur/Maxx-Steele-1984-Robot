@@ -9,6 +9,7 @@ import sys
 import tempfile
 from pathlib import Path
 
+from process_util import INTERRUPTED, interrupted_exit, run
 from project_paths import project_root
 
 SOURCE_SUFFIXES = {".bas", ".maxx"}
@@ -31,7 +32,12 @@ def run_maxx(argv: list[str], *, check: bool = True) -> subprocess.CompletedProc
     env = os.environ.copy()
     tools = str(project_root() / "tools")
     env["PATH"] = f"{tools}{os.pathsep}{env.get('PATH', '')}"
-    return subprocess.run(cmd, check=check, text=True, capture_output=False, env=env)
+    rc = run(cmd, text=True, env=env)
+    if rc == INTERRUPTED:
+        interrupted_exit()
+    if check and rc != 0:
+        raise subprocess.CalledProcessError(rc, cmd)
+    return subprocess.CompletedProcess(cmd, rc)
 
 
 def compile_source(

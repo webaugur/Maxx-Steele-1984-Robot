@@ -20,6 +20,7 @@ import subprocess
 import sys
 from pathlib import Path
 
+from process_util import INTERRUPTED, main_guard, run
 from project_paths import project_root
 
 CRATE_DIR = project_root() / "tools" / "maxxbas"
@@ -80,7 +81,11 @@ def build_maxx(release: bool = True) -> Path:
         str(CRATE_DIR / "Cargo.toml"),
     ]
     print("building maxx toolchain...", file=sys.stderr)
-    subprocess.run(cmd, check=True)
+    try:
+        subprocess.run(cmd, check=True)
+    except KeyboardInterrupt:
+        print("\nBuild interrupted.", file=sys.stderr)
+        raise SystemExit(INTERRUPTED) from None
     path = RELEASE_BIN if release else DEBUG_BIN
     if not path.is_file():
         raise RuntimeError(f"build succeeded but {path} not found")
@@ -137,9 +142,8 @@ def main(argv: list[str] | None = None) -> int:
                     file=sys.stderr,
                 )
 
-    result = subprocess.run([str(binary), *rest], env=env)
-    return result.returncode
+    return run([str(binary), *rest], env=env, interrupt_msg="Interrupted.")
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    main_guard(main)

@@ -7,18 +7,18 @@ Legacy:  python3 tools/maxx_compile.py SOURCE [-o OUT]
 
 from __future__ import annotations
 
-import subprocess
 import sys
 from pathlib import Path
 
+from process_util import main_guard, run
 from project_paths import project_root
 
 
 def main(argv: list[str] | None = None) -> int:
     maxx = project_root() / "tools" / "maxx"
     args = list(argv) if argv is not None else sys.argv[1:]
-    return subprocess.call([sys.executable, str(maxx), "compile", *args])
+    return run([sys.executable, str(maxx), "compile", *args])
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    main_guard(main)

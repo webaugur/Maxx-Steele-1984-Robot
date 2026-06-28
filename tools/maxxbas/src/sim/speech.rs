@@ -35,6 +35,26 @@ fn asset_path(phrase: u8) -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR")).join(format!("assets/speech/rom/{phrase:02X}.ogg"))
 }
 
+/// Wall-clock length of a phrase OGG (for speech-bubble timing).
+pub fn phrase_duration_secs(phrase: u8) -> f64 {
+    let path = asset_path(phrase);
+    if !path.is_file() {
+        return 0.8;
+    }
+    let file = match File::open(&path) {
+        Ok(f) => f,
+        Err(_) => return 0.8,
+    };
+    let decoder = match Decoder::new(BufReader::new(file)) {
+        Ok(d) => d,
+        Err(_) => return 0.8,
+    };
+    decoder
+        .total_duration()
+        .unwrap_or(Duration::from_millis(800))
+        .as_secs_f64()
+}
+
 pub struct SpeechPlayer {
     stream: Option<OutputStream>,
     sink: Option<Sink>,
