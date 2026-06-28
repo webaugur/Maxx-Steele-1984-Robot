@@ -304,6 +304,58 @@ fn paint_toolbar_transport_btn(
     enabled && response.on_hover_text(hover_tip).clicked()
 }
 
+fn paint_cpu_trace_panel(ui: &mut egui::Ui, app: &mut LiveSimApp) {
+    ui.horizontal(|ui| {
+        toolbar_emoji(ui, "📜");
+        ui.separator();
+        let enabled = app.firmware.trace_enabled();
+        let mut trace_on = enabled;
+        if ui
+            .checkbox(&mut trace_on, emoji_font::rich_emoji("🔴"))
+            .on_hover_text("Record trace")
+            .changed()
+        {
+            app.firmware.set_trace_enabled(trace_on);
+        }
+        if ui
+            .button(emoji_font::rich_emoji_btn("🗑️"))
+            .on_hover_text("Clear trace")
+            .clicked()
+        {
+            app.firmware.clear_trace();
+            app.trace_display.clear();
+        }
+        if ui
+            .button(emoji_font::rich_emoji_btn("📋"))
+            .on_hover_text("Copy trace")
+            .clicked()
+        {
+            ui.ctx().copy_text(app.firmware.trace_text());
+        }
+        ui.checkbox(&mut app.trace_editable, emoji_font::rich_emoji("✏️"))
+            .on_hover_text("Edit trace");
+    });
+    ui.separator();
+    ui.allocate_ui_with_layout(
+        egui::vec2(ui.available_width(), ui.available_height().max(60.0)),
+        egui::Layout::top_down(egui::Align::LEFT),
+        |ui| {
+            egui::ScrollArea::vertical()
+                .auto_shrink([false, false])
+                .stick_to_bottom(true)
+                .show(ui, |ui| {
+                    ui.set_min_height(ui.max_rect().height());
+                    ui.add(
+                        egui::TextEdit::multiline(&mut app.trace_display)
+                            .font(egui::TextStyle::Monospace)
+                            .desired_width(f32::INFINITY)
+                            .interactive(app.trace_editable),
+                    );
+                });
+        },
+    );
+}
+
 fn paint_status_toolbar(
     ui: &mut egui::Ui,
     app: &LiveSimApp,
@@ -502,6 +554,8 @@ impl eframe::App for LiveSimApp {
 
         });
 
+        self.trace_display = self.firmware.trace_text();
+
         egui::Panel::left("remote")
             .resizable(false)
             .frame(egui::Frame {
@@ -511,14 +565,15 @@ impl eframe::App for LiveSimApp {
             .default_width(remote_panel::REMOTE_PANEL_W)
             .width_range(remote_panel::REMOTE_PANEL_W..=remote_panel::REMOTE_PANEL_W)
             .show_inside(ui, |ui| {
-                ui.set_width(remote_panel::REMOTE_PANEL_W);
+                ui.set_min_width(remote_panel::REMOTE_PANEL_W);
+                ui.set_max_width(remote_panel::REMOTE_PANEL_W);
+                let window_tile = self.skins.window_tile(ui.ctx());
+                plastic_skin::paint_rect(ui, ui.clip_rect(), window_tile);
                 egui::ScrollArea::vertical()
                     .auto_shrink([false, false])
                     .show(ui, |ui| {
                         ui.set_width(remote_panel::REMOTE_SHELL_W);
                         let now = ui.input(|i| i.time);
-                        let window_tile = self.skins.window_tile(ui.ctx());
-                        plastic_skin::paint_rect(ui, ui.clip_rect(), window_tile);
                         let (key, _shell) = remote_panel::paint_transmitter_face(
                             ui,
                             &mut self.skins,
@@ -533,65 +588,30 @@ impl eframe::App for LiveSimApp {
                     });
             });
 
-        self.trace_display = self.firmware.trace_text();
-        egui::Panel::bottom("cpu_trace")
-            .resizable(true)
-            .default_size(240.0)
-            .min_size(140.0)
+        egui::Panel::left("cpu_trace")
+            .resizable(false)
+            .frame(egui::Frame {
+                inner_margin: egui::Margin::ZERO,
+                ..Default::default()
+            })
+            .default_width(remote_panel::REMOTE_PANEL_W)
+            .width_range(remote_panel::REMOTE_PANEL_W..=remote_panel::REMOTE_PANEL_W)
+            .show_inside(ui, |ui| {
+                ui.set_min_width(remote_panel::REMOTE_PANEL_W);
+                ui.set_max_width(remote_panel::REMOTE_PANEL_W);
+                let window_tile = self.skins.window_tile(ui.ctx());
+                plastic_skin::paint_rect(ui, ui.clip_rect(), window_tile);
+                paint_cpu_trace_panel(ui, self);
+            });
+
+        egui::CentralPanel::default()
+            .frame(egui::Frame {
+                inner_margin: egui::Margin::ZERO,
+                ..Default::default()
+            })
             .show_inside(ui, |ui| {
                 let window_tile = self.skins.window_tile(ui.ctx());
                 plastic_skin::paint_rect(ui, ui.clip_rect(), window_tile);
-                ui.horizontal(|ui| {
-                    toolbar_emoji(ui, "📜");
-                    ui.separator();
-                    let enabled = self.firmware.trace_enabled();
-                    let mut trace_on = enabled;
-                    if ui
-                        .checkbox(&mut trace_on, emoji_font::rich_emoji("🔴"))
-                        .on_hover_text("Record trace")
-                        .changed()
-                    {
-                        self.firmware.set_trace_enabled(trace_on);
-                    }
-                    if ui
-                        .button(emoji_font::rich_emoji_btn("🗑️"))
-                        .on_hover_text("Clear trace")
-                        .clicked()
-                    {
-                        self.firmware.clear_trace();
-                        self.trace_display.clear();
-                    }
-                    if ui
-                        .button(emoji_font::rich_emoji_btn("📋"))
-                        .on_hover_text("Copy trace")
-                        .clicked()
-                    {
-                        ui.ctx().copy_text(self.firmware.trace_text());
-                    }
-                    ui.checkbox(&mut self.trace_editable, emoji_font::rich_emoji("✏️"))
-                        .on_hover_text("Edit trace");
-                });
-                ui.separator();
-                let trace_h = ui.available_height().max(60.0);
-                egui::ScrollArea::vertical()
-                    .auto_shrink([false, false])
-                    .stick_to_bottom(true)
-                    .max_height(trace_h)
-                    .show(ui, |ui| {
-                        ui.add(
-                            egui::TextEdit::multiline(&mut self.trace_display)
-                                .font(egui::TextStyle::Monospace)
-                                .desired_width(f32::INFINITY)
-                                .desired_rows(8)
-                                .interactive(self.trace_editable),
-                        );
-                    });
-            });
-
-        egui::CentralPanel::default().show_inside(ui, |ui| {
-            let window_tile = self.skins.window_tile(ui.ctx());
-            plastic_skin::paint_rect(ui, ui.clip_rect(), window_tile);
-            ui.vertical(|ui| {
                 let (rect, _resp) = ui.allocate_exact_size(
                     egui::vec2(ui.available_width(), ui.available_height().max(80.0)),
                     egui::Sense::hover(),
@@ -603,7 +623,6 @@ impl eframe::App for LiveSimApp {
                     self.speech_bubble.as_ref(),
                 );
             });
-        });
 
         self.boot_gate.note_ui_painted(ui.ctx());
     }
@@ -646,77 +665,119 @@ fn paint_live_status_chip(ui: &mut egui::Ui, app: &LiveSimApp, st: &super::inter
 }
 
 fn paint_live_robot(ui: &egui::Ui, rect: egui::Rect, led: &str, speech: Option<&SpeechBubble>) {
-    let painter = ui.painter_at(rect);
-    let cx = rect.center().x;
-    let base_y = rect.bottom() - 48.0;
-    let body_top = base_y - 120.0;
+    const DESIGN_W: f32 = 360.0;
+    const DESIGN_H: f32 = 240.0;
+
+    if rect.width() < 8.0 || rect.height() < 8.0 || !ui.is_rect_visible(rect) {
+        return;
+    }
+
+    let scale = (rect.width() / DESIGN_W).min(rect.height() / DESIGN_H);
+    let drawn = egui::vec2(DESIGN_W * scale, DESIGN_H * scale);
+    let origin = rect.center() - drawn * 0.5;
+    let s = |v: f32| v * scale;
+
+    let painter = ui.painter_at(rect).with_clip_rect(rect);
+    let cx = origin.x + DESIGN_W * 0.5 * scale;
+    let base_y = origin.y + (DESIGN_H - 48.0) * scale;
+    let body_top = base_y - s(120.0);
 
     painter.rect_filled(
         egui::Rect::from_min_max(
-            egui::pos2(cx - 70.0, body_top),
-            egui::pos2(cx + 70.0, base_y - 8.0),
+            egui::pos2(cx - s(70.0), body_top),
+            egui::pos2(cx + s(70.0), base_y - s(8.0)),
         ),
-        10.0,
+        s(10.0),
         egui::Color32::from_rgb(70, 110, 160),
     );
 
     let head = egui::Rect::from_center_size(
-        egui::pos2(cx, body_top + 28.0),
-        egui::vec2(90.0, 32.0),
+        egui::pos2(cx, body_top + s(28.0)),
+        egui::vec2(s(90.0), s(32.0)),
     );
-    painter.rect_filled(head, 4.0, egui::Color32::from_gray(12));
+    painter.rect_filled(head, s(4.0), egui::Color32::from_gray(12));
     let display = if led.trim().is_empty() { "__" } else { led };
     painter.text(
         head.center(),
         egui::Align2::CENTER_CENTER,
         display,
-        egui::FontId::monospace(26.0),
+        egui::FontId::monospace(s(26.0)),
         egui::Color32::from_rgb(80, 255, 120),
     );
 
     for dx in [-42.0_f32, 42.0] {
-        painter.circle_filled(egui::pos2(cx + dx, base_y), 18.0, egui::Color32::from_gray(70));
+        painter.circle_filled(egui::pos2(cx + s(dx), base_y), s(18.0), egui::Color32::from_gray(70));
     }
 
     if let Some(bubble) = speech {
-        paint_speech_bubble(&painter, head, &bubble.text);
+        paint_speech_bubble(&painter, head, &bubble.text, rect, scale);
     }
 }
 
-fn paint_speech_bubble(painter: &egui::Painter, head: egui::Rect, text: &str) {
-    let font = speech_font::id(17.0);
-    let wrap_w = 220.0;
+fn paint_speech_bubble(
+    painter: &egui::Painter,
+    head: egui::Rect,
+    text: &str,
+    bounds: egui::Rect,
+    scale: f32,
+) {
+    let font = speech_font::id(17.0 * scale);
+    let wrap_w = 220.0 * scale;
     let galley = painter.layout(
         text.to_owned(),
         font,
         egui::Color32::BLACK,
         wrap_w,
     );
-    let pad = egui::vec2(14.0, 10.0);
+    let pad = egui::vec2(14.0 * scale, 10.0 * scale);
     let bubble_size = galley.size() + pad * 2.0;
-    let anchor = head.right_top() + egui::vec2(10.0, -bubble_size.y - 8.0);
-    let bubble_rect = egui::Rect::from_min_size(anchor, bubble_size);
-    let shadow_rect = bubble_rect.translate(egui::vec2(4.0, 5.0));
+    let prefer_right = head.right_top() + egui::vec2(10.0 * scale, -bubble_size.y - 8.0 * scale);
+    let prefer_left =
+        head.left_top() + egui::vec2(-bubble_size.x - 10.0 * scale, -bubble_size.y - 8.0 * scale);
+    let right_rect = egui::Rect::from_min_size(prefer_right, bubble_size);
+    let left_rect = egui::Rect::from_min_size(prefer_left, bubble_size);
+    let anchor = if right_rect.right() <= bounds.right() {
+        prefer_right
+    } else if left_rect.left() >= bounds.left() {
+        prefer_left
+    } else {
+        egui::pos2(
+            (bounds.right() - bubble_size.x).max(bounds.left()),
+            prefer_right.y.max(bounds.top()),
+        )
+    };
+    let bubble_rect = egui::Rect::from_min_size(anchor, bubble_size).intersect(bounds);
+    let shadow_rect = bubble_rect.translate(egui::vec2(4.0 * scale, 5.0 * scale));
+    let corner = 12.0 * scale;
 
-    painter.rect_filled(shadow_rect, 12.0, egui::Color32::from_black_alpha(90));
-    painter.rect_filled(bubble_rect, 12.0, egui::Color32::from_rgb(255, 255, 252));
+    painter.rect_filled(shadow_rect, corner, egui::Color32::from_black_alpha(90));
+    painter.rect_filled(bubble_rect, corner, egui::Color32::from_rgb(255, 255, 252));
     painter.rect_stroke(
         bubble_rect,
-        12.0,
-        egui::Stroke::new(2.0, egui::Color32::BLACK),
+        corner,
+        egui::Stroke::new(2.0 * scale, egui::Color32::BLACK),
         egui::StrokeKind::Outside,
     );
     painter.galley(bubble_rect.min + pad, galley, egui::Color32::BLACK);
 
-    let tail_base = egui::pos2(bubble_rect.left() + 18.0, bubble_rect.bottom() - 2.0);
-    let tail_tip = head.right_center() + egui::vec2(4.0, 0.0);
+    let tail_on_right = bubble_rect.left() >= head.right() - 1.0;
+    let tail_base = if tail_on_right {
+        egui::pos2(bubble_rect.left() + 18.0 * scale, bubble_rect.bottom() - 2.0 * scale)
+    } else {
+        egui::pos2(bubble_rect.right() - 18.0 * scale, bubble_rect.bottom() - 2.0 * scale)
+    };
+    let tail_tip = if tail_on_right {
+        head.right_center() + egui::vec2(4.0 * scale, 0.0)
+    } else {
+        head.left_center() + egui::vec2(-4.0 * scale, 0.0)
+    };
     painter.add(egui::Shape::convex_polygon(
         vec![
             tail_base,
-            tail_base + egui::vec2(14.0, 0.0),
+            tail_base + egui::vec2(14.0 * scale * if tail_on_right { 1.0 } else { -1.0 }, 0.0),
             tail_tip,
         ],
         egui::Color32::from_rgb(255, 255, 252),
-        egui::Stroke::new(2.0, egui::Color32::BLACK),
+        egui::Stroke::new(2.0 * scale, egui::Color32::BLACK),
     ));
 }
