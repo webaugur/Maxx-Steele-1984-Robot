@@ -8,6 +8,8 @@ use egui::TextBuffer as _;
 use super::interactive::InteractiveFirmware;
 use super::keypad::RemoteKey;
 use super::plastic_skin;
+use super::robot::LiveRobotPose;
+use super::robot_view;
 use super::remote_branding::{self, RemoteBranding, RemoteStatusLeds};
 use super::remote_panel;
 use super::speech_font;
@@ -777,12 +779,9 @@ impl eframe::App for LiveSimApp {
                         });
                 });
                 ui.scope_builder(egui::UiBuilder::new().max_rect(robot_rect), |ui| {
-                    paint_live_robot(
-                        ui,
-                        robot_rect,
-                        &self.firmware.led_chars_settled(),
-                        self.speech_bubble.as_ref(),
-                    );
+                    let led = self.firmware.led_chars_settled();
+                    let pose = self.firmware.live_robot_pose();
+                    paint_live_robot(ui, robot_rect, &led, pose, self.speech_bubble.as_ref());
                 });
             });
 
@@ -824,52 +823,44 @@ fn paint_live_status_chip(ui: &mut egui::Ui, app: &LiveSimApp, st: &super::inter
     }
 }
 
-fn paint_live_robot(ui: &egui::Ui, rect: egui::Rect, led: &str, speech: Option<&SpeechBubble>) {
-    const DESIGN_W: f32 = 360.0;
-    const DESIGN_H: f32 = 240.0;
-
+fn paint_live_robot(
+    ui: &egui::Ui,
+    rect: egui::Rect,
+    led: &str,
+    pose: &LiveRobotPose,
+    speech: Option<&SpeechBubble>,
+) {
     if rect.width() < 8.0 || rect.height() < 8.0 || !ui.is_rect_visible(rect) {
         return;
     }
 
-    let scale = (rect.width() / DESIGN_W).min(rect.height() / DESIGN_H);
-    let drawn = egui::vec2(DESIGN_W * scale, DESIGN_H * scale);
-    let origin = egui::pos2(rect.left() + (rect.width() - drawn.x) * 0.5, rect.top());
-    let s = |v: f32| v * scale;
-
     let painter = ui.painter_at(rect).with_clip_rect(rect);
-    let cx = origin.x + DESIGN_W * 0.5 * scale;
-    let base_y = origin.y + (DESIGN_H - 48.0) * scale;
-    let body_top = base_y - s(120.0);
-
-    painter.rect_filled(
-        egui::Rect::from_min_max(
-            egui::pos2(cx - s(70.0), body_top),
-            egui::pos2(cx + s(70.0), base_y - s(8.0)),
-        ),
-        s(10.0),
-        egui::Color32::from_rgb(70, 110, 160),
-    );
-
-    let head = egui::Rect::from_center_size(
-        egui::pos2(cx, body_top + s(28.0)),
-        egui::vec2(s(90.0), s(32.0)),
-    );
-    painter.rect_filled(head, s(4.0), egui::Color32::from_gray(12));
-    let display = if led.trim().is_empty() { "__" } else { led };
-    painter.text(
-        head.center(),
-        egui::Align2::CENTER_CENTER,
+    let display = if led.trim().is_empty() { None } else { Some(led) };
+    robot_view::paint_robot_playfield(
+        &painter,
+        rect,
+        &pose.state,
+        &pose.active_kind,
         display,
-        egui::FontId::monospace(s(26.0)),
-        egui::Color32::from_rgb(80, 255, 120),
+        false,
     );
-
-    for dx in [-42.0_f32, 42.0] {
-        painter.circle_filled(egui::pos2(cx + s(dx), base_y), s(18.0), egui::Color32::from_gray(70));
-    }
 
     if let Some(bubble) = speech {
+        let plan_h = rect.height() * 0.38;
+        let robot_h = rect.height() - plan_h - 16.0;
+        let robot_rect = egui::Rect::from_min_max(
+            egui::pos2(rect.left() + 12.0, rect.top() + 8.0),
+            egui::pos2(rect.right() - 12.0, rect.top() + 8.0 + robot_h),
+        );
+        let cx = robot_rect.center().x;
+        let base_y = robot_rect.bottom() - 36.0;
+        let body_h = 90.0 + (pose.state.arms.min(64) as f32 / 64.0) * 40.0;
+        let body_top = base_y - body_h;
+        let head = egui::Rect::from_center_size(
+            egui::pos2(cx, body_top + 22.0),
+            egui::vec2(70.0, 28.0),
+        );
+        let scale = (rect.width() / 360.0).min(rect.height() / 240.0);
         paint_speech_bubble(&painter, head, &bubble.text, rect, scale);
     }
 }

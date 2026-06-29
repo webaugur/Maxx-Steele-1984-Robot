@@ -115,7 +115,7 @@ pub fn decode_program(data: &[u8], base_addr: u16, start: usize) -> Vec<ProgramS
     while i + 1 < data.len() {
         let opcode = data[i];
         let operand = data[i + 1];
-        let kind = classify_opcode(opcode, operand);
+        let kind = opcode_kind(opcode, operand);
         let comment = step_comment(&kind);
         steps.push(ProgramStep {
             index,
@@ -135,7 +135,7 @@ pub fn decode_program(data: &[u8], base_addr: u16, start: usize) -> Vec<ProgramS
     steps
 }
 
-fn classify_opcode(opcode: u8, operand: u8) -> StepKind {
+pub fn opcode_kind(opcode: u8, operand: u8) -> StepKind {
     match opcode {
         0x00 => StepKind::Left { distance: operand },
         0x01 => StepKind::Forward { distance: operand },

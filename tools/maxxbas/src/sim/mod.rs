@@ -1,6 +1,6 @@
 //! Unified Maxx Steele simulator — program trace, robot model, firmware CPU.
 //!
-//! **Audio checkpoint (v0.2.77):** Live sim verified — startup tune 1, cart/ROM PLAY tunes,
+//! **Audio checkpoint (v0.2.78):** Live sim verified — startup tune 1, cart/ROM PLAY tunes,
 //! SAM speech phrases, and instruction waits (`$E504` / `$F47E`) all play correctly.
 
 mod audio;
@@ -18,6 +18,7 @@ mod ui_font;
 mod remote_panel;
 mod report;
 mod robot;
+mod robot_view;
 mod emoji_font;
 mod music;
 mod speech;

@@ -6,6 +6,7 @@ use mos6502::memory::Bus;
 
 use super::display::LedDisplay;
 use super::keypad::RemoteKey;
+use super::robot::{sync_live_robot_pose, LiveRobotPose};
 use super::speech::{self, SpeechPlayer};
 use super::patches::{MemPatch, PatchSet};
 use super::trace::TraceBuffer;
@@ -219,6 +220,8 @@ pub struct InteractiveFirmware {
     music: super::music::MusicPlayer,
     /// Visits to the ROM music bitstream decoder (`$EF9C` / `$F0B8`) without IRQ feedback.
     music_decode_streak: u32,
+    /// Plan grid + front pose replayed from program RAM during execute mode.
+    live_robot: LiveRobotPose,
 }
 
 fn interactive_patches() -> PatchSet {
@@ -1029,6 +1032,7 @@ impl InteractiveFirmware {
             speech: SpeechPlayer::new(true),
             music: super::music::MusicPlayer::new(true),
             music_decode_streak: 0,
+            live_robot: LiveRobotPose::default(),
         })
     }
 
@@ -1070,9 +1074,16 @@ impl InteractiveFirmware {
             .is_some_and(super::firmware::cart_returns_to_main_loop);
         self.keys_pressed = 0;
         self.music_decode_streak = 0;
+        self.live_robot = LiveRobotPose::default();
         self.speech.stop();
         self.music.stop();
         Ok(())
+    }
+
+    /// Replay bytecode up to the current program pointer for the live playfield.
+    pub fn live_robot_pose(&mut self) -> &LiveRobotPose {
+        sync_live_robot_pose(self.mem.as_ref(), &mut self.live_robot);
+        &self.live_robot
     }
 
     /// Live GUI: digit keys auto-chain ENTER so one click submits the MaxxOS answer.
