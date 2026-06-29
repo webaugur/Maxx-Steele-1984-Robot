@@ -214,7 +214,7 @@ impl MusicPlayer {
         tune: u8,
         mem: &[u8; 65536],
         audio: &mut AudioOutput,
-        speech: &mut SpeechPlayer,
+        _speech: &mut SpeechPlayer,
         cpu_cycles: u64,
     ) -> bool {
         self.last_tune = Some(tune);
@@ -224,7 +224,6 @@ impl MusicPlayer {
         }
 
         self.stop();
-        speech.stop();
 
         let (samples, sample_rate) = if tune == 0 {
             (synthesize_cart_tune(mem), SAMPLE_RATE)
@@ -292,6 +291,9 @@ pub fn enter_play_tune(
     let Some(tune) = tune_for_play_hook(cpu_pc, mem) else {
         return false;
     };
+    if speech.speech_busy(cpu_cycles) {
+        return false;
+    }
     if player.last_tune == Some(tune)
         && player.has_active_sink()
         && player.music_busy(cpu_cycles)

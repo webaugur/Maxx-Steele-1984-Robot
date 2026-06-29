@@ -862,7 +862,7 @@ fn finish_music_playback(
 }
 
 fn motor_only_busy(mem: &[u8; 65536]) -> bool {
-    (mem[0x08] & 0x0C) != 0 || mem[0x05] != 0 || mem[0x5B] != 0
+    (mem[0x08] & 0x0C) != 0 || mem[0x05] != 0
 }
 
 fn clear_motor_busy_flags(mem: &mut [u8; 65536]) {
@@ -877,6 +877,7 @@ fn emulate_motor_hw_waits(
     mem: &mut [u8; 65536],
     cpu: &mut CPU<LiveBus, Cmos6502>,
     music: &super::music::MusicPlayer,
+    speech: &super::speech::SpeechPlayer,
 ) {
     let pc = cpu.registers.program_counter;
     if pc == 0xE9FE {
@@ -885,7 +886,11 @@ fn emulate_motor_hw_waits(
         return;
     }
     if pc == 0xE516 {
-        if mem[0x2B] != 0 || music.music_busy(cpu.cycles) {
+        if mem[0x2B] != 0
+            || music.music_busy(cpu.cycles)
+            || mem[0x5B] != 0
+            || speech.speech_busy(cpu.cycles)
+        {
             cpu.registers.program_counter = 0xE504;
             return;
         }
@@ -955,21 +960,9 @@ fn emulate_speech_bus_wait(
         return true;
     }
     if let Some(next) = speech::enter_say_phrase(pc, cpu.registers.index_x, speech, audio, cpu.cycles) {
-        mem[0x5B] = 0x01;
+        mem[0x5B] = 0x80;
         cpu.registers.program_counter = next;
         cpu.cycles = cpu.cycles.saturating_add(1);
-        return true;
-    }
-    if let Some(done) = speech::spin_wait_speech(pc, speech, cpu.cycles) {
-        if done {
-            mem[0x5B] = 0;
-            speech.clear_busy();
-            cpu.registers.program_counter = speech::ROM_SPEECH_DONE;
-            cpu.cycles = cpu.cycles.saturating_add(6);
-            return true;
-        }
-        mem[0x5B] = 0x01;
-        cpu.cycles = cpu.cycles.saturating_add(6);
         return true;
     }
     false
@@ -1354,7 +1347,12 @@ impl InteractiveFirmware {
                 &mut self.music_decode_streak,
                 &self.music,
             );
-            emulate_motor_hw_waits(self.mem.as_mut(), &mut self.cpu, &self.music);
+            emulate_motor_hw_waits(
+                self.mem.as_mut(),
+                &mut self.cpu,
+                &self.music,
+                &self.speech,
+            );
             emulate_factory_demo_waits(self.mem.as_mut(), &mut self.cpu, self.factory_demo_cart);
             super::music::enter_play_tune(
                 self.cpu.registers.program_counter,
@@ -1454,6 +1452,11 @@ impl InteractiveFirmware {
             super::music::sync_music_voice_busy(
                 self.mem.as_mut(),
                 &self.music,
+                self.cpu.cycles,
+            );
+            super::speech::sync_speech_voice_busy(
+                self.mem.as_mut(),
+                &self.speech,
                 self.cpu.cycles,
             );
             if let Some(max) = max_instructions {
@@ -1986,8 +1989,8 @@ mod tests {
         fw.step(1);
         assert_eq!(fw.cpu.registers.program_counter, 0xF47E);
         assert_eq!(fw.speech.last_phrase(), Some(0x13));
-        assert_eq!(fw.mem[0x5B], 0x01);
-        for _ in 0..250 {
+        assert_eq!(fw.mem[0x5B], 0x80);
+        for _ in 0..2500 {
             fw.step_frame();
             if fw.speech.speech_wait_done(fw.cpu.cycles) {
                 break;
@@ -3010,15 +3013,14 @@ mod tests {
         fw.set_speech_enabled(false);
         fw.set_music_enabled(false);
         fw.warm_audio();
-        fw.set_speech_enabled(true);
         fw.set_music_enabled(true);
         fw.set_running(true);
-        for frame in 0..2500 {
+        for frame in 0..12_000 {
             fw.step_frame();
             if fw.music.last_tune() == Some(6) {
                 return;
             }
-            if frame == 2499 {
+            if frame == 11_999 {
                 panic!(
                     "never started Reveille after boot gate (last_tune={:?} pc=${:04X} $0D=${:02X} $11=${:02X} $13=${:02X})",
                     fw.music.last_tune(),
@@ -3074,6 +3076,36 @@ mod tests {
         );
         assert_eq!(fw.music.last_tune(), Some(6));
         assert!(fw.music.music_busy(fw.cpu.cycles));
+    }
+
+    #[test]
+    fn cart_say_waits_at_e504_until_speech_finishes() {
+        let cart = CartImage::from_bytes(MAXXOS.to_vec()).unwrap();
+        let mut fw = InteractiveFirmware::new(cart, "MaxxOS").unwrap();
+        fw.warm_audio();
+        fw.mem[0x11] = 0x83;
+        fw.mem[0x13] = 0x10;
+        fw.cpu.registers.program_counter = 0xF44B;
+        fw.step_frame();
+        assert_eq!(fw.speech.last_phrase(), Some(0x10));
+        fw.cpu.registers.program_counter = 0xE504;
+        let mut waited_while_busy = false;
+        let mut left_wait = false;
+        for _ in 0..50_000 {
+            fw.step_frame();
+            let pc = fw.cpu.registers.program_counter;
+            let busy = fw.speech.speech_busy(fw.cpu.cycles);
+            if busy && (0xE504..=0xE516).contains(&pc) {
+                waited_while_busy = true;
+                assert_ne!(fw.mem[0x5B], 0, "speech flag cleared while audio still playing");
+            }
+            if !busy && !(0xE504..=0xE516).contains(&pc) {
+                left_wait = true;
+                break;
+            }
+        }
+        assert!(waited_while_busy, "never waited in PLAY loop while speech was busy");
+        assert!(left_wait, "stuck in PLAY wait after speech finished");
     }
 
     #[test]
@@ -3283,7 +3315,7 @@ mod tests {
         fw.cpu.registers.stack_pointer.0 = 0xFD;
         fw.mem[0x01FE] = 0x34;
         fw.mem[0x01FF] = 0xA0;
-        for _ in 0..250 {
+        for _ in 0..2500 {
             fw.step_frame();
             if fw.cpu.registers.program_counter != 0xF47E {
                 break;

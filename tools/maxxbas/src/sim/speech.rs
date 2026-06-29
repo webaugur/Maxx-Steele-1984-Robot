@@ -139,17 +139,16 @@ impl SpeechPlayer {
     }
 
     pub fn speech_busy(&self, cpu_cycles: u64) -> bool {
+        if self.sink.as_ref().is_some_and(|sink| !sink.empty()) {
+            return true;
+        }
         self.busy_until_cycles
             .is_some_and(|until| cpu_cycles < until)
     }
 
     /// True once audio has finished (sink drained or cycle budget elapsed).
     pub fn speech_wait_done(&self, cpu_cycles: u64) -> bool {
-        let sink_done = self
-            .sink
-            .as_ref()
-            .is_none_or(|sink| sink.empty());
-        sink_done || !self.speech_busy(cpu_cycles)
+        !self.speech_busy(cpu_cycles)
     }
 
     pub fn is_playing(&self, cpu_cycles: u64) -> bool {
@@ -293,6 +292,15 @@ pub fn spin_wait_speech(cpu_pc: u16, player: &SpeechPlayer, cpu_cycles: u64) -> 
         return None;
     }
     Some(player.speech_wait_done(cpu_cycles))
+}
+
+/// Keep `$5B` set while audio is still playing so `$E504` / `$F47E` wait like hardware.
+pub fn sync_speech_voice_busy(mem: &mut [u8; 65536], player: &SpeechPlayer, cpu_cycles: u64) {
+    if player.speech_busy(cpu_cycles) {
+        mem[0x5B] = 0x80;
+    } else if mem[0x5B] != 0 {
+        mem[0x5B] = 0;
+    }
 }
 
 #[cfg(test)]

@@ -28,8 +28,8 @@ impl AudioOutput {
         }
     }
 
+    /// Returns a mixer sink only after [`warm`](Self::warm) — avoids opening audio during headless tests.
     pub fn open_sink(&mut self) -> Option<Sink> {
-        self.ensure();
         self.stream
             .as_ref()
             .map(|stream| Sink::connect_new(stream.mixer()))
