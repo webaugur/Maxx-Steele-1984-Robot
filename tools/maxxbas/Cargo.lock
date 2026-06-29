@@ -2080,7 +2080,7 @@ dependencies = [
 
 [[package]]
 name = "maxxbas"
-version = "0.2.37"
+version = "0.2.39"
 dependencies = [
  "clap",
  "eframe",

@@ -82,13 +82,11 @@ pub fn paint_status_leds(ui: &mut egui::Ui, leds: &RemoteStatusLeds, now: f64) {
     for (emoji, color, on) in slots {
         let center = egui::pos2(x, cy);
         paint_led_bevel_hole(&painter, center, hole_r, led_d * 0.5, color, on);
-        painter.text(
+        let label_rect = egui::Rect::from_center_size(
             center + egui::vec2(-hole_r - 5.0, 0.0),
-            egui::Align2::RIGHT_CENTER,
-            emoji,
-            emoji_font::id(13.0),
-            egui::Color32::WHITE,
+            egui::vec2(18.0, 18.0),
         );
+        emoji_font::paint_centered(&painter, label_rect, emoji, 13.0);
         x -= slot_pitch;
     }
 }

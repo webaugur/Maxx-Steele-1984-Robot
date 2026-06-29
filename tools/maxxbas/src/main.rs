@@ -75,6 +75,7 @@ enum Commands {
         dry_run: bool,
     },
     /// Simulate program + robot model + patched internal ROM (unified simulator)
+    #[command(visible_alias = "sim")]
     Simulate {
         /// .bas, .maxx, or .532
         file: PathBuf,

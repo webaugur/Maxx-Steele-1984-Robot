@@ -12,7 +12,9 @@ static INSTALLED: AtomicBool = AtomicBool::new(false);
 
 const SYSTEM_CANDIDATES: &[&str] = &[
     "/usr/share/fonts/truetype/noto/NotoColorEmoji.ttf",
+    "/usr/share/fonts/noto/NotoColorEmoji.ttf",
     "/usr/share/fonts/truetype/noto/NotoEmoji-Regular.ttf",
+    "/usr/share/fonts/opentype/noto/NotoColorEmoji.ttf",
     "/usr/share/fonts/truetype/joypixels/JoyPixels.ttf",
     "C:\\Windows\\Fonts\\seguiemj.ttf",
     "C:\\Windows\\Fonts\\SegoeUIEmoji.ttf",
@@ -49,10 +51,16 @@ pub fn install(ctx: &egui::Context) {
     ctx.add_font(FontInsert::new(
         FAMILY,
         FontData::from_owned(data.clone()),
-        vec![InsertFontFamily {
-            family: egui::FontFamily::Name(FAMILY.into()),
-            priority: FontPriority::Highest,
-        }],
+        vec![
+            InsertFontFamily {
+                family: egui::FontFamily::Name(FAMILY.into()),
+                priority: FontPriority::Highest,
+            },
+            InsertFontFamily {
+                family: egui::FontFamily::Proportional,
+                priority: FontPriority::Lowest,
+            },
+        ],
     ));
     ctx.add_font(FontInsert::new(
         "toolbar_emoji_fallback",
@@ -76,4 +84,18 @@ pub fn rich_emoji(text: impl Into<String>) -> egui::RichText {
 
 pub fn rich_emoji_btn(text: impl Into<String>) -> egui::RichText {
     egui::RichText::new(text).font(id(16.0))
+}
+
+/// Paint emoji through the galley path (required for Noto Color Emoji; `painter.text` fails).
+pub fn paint_centered(
+    painter: &egui::Painter,
+    rect: egui::Rect,
+    text: &str,
+    size: f32,
+) {
+    let font = id(size);
+    // Color emoji fonts ignore tint; WHITE keeps bitmap glyphs visible.
+    let galley = painter.layout_no_wrap(text.to_owned(), font, egui::Color32::WHITE);
+    let pos = rect.center() - galley.size() * 0.5;
+    painter.galley(pos, galley, egui::Color32::WHITE);
 }

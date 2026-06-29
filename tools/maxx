@@ -26,7 +26,6 @@ from project_paths import project_root
 CRATE_DIR = project_root() / "tools" / "maxxbas"
 RELEASE_BIN = CRATE_DIR / "target" / "release" / "maxx"
 DEBUG_BIN = CRATE_DIR / "target" / "debug" / "maxx"
-BIN_INSTALL = project_root() / "tools" / "bin" / "maxx"
 
 
 def find_maxx_binary() -> Path | None:
@@ -44,31 +43,6 @@ def binary_version(path: Path) -> str:
         check=False,
     )
     return (proc.stdout or proc.stderr or "").strip()
-
-
-def install_release_binary(source: Path) -> None:
-    """Keep tools/bin/maxx in sync with target/release/maxx (PATH may prefer tools/bin)."""
-    if not source.is_file():
-        return
-    BIN_INSTALL.parent.mkdir(parents=True, exist_ok=True)
-    data = source.read_bytes()
-    try:
-        BIN_INSTALL.write_bytes(data)
-        BIN_INSTALL.chmod(0o755)
-        return
-    except OSError:
-        pass
-    staging = BIN_INSTALL.with_name("maxx.new")
-    staging.write_bytes(data)
-    staging.chmod(0o755)
-    try:
-        staging.replace(BIN_INSTALL)
-    except OSError:
-        print(
-            f"note: could not update {BIN_INSTALL} (is the sim GUI still running?). "
-            f"Using {source} directly.",
-            file=sys.stderr,
-        )
 
 
 def build_maxx(release: bool = True) -> Path:
@@ -89,14 +63,11 @@ def build_maxx(release: bool = True) -> Path:
     path = RELEASE_BIN if release else DEBUG_BIN
     if not path.is_file():
         raise RuntimeError(f"build succeeded but {path} not found")
-    if release:
-        install_release_binary(path)
     return path
 
 
 def ensure_maxx() -> Path:
     if RELEASE_BIN.is_file():
-        install_release_binary(RELEASE_BIN)
         return RELEASE_BIN
     found = find_maxx_binary()
     if found is not None:
@@ -109,6 +80,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--debug-build", action="store_true", help=argparse.SUPPRESS)
     parser.add_argument("--no-build", action="store_true", help=argparse.SUPPRESS)
     args, rest = parser.parse_known_args(list(argv) if argv is not None else None)
+    if rest and rest[0] == "sim":
+        rest = ["simulate", *rest[1:]]
 
     if args.no_build:
         binary = find_maxx_binary()
@@ -132,15 +105,6 @@ def main(argv: list[str] | None = None) -> int:
         ver = binary_version(binary)
         if ver:
             print(f"using {ver} ({binary})", file=sys.stderr)
-        if RELEASE_BIN.is_file() and BIN_INSTALL.is_file() and binary.resolve() != BIN_INSTALL.resolve():
-            inst_ver = binary_version(BIN_INSTALL)
-            rel_ver = binary_version(RELEASE_BIN)
-            if inst_ver != rel_ver:
-                print(
-                    f"note: {BIN_INSTALL} is {inst_ver} but release is {rel_ver}; "
-                    "close the GUI and re-run to refresh PATH.",
-                    file=sys.stderr,
-                )
 
     return run([str(binary), *rest], env=env, interrupt_msg="Interrupted.")
 

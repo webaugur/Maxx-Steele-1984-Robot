@@ -10,6 +10,7 @@ mod patches;
 mod plastic_skin;
 mod remote_branding;
 mod remote_font;
+mod ui_font;
 mod remote_panel;
 mod report;
 mod robot;
@@ -17,6 +18,7 @@ mod emoji_font;
 mod speech;
 mod speech_font;
 mod trace;
+mod trace_breakpoint;
 mod visual;
 
 pub use gui::run_gui;

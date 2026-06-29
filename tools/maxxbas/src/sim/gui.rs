@@ -20,8 +20,11 @@ pub fn run_gui(report: SimulationReport) -> Result<(), String> {
         ..Default::default()
     };
 
-    eframe::run_native(&title, options, Box::new(|_cc| Ok(Box::new(app))))
-        .map_err(|e| format!("GUI error: {e}"))
+    eframe::run_native(&title, options, Box::new(|cc| {
+        super::ui_font::install(&cc.egui_ctx);
+        Ok(Box::new(app))
+    }))
+    .map_err(|e| format!("GUI error: {e}"))
 }
 
 struct MaxxSimApp {

@@ -3,11 +3,11 @@
 use std::path::Path;
 
 use eframe::egui;
+use egui::TextBuffer as _;
 
 use super::interactive::InteractiveFirmware;
 use super::keypad::RemoteKey;
 use super::plastic_skin;
-use super::emoji_font;
 use super::remote_branding::{self, RemoteBranding, RemoteStatusLeds};
 use super::remote_panel;
 use super::speech_font;
@@ -22,10 +22,20 @@ const IEC_RESET: &str = "⟲"; // reset / restart (common ISO equipment symbol)
 const IEC_STEP_INSN: &str = "⏭"; // step one instruction
 const IEC_STEP_FRAME: &str = "⏩"; // step one frame
 
+// Trace toolbar glyphs — only U+2398 / U+239A / U+23F3 / U+23F9 / U+23FA render here
+// (egui fallback font); other Misc. Technical code points show as tofu.
+// IEC 60417 has no software breakpoint; ⏹ stop is the closest IEC media symbol.
+const TRACE_RECORD: &str = "⏺"; // U+23FA record
+const TRACE_CLEAR: &str = "⏏"; // U+23CF eject (same media cluster as ⏺/⏹/⏳)
+const TRACE_COPY: &str = "⎘"; // U+2398 copy
+const TRACE_FREEZE: &str = "⏳"; // U+23F3 hourglass
+const TRACE_CLEAR_BP: &str = "×"; // U+00D7 (bundled Noto)
+const TRACE_BREAK: &str = "⏹"; // U+23F9 IEC stop / break-on-hit
+
 /// Square remote-style transport keys in the top toolbar.
 const TOOLBAR_KEY_SIZE: f32 = 36.0;
-const TOOLBAR_KEY_INSET: f32 = 3.0;
 const TOOLBAR_KEY_DEPTH: f32 = 2.0;
+const TOOLBAR_ROW_GAP: f32 = 4.0;
 const TOOLBAR_KEY_GLYPH: f32 = 17.0;
 const TOOLBAR_KEY_FACE: egui::Color32 = egui::Color32::from_rgb(0, 0, 0);
 const TOOLBAR_KEY_GLYPH_COLOR: egui::Color32 = egui::Color32::from_rgb(235, 235, 235);
@@ -138,6 +148,7 @@ pub fn run_live_gui(cart: CartImage, label: impl Into<String>) -> Result<(), Str
             power_on: false,
         },
         speech_bubble: None,
+        trace_breakpoint_hint: None,
     };
     let options = eframe::NativeOptions {
         viewport: egui::ViewportBuilder::default()
@@ -146,6 +157,7 @@ pub fn run_live_gui(cart: CartImage, label: impl Into<String>) -> Result<(), Str
         ..Default::default()
     };
     eframe::run_native(&title, options, Box::new(|cc| {
+        super::ui_font::install(&cc.egui_ctx);
         super::remote_font::install(&cc.egui_ctx);
         super::emoji_font::install(&cc.egui_ctx);
         super::speech_font::install(&cc.egui_ctx);
@@ -168,6 +180,7 @@ struct LiveSimApp {
     skins: plastic_skin::PlasticSkins,
     status_leds: RemoteStatusLeds,
     speech_bubble: Option<SpeechBubble>,
+    trace_breakpoint_hint: Option<String>,
 }
 
 #[derive(Clone)]
@@ -216,18 +229,85 @@ fn queue_key(app: &mut LiveSimApp, key: RemoteKey, remote: bool) {
     app.last_input = Some((remote, key.matrix()));
 }
 
-fn toolbar_chip(ui: &mut egui::Ui, emoji: &str, value: &str) {
+fn toolbar_glyph_font(size: f32) -> egui::FontId {
+    egui::FontId::proportional(size)
+}
+
+fn toolbar_chip(ui: &mut egui::Ui, glyph: &str, value: &str) {
     ui.horizontal(|ui| {
         ui.spacing_mut().item_spacing.x = 1.0;
-        ui.label(emoji_font::rich_emoji(emoji));
+        ui.label(egui::RichText::new(glyph).font(toolbar_glyph_font(15.0)));
         if !value.is_empty() {
             ui.label(egui::RichText::new(value).monospace().size(13.0));
         }
     });
 }
 
-fn toolbar_emoji(ui: &mut egui::Ui, emoji: &str) {
-    ui.label(emoji_font::rich_emoji(emoji));
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum ToolbarKeyMode {
+    Normal { enabled: bool },
+    Toggle { active: bool },
+}
+
+fn paint_toolbar_key_btn(
+    ui: &mut egui::Ui,
+    glyph: &str,
+    tip: &str,
+    mode: ToolbarKeyMode,
+) -> bool {
+    let enabled = match mode {
+        ToolbarKeyMode::Normal { enabled } => enabled,
+        ToolbarKeyMode::Toggle { .. } => true,
+    };
+    let sense = if enabled {
+        egui::Sense::click()
+    } else {
+        egui::Sense::hover()
+    };
+    let (rect, response) =
+        ui.allocate_exact_size(egui::vec2(TOOLBAR_KEY_SIZE, TOOLBAR_KEY_SIZE), sense);
+    let hover_tip = if enabled {
+        tip.to_string()
+    } else {
+        format!("{tip} (halt CPU first)")
+    };
+    if ui.is_rect_visible(rect) {
+        let painter = ui.painter_at(rect);
+        let active = matches!(mode, ToolbarKeyMode::Toggle { active: true });
+        if active {
+            painter.rect_filled(rect, 3.0, TOOLBAR_KEY_GLYPH_COLOR);
+            painter.rect_stroke(
+                rect,
+                3.0,
+                egui::Stroke::new(1.0, TOOLBAR_KEY_FACE),
+                egui::StrokeKind::Outside,
+            );
+        } else if enabled {
+            paint_toolbar_recessed_key(
+                &painter,
+                rect,
+                response.hovered(),
+                response.is_pointer_button_down_on(),
+            );
+        } else {
+            painter.rect_filled(rect, 3.0, TOOLBAR_KEY_DISABLED_FACE);
+        }
+        let glyph_color = if active {
+            TOOLBAR_KEY_FACE
+        } else if enabled {
+            TOOLBAR_KEY_GLYPH_COLOR
+        } else {
+            TOOLBAR_KEY_DISABLED_GLYPH
+        };
+        painter.text(
+            rect.center(),
+            egui::Align2::CENTER_CENTER,
+            glyph,
+            toolbar_glyph_font(TOOLBAR_KEY_GLYPH),
+            glyph_color,
+        );
+    }
+    enabled && response.on_hover_text(hover_tip).clicked()
 }
 
 fn paint_toolbar_recessed_key(
@@ -236,27 +316,36 @@ fn paint_toolbar_recessed_key(
     hovered: bool,
     pressed: bool,
 ) {
-    let well = rect.shrink(TOOLBAR_KEY_INSET);
     let depth = if pressed {
         TOOLBAR_KEY_DEPTH * 0.55
     } else {
         TOOLBAR_KEY_DEPTH
     };
-    let inner = well.shrink(depth);
-    painter.rect_filled(inner, 3.0, TOOLBAR_KEY_FACE);
+    let face = rect.shrink(depth);
+    painter.rect_filled(face, 3.0, TOOLBAR_KEY_FACE);
     let shadow = egui::Stroke::new(1.5, egui::Color32::from_rgb(0, 0, 0));
     let highlight = egui::Stroke::new(
         1.0,
         if hovered {
             egui::Color32::from_rgb(72, 72, 78)
         } else {
-            plastic_skin::REMOTE_PLASTIC_LIGHT
+            plastic_skin::WINDOW_PLASTIC_LIGHT
         },
     );
-    painter.line_segment([inner.left_top(), inner.right_top()], shadow);
-    painter.line_segment([inner.left_top(), inner.left_bottom()], shadow);
-    painter.line_segment([inner.left_bottom(), inner.right_bottom()], highlight);
-    painter.line_segment([inner.right_top(), inner.right_bottom()], highlight);
+    painter.line_segment([face.left_top(), face.right_top()], shadow);
+    painter.line_segment([face.left_top(), face.left_bottom()], shadow);
+    painter.line_segment([face.left_bottom(), face.right_bottom()], highlight);
+    painter.line_segment([face.right_top(), face.right_bottom()], highlight);
+}
+
+fn with_toolbar_row<R>(ui: &mut egui::Ui, body: impl FnOnce(&mut egui::Ui) -> R) -> R {
+    ui.horizontal(|ui| {
+        ui.spacing_mut().item_spacing = egui::vec2(TOOLBAR_ROW_GAP, 0.0);
+        ui.spacing_mut().button_padding = egui::vec2(0.0, 0.0);
+        ui.spacing_mut().interact_size = egui::vec2(TOOLBAR_KEY_SIZE, TOOLBAR_KEY_SIZE);
+        body(ui)
+    })
+    .inner
 }
 
 fn paint_toolbar_transport_btn(
@@ -265,77 +354,75 @@ fn paint_toolbar_transport_btn(
     tip: &str,
     enabled: bool,
 ) -> bool {
-    let sense = if enabled {
-        egui::Sense::click()
-    } else {
-        egui::Sense::hover()
-    };
-    let (rect, response) = ui.allocate_exact_size(egui::vec2(TOOLBAR_KEY_SIZE, TOOLBAR_KEY_SIZE), sense);
-    let hover_tip = if enabled {
-        tip.to_string()
-    } else {
-        format!("{tip} (halt CPU first)")
-    };
-    if ui.is_rect_visible(rect) {
-        let painter = ui.painter_at(rect);
-        if enabled {
-            paint_toolbar_recessed_key(
-                &painter,
-                rect,
-                response.hovered(),
-                response.is_pointer_button_down_on(),
-            );
-        } else {
-            let inner = rect.shrink(TOOLBAR_KEY_INSET + TOOLBAR_KEY_DEPTH);
-            painter.rect_filled(inner, 3.0, TOOLBAR_KEY_DISABLED_FACE);
-        }
-        painter.text(
-            rect.center(),
-            egui::Align2::CENTER_CENTER,
-            glyph,
-            egui::FontId::proportional(TOOLBAR_KEY_GLYPH),
-            if enabled {
-                TOOLBAR_KEY_GLYPH_COLOR
-            } else {
-                TOOLBAR_KEY_DISABLED_GLYPH
-            },
-        );
+    paint_toolbar_key_btn(ui, glyph, tip, ToolbarKeyMode::Normal { enabled })
+}
+
+fn trace_selection_text(text: &str, range: egui::text::CCursorRange) -> String {
+    let mut span = range.as_sorted_char_range();
+    if let Some((start, end)) =
+        super::trace_breakpoint::expand_trace_selection(text, range.primary.index)
+    {
+        span = start..end;
     }
-    enabled && response.on_hover_text(hover_tip).clicked()
+    text.char_range(span).to_string()
 }
 
 fn paint_cpu_trace_panel(ui: &mut egui::Ui, app: &mut LiveSimApp) {
-    ui.horizontal(|ui| {
-        toolbar_emoji(ui, "📜");
-        ui.separator();
-        let enabled = app.firmware.trace_enabled();
-        let mut trace_on = enabled;
-        if ui
-            .checkbox(&mut trace_on, emoji_font::rich_emoji("🔴"))
-            .on_hover_text("Record trace")
-            .changed()
-        {
-            app.firmware.set_trace_enabled(trace_on);
+    let mut set_break_on_selection = false;
+    with_toolbar_row(ui, |ui| {
+        let trace_on = app.firmware.trace_enabled();
+        if paint_toolbar_key_btn(
+            ui,
+            TRACE_RECORD,
+            "Record trace",
+            ToolbarKeyMode::Toggle {
+                active: trace_on,
+            },
+        ) {
+            app.firmware.set_trace_enabled(!trace_on);
         }
-        if ui
-            .button(emoji_font::rich_emoji_btn("🗑️"))
-            .on_hover_text("Clear trace")
-            .clicked()
+        if paint_toolbar_key_btn(ui, TRACE_CLEAR, "Clear trace", ToolbarKeyMode::Normal { enabled: true })
         {
             app.firmware.clear_trace();
             app.trace_display.clear();
         }
-        if ui
-            .button(emoji_font::rich_emoji_btn("📋"))
-            .on_hover_text("Copy trace")
-            .clicked()
+        if paint_toolbar_key_btn(ui, TRACE_COPY, "Copy trace", ToolbarKeyMode::Normal { enabled: true })
         {
             ui.ctx().copy_text(app.firmware.trace_text());
         }
-        ui.checkbox(&mut app.trace_editable, emoji_font::rich_emoji("✏️"))
-            .on_hover_text("Edit trace");
+        if paint_toolbar_key_btn(
+            ui,
+            TRACE_FREEZE,
+            "Freeze trace text for manual edits",
+            ToolbarKeyMode::Toggle {
+                active: app.trace_editable,
+            },
+        ) {
+            app.trace_editable = !app.trace_editable;
+        }
+        set_break_on_selection = paint_toolbar_key_btn(
+            ui,
+            TRACE_BREAK,
+            "Break on selection: address ($E617), opcode (A9 00), or value (A=$02, #$0F, JSR)",
+            ToolbarKeyMode::Normal { enabled: true },
+        );
+        if let Some(bp) = app.firmware.trace_breakpoint() {
+            ui.add_space(TOOLBAR_ROW_GAP);
+            toolbar_chip(ui, IEC_PAUSE, &bp.label);
+            if paint_toolbar_key_btn(
+                ui,
+                TRACE_CLEAR_BP,
+                "Clear breakpoint",
+                ToolbarKeyMode::Normal { enabled: true },
+            ) {
+                app.firmware.set_trace_breakpoint(None);
+                app.trace_breakpoint_hint = None;
+            }
+        }
+        if let Some(hint) = &app.trace_breakpoint_hint {
+            ui.colored_label(egui::Color32::from_rgb(255, 140, 80), hint);
+        }
     });
-    ui.separator();
     ui.allocate_ui_with_layout(
         egui::vec2(ui.available_width(), ui.available_height().max(60.0)),
         egui::Layout::top_down(egui::Align::LEFT),
@@ -345,12 +432,47 @@ fn paint_cpu_trace_panel(ui: &mut egui::Ui, app: &mut LiveSimApp) {
                 .stick_to_bottom(true)
                 .show(ui, |ui| {
                     ui.set_min_height(ui.max_rect().height());
-                    ui.add(
-                        egui::TextEdit::multiline(&mut app.trace_display)
-                            .font(egui::TextStyle::Monospace)
-                            .desired_width(f32::INFINITY)
-                            .interactive(app.trace_editable),
-                    );
+                    let mut output = egui::TextEdit::multiline(&mut app.trace_display)
+                        .id(ui.id().with("cpu_trace_edit"))
+                        .font(egui::TextStyle::Monospace)
+                        .desired_width(f32::INFINITY)
+                        .interactive(true)
+                        .show(ui);
+                    if output.response.clicked() {
+                        if let Some(range) = output.cursor_range {
+                            if let Some((start, end)) = super::trace_breakpoint::expand_trace_selection(
+                                &app.trace_display,
+                                range.primary.index,
+                            ) {
+                                let expanded = egui::text::CCursorRange::two(
+                                    egui::text::CCursor::new(start),
+                                    egui::text::CCursor::new(end),
+                                );
+                                output.state.cursor.set_char_range(Some(expanded));
+                                output.state.store(ui.ctx(), output.response.id);
+                            }
+                        }
+                    }
+                    if set_break_on_selection {
+                        if let Some(range) = output.cursor_range {
+                            let selected = trace_selection_text(&app.trace_display, range);
+                            if let Some(bp) =
+                                super::trace_breakpoint::parse_trace_selection(&selected)
+                            {
+                                app.firmware.set_trace_breakpoint(Some(bp));
+                                app.trace_breakpoint_hint = None;
+                            } else if !selected.trim().is_empty() {
+                                app.trace_breakpoint_hint =
+                                    Some(format!("Unrecognized selection: {selected}"));
+                            } else {
+                                app.trace_breakpoint_hint =
+                                    Some("Select text in the trace first".into());
+                            }
+                        } else {
+                            app.trace_breakpoint_hint =
+                                Some("Select text in the trace first".into());
+                        }
+                    }
                 });
         },
     );
@@ -362,31 +484,29 @@ fn paint_status_toolbar(
     st: &super::interactive::FirmwareStatus,
 ) {
     ui.spacing_mut().item_spacing.x = 6.0;
-    toolbar_chip(ui, "🧭", &format!("${:04X}", st.pc));
-    toolbar_chip(ui, "📡", &format!("{:02X}", st.key_ready));
-    toolbar_chip(ui, "⌨️", &format!("{:02X}", st.last_key));
+    toolbar_chip(ui, "PC", &format!("${:04X}", st.pc));
+    toolbar_chip(ui, "$75", &format!("{:02X}", st.key_ready));
+    toolbar_chip(ui, "$15", &format!("{:02X}", st.last_key));
     if let Some(k) = st.pending_raw {
-        toolbar_chip(ui, "⏳", &format!("{k:02X}"));
+        toolbar_chip(ui, "pnd", &format!("{k:02X}"));
     }
     if let Some(k) = st.latched_raw {
-        toolbar_chip(ui, "🔒", &format!("{k:02X}"));
-    } else {
-        toolbar_emoji(ui, "🔓");
+        toolbar_chip(ui, "lat", &format!("{k:02X}"));
     }
     if let Some(k) = st.gui_raw {
-        toolbar_chip(ui, "🖱️", &format!("{k:02X}"));
+        toolbar_chip(ui, "gui", &format!("{k:02X}"));
     }
     if st.gui_armed {
-        toolbar_emoji(ui, "🎯");
+        toolbar_chip(ui, "arm", "1");
     }
     if st.keys_pressed > 0 {
-        toolbar_chip(ui, "🔢", &st.keys_pressed.to_string());
+        toolbar_chip(ui, "keys", &st.keys_pressed.to_string());
     }
     if let Some((remote, key)) = app.last_input {
-        toolbar_chip(ui, if remote { "📻" } else { "⌨️" }, &key.to_string());
+        toolbar_chip(ui, if remote { "RF" } else { "KY" }, &key.to_string());
     }
     if st.answer < 0x0A {
-        toolbar_chip(ui, "❓", &st.answer.to_string());
+        toolbar_chip(ui, "$35", &st.answer.to_string());
     }
     paint_live_status_chip(ui, app, st);
 }
@@ -488,12 +608,16 @@ impl eframe::App for LiveSimApp {
         let now = ui.input(|i| i.time);
         update_speech_bubble(self, now);
 
-        egui::Panel::top("toolbar").show_inside(ui, |ui| {
+        egui::Panel::top("toolbar")
+            .frame(egui::Frame {
+                inner_margin: egui::Margin::symmetric(6, 3),
+                ..Default::default()
+            })
+            .show_inside(ui, |ui| {
             let window_tile = self.skins.window_tile(ui.ctx());
             plastic_skin::paint_rect(ui, ui.clip_rect(), window_tile);
-            ui.spacing_mut().item_spacing = egui::vec2(8.0, 4.0);
 
-            ui.horizontal(|ui| {
+            with_toolbar_row(ui, |ui| {
                 let st = self.firmware.status();
                 let (halt_glyph, halt_tip) = if st.running {
                     (IEC_PAUSE, "Halt CPU (IEC 60417-5008 pause)")
@@ -525,7 +649,7 @@ impl eframe::App for LiveSimApp {
                     }
                 }
                 ui.separator();
-                toolbar_chip(ui, "⚙️", &st.cycles.to_string());
+                toolbar_chip(ui, "⚙", &st.cycles.to_string());
                 ui.separator();
                 ui.add(
                     egui::Slider::new(
@@ -542,7 +666,7 @@ impl eframe::App for LiveSimApp {
                 if remaining > 40.0 {
                     ui.allocate_ui_with_layout(
                         egui::vec2(remaining, ui.available_height()),
-                        egui::Layout::right_to_left(egui::Align::Center),
+                        egui::Layout::top_down(egui::Align::Max),
                         |ui| {
                             ui.horizontal(|ui| {
                                 paint_status_toolbar(ui, self, &st);
@@ -552,9 +676,11 @@ impl eframe::App for LiveSimApp {
                 }
             });
 
-        });
+            });
 
-        self.trace_display = self.firmware.trace_text();
+        if !self.trace_editable {
+            self.trace_display = self.firmware.trace_text();
+        }
 
         egui::Panel::left("remote")
             .resizable(false)
@@ -591,7 +717,7 @@ impl eframe::App for LiveSimApp {
         egui::Panel::left("cpu_trace")
             .resizable(false)
             .frame(egui::Frame {
-                inner_margin: egui::Margin::ZERO,
+                inner_margin: egui::Margin::symmetric(6, 3),
                 ..Default::default()
             })
             .default_width(remote_panel::REMOTE_PANEL_W)
@@ -631,36 +757,35 @@ impl eframe::App for LiveSimApp {
 fn paint_live_status_chip(ui: &mut egui::Ui, app: &LiveSimApp, st: &super::interactive::FirmwareStatus) {
     if app.boot_gate.holding_cpu() {
         let icon = match app.boot_gate.phase {
-            BootPhase::AwaitPaint => "🪟",
-            BootPhase::AwaitIdle => "💤",
+            BootPhase::AwaitPaint => "□",
+            BootPhase::AwaitIdle => "⋯",
             BootPhase::Live => "",
         };
         if !icon.is_empty() {
             ui.colored_label(
                 egui::Color32::from_rgb(255, 180, 60),
-                emoji_font::rich_emoji(icon),
+                egui::RichText::new(icon).font(toolbar_glyph_font(15.0)),
             );
         }
     } else if !st.running {
-        ui.colored_label(egui::Color32::YELLOW, emoji_font::rich_emoji("⏸️"));
+        ui.colored_label(
+            egui::Color32::YELLOW,
+            egui::RichText::new(IEC_PAUSE).font(toolbar_glyph_font(15.0)),
+        );
     } else if st.key_pending {
-        ui.horizontal(|ui| {
-            ui.spacing_mut().item_spacing.x = 1.0;
-            ui.colored_label(
-                egui::Color32::from_rgb(255, 200, 80),
-                emoji_font::rich_emoji("⌨️"),
-            );
-            ui.colored_label(
-                egui::Color32::from_rgb(255, 200, 80),
-                emoji_font::rich_emoji("⏳"),
-            );
-        });
+        ui.colored_label(
+            egui::Color32::from_rgb(255, 200, 80),
+            egui::RichText::new("KEY").font(toolbar_glyph_font(13.0)),
+        );
     } else if st.needs_enter {
-        toolbar_chip(ui, "⏎", &st.answer.to_string());
+        toolbar_chip(ui, "ENT", &st.answer.to_string());
     } else if st.keypad_waiting {
-        ui.colored_label(egui::Color32::LIGHT_GREEN, emoji_font::rich_emoji("🔢"));
+        ui.colored_label(
+            egui::Color32::LIGHT_GREEN,
+            egui::RichText::new("WAIT").font(toolbar_glyph_font(13.0)),
+        );
     } else if st.pc < 0xA000 {
-        toolbar_chip(ui, "🚀", &format!("${:04X}", st.pc));
+        toolbar_chip(ui, "PC", &format!("${:04X}", st.pc));
     }
 }
 

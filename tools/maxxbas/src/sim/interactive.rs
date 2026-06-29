@@ -9,6 +9,7 @@ use super::keypad::RemoteKey;
 use super::speech::{self, SpeechPlayer};
 use super::patches::{MemPatch, PatchSet};
 use super::trace::TraceBuffer;
+use super::trace_breakpoint::TraceBreakpoint;
 use crate::CartImage;
 
 const ROM_ED4F: u16 = 0xED4F;
@@ -202,6 +203,7 @@ pub struct InteractiveFirmware {
     keypad_waiting: bool,
     trace: TraceBuffer,
     trace_enabled: bool,
+    trace_breakpoint: Option<TraceBreakpoint>,
     /// Last mirrored MaxxOS answer digit at `$35`.
     last_answer_digit: u8,
     /// Live GUI: one digit press submits answer (auto-ENTER after `$A1A5`).
@@ -787,6 +789,7 @@ impl InteractiveFirmware {
             keypad_waiting: false,
             trace: TraceBuffer::default(),
             trace_enabled: true,
+            trace_breakpoint: None,
             last_answer_digit: 0xFF,
             auto_submit_enter: false,
             queue_auto_enter: false,
@@ -812,6 +815,7 @@ impl InteractiveFirmware {
         self.bus_state.cpu_cycles = 0;
         self.keypad_waiting = false;
         self.trace.clear();
+        self.trace_breakpoint = None;
         self.cpu = new_cpu(self.mem.as_mut(), self.bus_state.as_mut());
         self.running = true;
         self.irq_phase = 0;
@@ -1164,14 +1168,17 @@ impl InteractiveFirmware {
                 continue;
             }
             let pc_before = self.cpu.registers.program_counter;
+            let a = u8::from(self.cpu.registers.accumulator);
+            let x = self.cpu.registers.index_x;
+            let y = self.cpu.registers.index_y;
             if self.trace_enabled {
-                self.trace.record(
-                    &self.mem,
-                    pc_before,
-                    u8::from(self.cpu.registers.accumulator),
-                    self.cpu.registers.index_x,
-                    self.cpu.registers.index_y,
-                );
+                self.trace.record(&self.mem, pc_before, a, x, y);
+            }
+            if let Some(bp) = &self.trace_breakpoint {
+                if bp.matches(&self.mem, pc_before, a, x, y) {
+                    self.running = false;
+                    break;
+                }
             }
             if !self.cpu.single_step() {
                 self.running = false;
@@ -1344,6 +1351,14 @@ impl InteractiveFirmware {
 
     pub fn clear_trace(&mut self) {
         self.trace.clear();
+    }
+
+    pub fn set_trace_breakpoint(&mut self, bp: Option<TraceBreakpoint>) {
+        self.trace_breakpoint = bp;
+    }
+
+    pub fn trace_breakpoint(&self) -> Option<&TraceBreakpoint> {
+        self.trace_breakpoint.as_ref()
     }
 
     /// Recent instructions (newest at bottom), ready to copy/paste.
