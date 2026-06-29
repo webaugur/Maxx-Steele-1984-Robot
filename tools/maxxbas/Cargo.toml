@@ -1,6 +1,6 @@
 [package]
 name = "maxxbas"
-version = "0.2.42"
+version = "0.2.73"
 edition = "2021"
 description = "Maxx Steele toolchain — compile MaxxBAS, decode ROMs, upload to PicoROM"
 readme = "README.md"
@@ -21,6 +21,7 @@ egui = "0.34.3"
 mos6502 = "0.9"
 resvg = "0.45"
 rodio = { version = "0.21", default-features = false, features = ["playback", "vorbis"] }
+rustsam = { git = "https://github.com/thedjinn/rustsam", version = "0.1.0" }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 tempfile = "3.20"

@@ -70,16 +70,17 @@ struct LiveBusState {
     gui_armed: bool,
     irq_pending: bool,
     cpu_cycles: u64,
+    /// `$1000` BIT polls — alternate bit 6 so `BVC`/`BVS` handshake loops always progress.
+    display_mmio_reads: u64,
 }
 
-/// Toggle `$1000` bit 6 every N CPU cycles — matches ROM `BVC`/`BVS` LED handshake pacing.
-const DISPLAY_TIMER_TICK: u64 = 180;
-
-fn mmio_1000_display_timer(cycles: u64) -> u8 {
-    if (cycles / DISPLAY_TIMER_TICK) % 2 == 0 {
-        0x00
-    } else {
+/// LED/display serial clock at `$1000` — bit 6 drives the V flag on `BIT $1000`.
+fn mmio_1000_display_handshake(reads: &mut u64) -> u8 {
+    *reads = reads.wrapping_add(1);
+    if *reads % 2 == 1 {
         0x40
+    } else {
+        0x00
     }
 }
 
@@ -101,7 +102,8 @@ impl Bus for LiveBus {
     fn get_byte(&mut self, address: u16) -> u8 {
         if address == 0x1000 {
             unsafe {
-                return mmio_1000_display_timer((*self.state_ptr).cpu_cycles);
+                let state = &mut *self.state_ptr;
+                return mmio_1000_display_handshake(&mut state.display_mmio_reads);
             }
         }
         if address == 0x75 {
@@ -209,8 +211,14 @@ pub struct InteractiveFirmware {
     /// Live GUI: one digit press submits answer (auto-ENTER after `$A1A5`).
     auto_submit_enter: bool,
     queue_auto_enter: bool,
+    /// Factory bytecode carts (`JMP $E0B6`) loop in execute mode without keypad input.
+    factory_demo_cart: bool,
     keys_pressed: u64,
+    audio: super::audio::AudioOutput,
     speech: SpeechPlayer,
+    music: super::music::MusicPlayer,
+    /// Visits to the ROM music bitstream decoder (`$EF9C` / `$F0B8`) without IRQ feedback.
+    music_decode_streak: u32,
 }
 
 fn interactive_patches() -> PatchSet {
@@ -228,8 +236,51 @@ fn interactive_patches() -> PatchSet {
         },
         MemPatch {
             addr: "0xEF63".into(),
-            bytes: vec![0xA9, 0x00, 0x4C, 0x67, 0xEF],
-            purpose: Some("interactive sim: skip motor talkback spin at $EF63".into()),
+            bytes: vec![0xA9, 0x00, 0x60],
+            purpose: Some("interactive sim: skip motor talkback spin at $EF63 (LDA #0; RTS)".into()),
+        },
+        MemPatch {
+            addr: "0xEFB0".into(),
+            bytes: vec![0x4C, 0xB6, 0xEF, 0xEA, 0xEA],
+            purpose: Some("interactive sim: skip music note-ready spin at $EFB0".into()),
+        },
+        // `$ED4F` already mirrors digits in `capture_display_digit` — skip the 8-bit COP411 loop.
+        MemPatch {
+            addr: "0xED5F".into(),
+            bytes: vec![0x4C, 0x7A, 0xED],
+            purpose: Some("interactive sim: JMP $ED7A past LED bit-shift at $ED5F".into()),
+        },
+        MemPatch {
+            addr: "0xED82".into(),
+            bytes: vec![0x4C, 0xAE, 0xED],
+            purpose: Some("interactive sim: JMP $EDAE past LED read-shift at $ED82".into()),
+        },
+        // `patches.json` replaces `BIT $1000` with `ADC #$7F` but leaves `BVC`/`BVS` waits
+        // that no longer see the display clock toggle — NOP them so shifts always progress.
+        MemPatch {
+            addr: "0xED62".into(),
+            bytes: vec![0xEA, 0xEA],
+            purpose: Some("interactive sim: NOP display BVC wait at $ED62".into()),
+        },
+        MemPatch {
+            addr: "0xED6F".into(),
+            bytes: vec![0xEA, 0xEA],
+            purpose: Some("interactive sim: NOP display BVS wait at $ED6F".into()),
+        },
+        MemPatch {
+            addr: "0xED85".into(),
+            bytes: vec![0xEA, 0xEA],
+            purpose: Some("interactive sim: NOP display BVC wait at $ED85".into()),
+        },
+        MemPatch {
+            addr: "0xED8F".into(),
+            bytes: vec![0xEA, 0xEA],
+            purpose: Some("interactive sim: NOP display BVS wait at $ED8F".into()),
+        },
+        MemPatch {
+            addr: "0xEDA3".into(),
+            bytes: vec![0xEA, 0xEA],
+            purpose: Some("interactive sim: NOP display BVC wait at $EDA3".into()),
         },
         // Embedded patches.json uses opcode $00 (BRK) at these sites — fatal once IRQ runs.
         MemPatch {
@@ -241,37 +292,6 @@ fn interactive_patches() -> PatchSet {
             addr: "0xF438".into(),
             bytes: vec![0xEA],
             purpose: Some("interactive sim: NOP instead of BRK at $F438".into()),
-        },
-        // Restore ROM `BIT $1000` display pacing (patches.json bypasses for headless sim).
-        MemPatch {
-            addr: "0xEC1B".into(),
-            bytes: vec![0x2C, 0x00, 0x10, 0x10, 0x01],
-            purpose: Some("interactive sim: restore clock display $1000 wait".into()),
-        },
-        MemPatch {
-            addr: "0xED5F".into(),
-            bytes: vec![0x2C, 0x00, 0x10, 0x50, 0xFB],
-            purpose: Some("interactive sim: restore LED shift $1000 wait (pre)".into()),
-        },
-        MemPatch {
-            addr: "0xED6C".into(),
-            bytes: vec![0x2C, 0x00, 0x10, 0x70, 0xFB],
-            purpose: Some("interactive sim: restore LED shift $1000 wait (post)".into()),
-        },
-        MemPatch {
-            addr: "0xED82".into(),
-            bytes: vec![0x2C, 0x00, 0x10, 0x50, 0xFB],
-            purpose: Some("interactive sim: restore LED path $1000 wait".into()),
-        },
-        MemPatch {
-            addr: "0xED8C".into(),
-            bytes: vec![0x2C, 0x00, 0x10, 0x70, 0xFB],
-            purpose: Some("interactive sim: restore LED path $1000 wait (2)".into()),
-        },
-        MemPatch {
-            addr: "0xEDA0".into(),
-            bytes: vec![0x2C, 0x00, 0x10, 0x50, 0xFB],
-            purpose: Some("interactive sim: restore LED path $1000 wait (tail)".into()),
         },
         // IRQ entry at `$FDC8`: return immediately — full handler nests `RTS` at `$FDDF` → `$FDD9` spin.
         MemPatch {
@@ -439,6 +459,38 @@ fn stack_has_cart_e60d_return(mem: &[u8; 65536], sp: u8) -> bool {
 fn note_keypad_wait(pc: u16, keypad_waiting: &mut bool) {
     if in_keypad_subsystem(pc) || (0xA080..=0xA200).contains(&pc) {
         *keypad_waiting = true;
+    }
+}
+
+/// Factory demo carts load bytecode then `JMP $E0B6` (immediate mode). Re-enter execute whenever
+/// the ROM idles in immediate mode (`$E161` / `$E617`) so the program loops like a store demo.
+fn maybe_auto_start_demo_execute(
+    mem: &mut [u8; 65536],
+    pc: u16,
+    factory_demo: bool,
+    cpu: &mut CPU<LiveBus, Cmos6502>,
+    speech_busy: bool,
+) -> bool {
+    if !factory_demo || mem[0x0D] != 0 || speech_busy {
+        return false;
+    }
+    if pc != 0xE161 && !in_keypad_spin(pc) {
+        return false;
+    }
+    mem[0x0D] = 3;
+    cpu.registers.program_counter = 0xE434;
+    true
+}
+
+/// Execute-mode single-step path (`$E499` → `$E60D`) waits for a key the live sim never injects.
+fn emulate_factory_demo_waits(mem: &mut [u8; 65536], cpu: &mut CPU<LiveBus, Cmos6502>, factory_demo: bool) {
+    if !factory_demo || mem[0x0D] != 3 {
+        return;
+    }
+    if cpu.registers.program_counter == 0xE60D {
+        cpu.registers.program_counter = 0xE610;
+        cpu.registers.accumulator = 0x0F.into();
+        mem[0x15] = 0x0F;
     }
 }
 
@@ -712,9 +764,17 @@ fn sync_keypad_x_from_latch(
     *index_x = key;
 }
 
+/// IRQ 4 sub-second tick: `DEC $26`, reload `$F4` on underflow (`$E095`–`$E09B`).
+fn tick_subsecond_timer(mem: &mut [u8; 65536]) {
+    mem[0x26] = mem[0x26].wrapping_sub(1);
+    if mem[0x26] == 0 {
+        mem[0x26] = 0xF4;
+    }
+}
+
 /// Approximate IRQ-side timer decrements so delays and speech paths make progress.
 fn tick_irq_services(mem: &mut [u8; 65536], irq_pending: &mut bool, speech_active: bool) {
-    mem[0x3A] = mem[0x3A].wrapping_add(1);
+    tick_subsecond_timer(mem);
     for zp in [0x2A_u16, 0x28, 0x27] {
         let v = mem[zp as usize];
         if v != 0 {
@@ -724,6 +784,7 @@ fn tick_irq_services(mem: &mut [u8; 65536], irq_pending: &mut bool, speech_activ
             }
         }
     }
+    tick_music_irq(mem);
     if !speech_active {
         let speech = mem[0x5B];
         if speech != 0 {
@@ -732,14 +793,168 @@ fn tick_irq_services(mem: &mut [u8; 65536], irq_pending: &mut bool, speech_activ
     }
 }
 
-/// ROM `$F475` / `$F47E` → OGG phrase playback (replaces RTS patches).
+/// Music voices at `$2B`/`$2D`/`$2F` with duration bytes `$2C`/`$2E`/`$30`.
+fn tick_music_irq(mem: &mut [u8; 65536]) {
+    let mut pulsed = false;
+    for (voice, dur) in [(0x2B_usize, 0x2C), (0x2D, 0x2E), (0x2F, 0x30)] {
+        if mem[voice] == 0 {
+            continue;
+        }
+        if mem[dur] > 0 {
+            mem[dur] -= 1;
+            if mem[dur] == 0 {
+                mem[voice] = 0;
+                pulsed = true;
+            }
+        }
+    }
+    if pulsed {
+        // `$EFB0` waits for bit 5 — set by the music IRQ path from `$75` on hardware.
+        mem[0x3C] |= 0x20;
+    }
+}
+
+fn music_decode_active(pc: u16) -> bool {
+    (0xEF6C..=0xEF74).contains(&pc)
+        || (0xEF9C..=0xF0CF).contains(&pc)
+        || (0xF151..=0xF15B).contains(&pc)
+}
+
+/// `$EF71` / `$EFAD` LSR the accumulator; hardware also rewrites `$3A` via IRQ.
+fn persist_music_bitstream_shift(mem: &mut [u8; 65536], cpu: &mut CPU<LiveBus, Cmos6502>, pc: u16) {
+    if !matches!(pc, 0xEF71 | 0xEFAD) {
+        return;
+    }
+    let shifted = u8::from(cpu.registers.accumulator);
+    mem[0x3A] = shifted;
+    if shifted == 0 {
+        // Bitstream drained — enter the `"Song"` playback path at `$EF76`.
+        cpu.registers.program_counter = 0xEF76;
+    }
+}
+
+fn clear_music_voices(mem: &mut [u8; 65536]) {
+    for zp in [0x2B_u16, 0x2C, 0x2D, 0x2E, 0x2F, 0x30] {
+        mem[zp as usize] = 0;
+    }
+}
+
+/// Force the ROM music engine to treat the current tune as finished.
+fn finish_music_playback(
+    mem: &mut [u8; 65536],
+    cpu: &mut CPU<LiveBus, Cmos6502>,
+    music: &super::music::MusicPlayer,
+    cpu_cycles: u64,
+) {
+    if music.music_busy(cpu_cycles) {
+        // Audio still playing — stay in the cart PLAY busy-wait until it finishes.
+        cpu.registers.program_counter = 0xE504;
+        return;
+    }
+    clear_music_voices(mem);
+    mem[0x3A] = 0;
+    mem[0x3B] = 0;
+    mem[0x3C] = 0;
+    mem[0x39] = 0;
+    mem[0x75] = 0x80;
+    cpu.registers.accumulator = 0x17.into();
+    cpu.registers.program_counter = 0xF2A7;
+}
+
+fn motor_only_busy(mem: &[u8; 65536]) -> bool {
+    (mem[0x08] & 0x0C) != 0 || mem[0x05] != 0 || mem[0x5B] != 0
+}
+
+fn clear_motor_busy_flags(mem: &mut [u8; 65536]) {
+    mem[0x08] = 0;
+    mem[0x05] = 0;
+    mem[0x0C] &= 0xF3;
+    mem[0x29] = 0;
+}
+
+/// `$E504` / `$E9FE` motor timing has no `$1600` MMIO in the live sim.
+fn emulate_motor_hw_waits(
+    mem: &mut [u8; 65536],
+    cpu: &mut CPU<LiveBus, Cmos6502>,
+    music: &super::music::MusicPlayer,
+) {
+    let pc = cpu.registers.program_counter;
+    if pc == 0xE9FE {
+        clear_motor_busy_flags(mem);
+        cpu.registers.program_counter = 0xEA66;
+        return;
+    }
+    if pc == 0xE516 {
+        if mem[0x2B] != 0 || music.music_busy(cpu.cycles) {
+            cpu.registers.program_counter = 0xE504;
+            return;
+        }
+        if motor_only_busy(mem) {
+            clear_motor_busy_flags(mem);
+            cpu.registers.program_counter = 0xE518;
+        }
+    }
+}
+
+/// `$EFB0` / `$F285` / `$EF9C` poll music hardware that has no MMIO in the live sim.
+fn emulate_music_hw_waits(
+    mem: &mut [u8; 65536],
+    cpu: &mut CPU<LiveBus, Cmos6502>,
+    decode_streak: &mut u32,
+    music: &super::music::MusicPlayer,
+) {
+    let pc = cpu.registers.program_counter;
+    let cpu_cycles = cpu.cycles;
+    // `LDA $3C` / `AND #$20` / `BEQ $EFB0` — note-ready handshake during `PLAY`.
+    if (0xEFB0..=0xEFB4).contains(&pc) {
+        mem[0x3C] = (mem[0x3C] & 0x1F) | 0x20;
+        return;
+    }
+    if (0xF285..=0xF2A4).contains(&pc) {
+        finish_music_playback(mem, cpu, music, cpu_cycles);
+        *decode_streak = 0;
+        return;
+    }
+    if pc == 0xEF6F && mem[0x3A] == 0 {
+        cpu.registers.program_counter = 0xEF76;
+        return;
+    }
+    if music_decode_active(pc) {
+        *decode_streak = decode_streak.saturating_add(1);
+        if pc == 0xEFCE || pc == 0xEFD0 {
+            // `BIT $3A` / `BVC $EF6C` — section boundary once bit 6 clears.
+            mem[0x3A] &= 0xBF;
+        }
+        if *decode_streak > 1_200 {
+            finish_music_playback(mem, cpu, music, cpu_cycles);
+            *decode_streak = 0;
+        }
+        return;
+    }
+    *decode_streak = 0;
+}
+
+/// Cart `$F44B` and boot `$F475` / `$F47E` → SAM phrase playback.
 fn emulate_speech_bus_wait(
     mem: &mut [u8; 65536],
     cpu: &mut CPU<LiveBus, Cmos6502>,
     speech: &mut SpeechPlayer,
+    audio: &mut super::audio::AudioOutput,
 ) -> bool {
     let pc = cpu.registers.program_counter;
-    if let Some(next) = speech::enter_say_phrase(pc, cpu.registers.index_x, speech, cpu.cycles) {
+    if let Some(next) = speech::enter_cart_speak(mem, pc, speech, audio, cpu.cycles) {
+        mem[0x5B] = if speech.speech_busy(cpu.cycles) { 0x80 } else { 0 };
+        cpu.registers.program_counter = next;
+        cpu.cycles = cpu.cycles.saturating_add(12);
+        return true;
+    }
+    if let Some(next) = speech::enter_f40f_speak(pc, cpu.registers.index_x, speech, audio, cpu.cycles) {
+        mem[0x5B] = if speech.speech_busy(cpu.cycles) { 0x80 } else { 0 };
+        cpu.registers.program_counter = next;
+        cpu.cycles = cpu.cycles.saturating_add(12);
+        return true;
+    }
+    if let Some(next) = speech::enter_say_phrase(pc, cpu.registers.index_x, speech, audio, cpu.cycles) {
         mem[0x5B] = 0x01;
         cpu.registers.program_counter = next;
         cpu.cycles = cpu.cycles.saturating_add(1);
@@ -748,11 +963,13 @@ fn emulate_speech_bus_wait(
     if let Some(done) = speech::spin_wait_speech(pc, speech, cpu.cycles) {
         if done {
             mem[0x5B] = 0;
-            simulate_rts(cpu, mem);
-        } else {
-            mem[0x5B] = 0x01;
+            speech.clear_busy();
+            cpu.registers.program_counter = speech::ROM_SPEECH_DONE;
+            cpu.cycles = cpu.cycles.saturating_add(6);
+            return true;
         }
-        cpu.cycles = cpu.cycles.saturating_add(1);
+        mem[0x5B] = 0x01;
+        cpu.cycles = cpu.cycles.saturating_add(6);
         return true;
     }
     false
@@ -760,6 +977,7 @@ fn emulate_speech_bus_wait(
 
 impl InteractiveFirmware {
     pub fn new(cart: CartImage, label: impl Into<String>) -> Result<Self, String> {
+        let factory_demo_cart = super::firmware::cart_returns_to_main_loop(&cart);
         let patches = interactive_patches();
         let mut mem = Box::new(super::firmware::build_memory_image(Some(&cart), &patches)?);
         super::firmware::prepare_interactive_memory(mem.as_mut(), &cart);
@@ -773,6 +991,7 @@ impl InteractiveFirmware {
             gui_armed: false,
             irq_pending: false,
             cpu_cycles: 0,
+            display_mmio_reads: 0,
         });
         let cpu = new_cpu(mem.as_mut(), bus_state.as_mut());
 
@@ -793,13 +1012,26 @@ impl InteractiveFirmware {
             last_answer_digit: 0xFF,
             auto_submit_enter: false,
             queue_auto_enter: false,
+            factory_demo_cart,
             keys_pressed: 0,
+            audio: super::audio::AudioOutput::new(),
             speech: SpeechPlayer::new(true),
+            music: super::music::MusicPlayer::new(true),
+            music_decode_streak: 0,
         })
     }
 
     pub fn set_speech_enabled(&mut self, enabled: bool) {
         self.speech.set_enabled(enabled);
+    }
+
+    pub fn set_music_enabled(&mut self, enabled: bool) {
+        self.music.set_enabled(enabled);
+    }
+
+    /// Open the shared audio device once (live GUI calls this before speech/music run).
+    pub fn warm_audio(&mut self) {
+        self.audio.warm();
     }
 
     pub fn reset(&mut self) -> Result<(), String> {
@@ -821,8 +1053,11 @@ impl InteractiveFirmware {
         self.irq_phase = 0;
         self.last_answer_digit = 0xFF;
         self.queue_auto_enter = false;
+        self.factory_demo_cart = super::firmware::cart_returns_to_main_loop(&self.cart);
         self.keys_pressed = 0;
+        self.music_decode_streak = 0;
         self.speech.stop();
+        self.music.stop();
         Ok(())
     }
 
@@ -1095,9 +1330,40 @@ impl InteractiveFirmware {
                 );
             }
 
-            if emulate_speech_bus_wait(self.mem.as_mut(), &mut self.cpu, &mut self.speech) {
+            if emulate_speech_bus_wait(
+                self.mem.as_mut(),
+                &mut self.cpu,
+                &mut self.speech,
+                &mut self.audio,
+            ) {
                 continue;
             }
+            let speech_busy = self.speech.speech_busy(self.cpu.cycles);
+            if maybe_auto_start_demo_execute(
+                self.mem.as_mut(),
+                self.cpu.registers.program_counter,
+                self.factory_demo_cart,
+                &mut self.cpu,
+                speech_busy,
+            ) {
+                continue;
+            }
+            emulate_music_hw_waits(
+                self.mem.as_mut(),
+                &mut self.cpu,
+                &mut self.music_decode_streak,
+                &self.music,
+            );
+            emulate_motor_hw_waits(self.mem.as_mut(), &mut self.cpu, &self.music);
+            emulate_factory_demo_waits(self.mem.as_mut(), &mut self.cpu, self.factory_demo_cart);
+            super::music::enter_play_tune(
+                self.cpu.registers.program_counter,
+                self.mem.as_ref(),
+                &mut self.music,
+                &mut self.audio,
+                &mut self.speech,
+                self.cpu.cycles,
+            );
 
             let effective = self.effective_pending_key();
             apply_radio_wire(&mut self.mem, &self.bus_state.radio_pending, effective);
@@ -1184,6 +1450,12 @@ impl InteractiveFirmware {
                 self.running = false;
                 break;
             }
+            persist_music_bitstream_shift(self.mem.as_mut(), &mut self.cpu, pc_before);
+            super::music::sync_music_voice_busy(
+                self.mem.as_mut(),
+                &self.music,
+                self.cpu.cycles,
+            );
             if let Some(max) = max_instructions {
                 instructions += 1;
                 if instructions >= max {
@@ -1655,6 +1927,54 @@ mod tests {
     }
 
     #[test]
+    fn cart_say_uses_ram_table() {
+        let cart = CartImage::from_bytes(MAXXOS.to_vec()).unwrap();
+        let mut fw = InteractiveFirmware::new(cart, "MaxxOS").unwrap();
+        fw.mem[0x11] = 0x83;
+        fw.mem[0x13] = 0x00;
+        fw.cpu.registers.program_counter = 0xF44B;
+        fw.step_frame();
+        assert_eq!(fw.speech.last_phrase(), Some(0x00));
+        assert_ne!(fw.cpu.registers.program_counter, 0xF44B);
+    }
+
+    #[test]
+    fn cart_say_uses_rom_table_for_high_indices() {
+        let cart = CartImage::from_bytes(MAXXOS.to_vec()).unwrap();
+        let mut fw = InteractiveFirmware::new(cart, "MaxxOS").unwrap();
+        fw.mem[0x11] = 0x83;
+        fw.mem[0x13] = 0x16;
+        fw.cpu.registers.program_counter = 0xF44B;
+        fw.step_frame();
+        assert_eq!(fw.speech.last_phrase(), Some(0x16));
+    }
+
+    #[test]
+    fn cart_speak_uses_phoneme_table() {
+        let cart = CartImage::from_bytes(MAXXOS.to_vec()).unwrap();
+        let mut fw = InteractiveFirmware::new(cart, "MaxxOS").unwrap();
+        fw.mem[0x11] = 0x82;
+        fw.mem[0x13] = 0x3F;
+        fw.cpu.registers.program_counter = 0xF44B;
+        fw.step_frame();
+        assert_eq!(fw.speech.last_phrase(), Some(0x3F));
+    }
+
+    #[test]
+    fn f40f_hook_routes_rom_phrase() {
+        let cart = CartImage::from_bytes(MAXXOS.to_vec()).unwrap();
+        let mut fw = InteractiveFirmware::new(cart, "MaxxOS").unwrap();
+        fw.cpu.registers.index_x = 0x13;
+        fw.cpu.registers.program_counter = 0xF40F;
+        fw.cpu.registers.stack_pointer.0 = 0xFD;
+        fw.mem[0x01FE] = 0xF6;
+        fw.mem[0x01FF] = 0x9E;
+        fw.step_frame();
+        assert_eq!(fw.speech.last_phrase(), Some(0x13));
+        assert_ne!(fw.cpu.registers.program_counter, 0xF40F);
+    }
+
+    #[test]
     fn speech_hook_starts_at_f475_and_waits_at_f47e() {
         let cart = CartImage::from_bytes(MAXXOS.to_vec()).unwrap();
         let mut fw = InteractiveFirmware::new(cart, "MaxxOS").unwrap();
@@ -1667,10 +1987,19 @@ mod tests {
         assert_eq!(fw.cpu.registers.program_counter, 0xF47E);
         assert_eq!(fw.speech.last_phrase(), Some(0x13));
         assert_eq!(fw.mem[0x5B], 0x01);
-        fw.speech.stop();
-        fw.step(1);
-        assert_eq!(fw.cpu.registers.program_counter, 0xA034);
+        for _ in 0..250 {
+            fw.step_frame();
+            if fw.speech.speech_wait_done(fw.cpu.cycles) {
+                break;
+            }
+        }
+        assert!(
+            fw.speech.speech_wait_done(fw.cpu.cycles),
+            "speech wait at $F47E did not complete"
+        );
+        assert_ne!(fw.cpu.registers.program_counter, 0xF47E);
         assert_eq!(fw.mem[0x5B], 0);
+        assert!(!fw.speech.speech_busy(fw.cpu.cycles));
     }
 
     #[test]
@@ -1681,7 +2010,8 @@ mod tests {
         assert_eq!(fw.mem[0xE959], 0x60, "E959 RF scan");
         assert_eq!(fw.mem[0xF475], 0xA9, "F475 speech driver intact (sim hooks playback)");
         assert_eq!(fw.mem[0xF47E], 0xA5, "F47E speech busy wait intact");
-        assert_eq!(fw.mem[0xED5F], 0x2C, "ED5F BIT $1000 display handshake");
+        assert_eq!(fw.mem[0xEC1B], 0xA9, "EC1B display wait bypass (LDA #255)");
+        assert_eq!(fw.mem[0xED5F], 0x4C, "ED5F should JMP past LED bit-shift loop");
         assert_eq!(fw.mem[0xE3EC], 0xA9, "E3EC ROM delay intact");
     }
 
@@ -2619,5 +2949,433 @@ mod tests {
             fw.mem[0x75],
             fw.mem[0x15]
         );
+    }
+
+    #[test]
+    fn motor_talkback_returns_to_caller_at_ef63() {
+        let cart = CartImage::from_bytes(MAXXOS.to_vec()).unwrap();
+        let mut fw = InteractiveFirmware::new(cart, "MaxxOS").unwrap();
+        assert_eq!(
+            &fw.mem[0xEF63..=0xEF67],
+            &[0xA9, 0x00, 0x60, 0xFC, 0x60],
+            "$EF63 should be LDA #0; RTS without clobbering $EF67"
+        );
+        fw.cpu.registers.program_counter = 0xEF63;
+        fw.cpu.registers.stack_pointer.0 = 0xFD;
+        fw.mem[0x01FE] = 0x7D;
+        fw.mem[0x01FF] = 0xEF;
+        fw.running = false;
+        for _ in 0..4 {
+            fw.step_instruction_halted();
+            if fw.cpu.registers.program_counter == 0xEF7E {
+                break;
+            }
+            assert!(
+                (0xEF63..=0xEF67).contains(&fw.cpu.registers.program_counter),
+                "JSR $EF63 should not fall through into $EF67 garbage (pc=${:04X})",
+                fw.cpu.registers.program_counter
+            );
+        }
+        assert_eq!(
+            fw.cpu.registers.program_counter, 0xEF7E,
+            "JSR $EF63 should RTS to caller at $EF7E"
+        );
+        assert_eq!(fw.mem[0xEF67], 0x60, "$EF67 RTS must remain intact");
+    }
+
+    #[test]
+    fn display_handshake_does_not_spin_at_ed62() {
+        let cart = CartImage::from_bytes(MAXXOS.to_vec()).unwrap();
+        let mut fw = InteractiveFirmware::new(cart, "MaxxOS").unwrap();
+        assert_eq!(fw.mem[0xED62], 0xEA, "ED62 BVC wait should be NOP'd");
+        fw.mem[0x5E] = 0x0D;
+        fw.mem[0x5F] = 0xC6;
+        fw.mem[0x60] = 0x08;
+        fw.running = false;
+        fw.cpu.registers.program_counter = 0xED5F;
+        fw.step_instruction_halted();
+        assert_eq!(
+            fw.cpu.registers.program_counter, 0xED7A,
+            "ED5F should JMP directly to ED7A RTS"
+        );
+    }
+
+    #[test]
+    fn cbs_demo_plays_tune_6_after_live_boot_gate() {
+        const CBS: &[u8] =
+            include_bytes!("../../../../Cartridge/Examples/CBSDemo/Firmware/Binary/CBSDemo.532");
+        let cart = CartImage::from_bytes(CBS.to_vec()).unwrap();
+        let mut fw = InteractiveFirmware::new(cart, "CBS").unwrap();
+        fw.set_running(false);
+        fw.set_speech_enabled(false);
+        fw.set_music_enabled(false);
+        fw.warm_audio();
+        fw.set_speech_enabled(true);
+        fw.set_music_enabled(true);
+        fw.set_running(true);
+        for frame in 0..2500 {
+            fw.step_frame();
+            if fw.music.last_tune() == Some(6) {
+                return;
+            }
+            if frame == 2499 {
+                panic!(
+                    "never started Reveille after boot gate (last_tune={:?} pc=${:04X} $0D=${:02X} $11=${:02X} $13=${:02X})",
+                    fw.music.last_tune(),
+                    fw.cpu.registers.program_counter,
+                    fw.mem[0x0D],
+                    fw.mem[0x11],
+                    fw.mem[0x13],
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn cbs_demo_plays_tune_6() {
+        const CBS: &[u8] =
+            include_bytes!("../../../../Cartridge/Examples/CBSDemo/Firmware/Binary/CBSDemo.532");
+        let cart = CartImage::from_bytes(CBS.to_vec()).unwrap();
+        let mut fw = InteractiveFirmware::new(cart, "CBS").unwrap();
+        let mut saw_e4ea = false;
+        for frame in 0..2500 {
+            fw.step_frame();
+            let pc = fw.cpu.registers.program_counter;
+            if pc == 0xE4EA || pc == 0xEF01 {
+                saw_e4ea = true;
+            }
+            if fw.music.last_tune() == Some(6) {
+                return;
+            }
+        }
+        panic!(
+            "never started Reveille (last_tune={:?} saw_play_jsr={saw_e4ea} pc=${:04X} $0D=${:02X} $11=${:02X} $13=${:02X})",
+            fw.music.last_tune(),
+            fw.cpu.registers.program_counter,
+            fw.mem[0x0D],
+            fw.mem[0x11],
+            fw.mem[0x13],
+        );
+    }
+
+    #[test]
+    fn play_tune_starts_music_busy() {
+        let cart = CartImage::from_bytes(MAXXOS.to_vec()).unwrap();
+        let mut fw = InteractiveFirmware::new(cart, "MaxxOS").unwrap();
+        fw.mem[0x0D] = 3;
+        fw.cpu.registers.index_x = 6;
+        fw.cpu.registers.program_counter = 0xEF01;
+        fw.music.play_tune(
+            6,
+            fw.mem.as_ref(),
+            &mut fw.audio,
+            &mut fw.speech,
+            fw.cpu.cycles,
+        );
+        assert_eq!(fw.music.last_tune(), Some(6));
+        assert!(fw.music.music_busy(fw.cpu.cycles));
+    }
+
+    #[test]
+    fn play_tune_waits_at_e504_until_audio_finishes() {
+        let cart = CartImage::from_bytes(MAXXOS.to_vec()).unwrap();
+        let mut fw = InteractiveFirmware::new(cart, "MaxxOS").unwrap();
+        fw.warm_audio();
+        fw.mem[0x11] = 0x81;
+        fw.mem[0x13] = 6;
+        fw.cpu.registers.program_counter = 0xE4EA;
+        fw.step_frame();
+        assert_eq!(fw.music.last_tune(), Some(6));
+        fw.cpu.registers.program_counter = 0xE504;
+        let mut waited_while_busy = false;
+        let mut left_wait = false;
+        for _ in 0..50_000 {
+            fw.step_frame();
+            let pc = fw.cpu.registers.program_counter;
+            let busy = fw.music.music_busy(fw.cpu.cycles);
+            if busy && (0xE504..=0xE516).contains(&pc) {
+                waited_while_busy = true;
+                assert_ne!(fw.mem[0x2B], 0, "voice byte cleared while audio still playing");
+            }
+            if !busy && !(0xE504..=0xE516).contains(&pc) {
+                left_wait = true;
+                break;
+            }
+        }
+        assert!(waited_while_busy, "never waited in PLAY loop while music was busy");
+        assert!(left_wait, "stuck in PLAY wait after audio finished");
+    }
+
+    #[test]
+    fn delay_wait_does_not_spin_at_e4ba() {
+        let cart = CartImage::from_bytes(MAXXOS.to_vec()).unwrap();
+        let mut fw = InteractiveFirmware::new(cart, "MaxxOS").unwrap();
+        fw.mem[0x27] = 1;
+        fw.mem[0x26] = 0x7F;
+        fw.cpu.registers.program_counter = 0xE4BA;
+        let mut streak = 0u32;
+        for _ in 0..200 {
+            fw.step_frame();
+            let pc = fw.cpu.registers.program_counter;
+            if pc == 0xE4BA || pc == 0xE4BE {
+                streak += 1;
+            } else {
+                break;
+            }
+            assert!(
+                streak < 48,
+                "stuck in DELAY bit-7 wait at ${pc:04X} ($26={:02X} $27={:02X})",
+                fw.mem[0x26],
+                fw.mem[0x27],
+            );
+        }
+        assert!(
+            !matches!(
+                fw.cpu.registers.program_counter,
+                0xE4BA | 0xE4BE | 0xE4BC | 0xE4C0
+            ),
+            "never left DELAY wait loop"
+        );
+    }
+
+    #[test]
+    fn music_note_wait_does_not_spin_at_efb0() {
+        let cart = CartImage::from_bytes(MAXXOS.to_vec()).unwrap();
+        let mut fw = InteractiveFirmware::new(cart, "MaxxOS").unwrap();
+        fw.mem[0x3C] = 0;
+        fw.cpu.registers.program_counter = 0xEFB0;
+        let mut streak = 0u32;
+        for _ in 0..80 {
+            fw.step_frame();
+            if fw.cpu.registers.program_counter == 0xEFB0 {
+                streak += 1;
+            } else {
+                break;
+            }
+            assert!(streak < 8, "stuck at music wait $EFB0");
+        }
+        assert_ne!(fw.cpu.registers.program_counter, 0xEFB0);
+    }
+
+    #[test]
+    fn music_bitstream_does_not_spin_at_ef6c() {
+        let cart = CartImage::from_bytes(MAXXOS.to_vec()).unwrap();
+        let mut fw = InteractiveFirmware::new(cart, "MaxxOS").unwrap();
+        fw.mem[0x3A] = 0xFE;
+        fw.cpu.registers.program_counter = 0xEF6F;
+        let mut streak = 0u32;
+        for _ in 0..120 {
+            fw.step_frame();
+            let pc = fw.cpu.registers.program_counter;
+            if (0xEF6C..=0xEF74).contains(&pc) || pc == 0xEE32 {
+                streak += 1;
+            } else {
+                break;
+            }
+            assert!(streak < 24, "stuck in music bitstream loop at $EF6C");
+        }
+        assert!(
+            !matches!(fw.cpu.registers.program_counter, 0xEF6C | 0xEF6F | 0xEF71 | 0xEE32),
+            "never left $EF6C bitstream loop"
+        );
+    }
+
+    #[test]
+    fn cbs_demo_progress_after_hello() {
+        const CBS: &[u8] =
+            include_bytes!("../../../../Cartridge/Examples/CBSDemo/Firmware/Binary/CBSDemo.532");
+        let cart = CartImage::from_bytes(CBS.to_vec()).unwrap();
+        let mut fw = InteractiveFirmware::new(cart, "CBS").unwrap();
+        let mut saw_post_speech = false;
+        let mut ec1b_streak = 0u32;
+        let mut efb0_streak = 0u32;
+        let mut f0bd_streak = 0u32;
+        let mut ef6c_streak = 0u32;
+        let mut e4ba_streak = 0u32;
+        let mut saw_post_play = false;
+        let mut saw_execute = false;
+        for frame in 0..600 {
+            fw.step_frame();
+            let pc = fw.cpu.registers.program_counter;
+            if fw.mem[0x0D] == 3 {
+                saw_execute = true;
+            }
+            if pc != 0xF47E && fw.cpu.cycles > 1_400_000 {
+                saw_post_speech = true;
+            }
+            if saw_post_speech && pc == 0xF47E {
+                panic!(
+                    "re-entered speech wait after hello (frame {frame} cycles {})",
+                    fw.cpu.cycles
+                );
+            }
+            if pc == 0xEC1B || pc == 0xEC26 {
+                ec1b_streak += 1;
+            } else {
+                ec1b_streak = 0;
+            }
+            if (0xEFB0..=0xEFB4).contains(&pc) {
+                efb0_streak += 1;
+            } else {
+                efb0_streak = 0;
+            }
+            if (0xF0B8..=0xF0BD).contains(&pc) || (0xEF9C..=0xEFAB).contains(&pc) {
+                f0bd_streak += 1;
+            } else if saw_post_speech && fw.cpu.cycles > 3_500_000 {
+                saw_post_play = true;
+                f0bd_streak = 0;
+            }
+            if (0xEF6C..=0xEF74).contains(&pc) || pc == 0xEE32 {
+                ef6c_streak += 1;
+            } else if saw_post_speech && fw.cpu.cycles > 3_500_000 {
+                ef6c_streak = 0;
+            }
+            if matches!(pc, 0xE4BA | 0xE4BC | 0xE4BE | 0xE4C0) {
+                e4ba_streak += 1;
+            } else {
+                e4ba_streak = 0;
+            }
+            assert!(
+                ec1b_streak < 30,
+                "stuck in LED refresh loop at $EC1B (frame {frame} cycles {})",
+                fw.cpu.cycles
+            );
+            assert!(
+                efb0_streak < 12,
+                "stuck in music wait at $EFB0 (frame {frame} cycles {})",
+                fw.cpu.cycles
+            );
+            assert!(
+                f0bd_streak < 40,
+                "stuck in music decode at $F0BD (frame {frame} cycles {})",
+                fw.cpu.cycles
+            );
+            assert!(
+                ef6c_streak < 40,
+                "stuck in music bitstream loop at $EF6C (frame {frame} cycles {})",
+                fw.cpu.cycles
+            );
+            assert!(
+                e4ba_streak < 48,
+                "stuck in DELAY wait at $E4BA (frame {frame} cycles {} $26={:02X} $27={:02X})",
+                fw.cpu.cycles,
+                fw.mem[0x26],
+                fw.mem[0x27],
+            );
+        }
+        assert!(saw_execute, "factory CBS demo never entered execute mode");
+        assert!(saw_post_play, "never progressed past PLAY decode loop");
+        assert!(saw_post_speech, "never left hello speech wait");
+        assert_ne!(fw.cpu.registers.program_counter, 0xF47E);
+        assert!(
+            fw.cpu.cycles < 12_000_000,
+            "CBS demo used too many cycles after hello ({})",
+            fw.cpu.cycles
+        );
+    }
+
+    #[test]
+    fn speech_wait_completes_and_clears_busy() {
+        let cart = CartImage::from_bytes(MAXXOS.to_vec()).unwrap();
+        let mut fw = InteractiveFirmware::new(cart, "MaxxOS").unwrap();
+        fw.cpu.registers.index_x = 0x10;
+        fw.cpu.registers.program_counter = 0xF475;
+        fw.cpu.registers.stack_pointer.0 = 0xFD;
+        fw.mem[0x01FE] = 0x34;
+        fw.mem[0x01FF] = 0xA0;
+        for _ in 0..250 {
+            fw.step_frame();
+            if fw.cpu.registers.program_counter != 0xF47E {
+                break;
+            }
+        }
+        assert_ne!(fw.cpu.registers.program_counter, 0xF47E);
+        assert!(!fw.speech.speech_busy(fw.cpu.cycles));
+        assert_eq!(fw.mem[0x5B], 0);
+    }
+
+    #[test]
+    fn cbs_demo_restarts_without_keypad() {
+        const CBS: &[u8] =
+            include_bytes!("../../../../Cartridge/Examples/CBSDemo/Firmware/Binary/CBSDemo.532");
+        let cart = CartImage::from_bytes(CBS.to_vec()).unwrap();
+        let mut fw = InteractiveFirmware::new(cart, "CBS").unwrap();
+        let mut execute_entries = 0u32;
+        let mut last_in_execute = false;
+        let mut idle_e617_streak = 0u32;
+        for frame in 0..5000 {
+            fw.step_frame();
+            let pc = fw.cpu.registers.program_counter;
+            let in_execute = fw.mem[0x0D] == 3;
+            if in_execute && !last_in_execute {
+                execute_entries += 1;
+            }
+            last_in_execute = in_execute;
+            if in_keypad_spin(pc) && fw.mem[0x0D] == 0 && fw.cpu.cycles > 8_000_000 {
+                idle_e617_streak += 1;
+            } else {
+                idle_e617_streak = 0;
+            }
+            assert!(
+                idle_e617_streak < 24,
+                "stuck in immediate-mode keypad poll after demo end (frame {frame} pc=${pc:04X} cycles {})",
+                fw.cpu.cycles,
+            );
+        }
+        assert!(
+            execute_entries >= 1,
+            "factory CBS demo never entered execute (entries={execute_entries})"
+        );
+    }
+
+    #[test]
+    fn cbs_demo_auto_starts_execute_mode() {
+        const CBS: &[u8] =
+            include_bytes!("../../../../Cartridge/Examples/CBSDemo/Firmware/Binary/CBSDemo.532");
+        let cart = CartImage::from_bytes(CBS.to_vec()).unwrap();
+        let mut fw = InteractiveFirmware::new(cart, "CBS").unwrap();
+        let mut saw_execute = false;
+        let mut e617_streak = 0u32;
+        let mut e504_streak = 0u32;
+        let mut e4ba_streak = 0u32;
+        for frame in 0..800 {
+            fw.step_frame();
+            let pc = fw.cpu.registers.program_counter;
+            if fw.mem[0x0D] == 3 {
+                saw_execute = true;
+            }
+            if matches!(pc, 0xE4BA | 0xE4BC | 0xE4BE | 0xE4C0) {
+                e4ba_streak += 1;
+            } else {
+                e4ba_streak = 0;
+            }
+            if saw_execute && in_keypad_spin(pc) {
+                e617_streak += 1;
+            } else {
+                e617_streak = 0;
+            }
+            if saw_execute && (0xE504..=0xEA66).contains(&pc) {
+                e504_streak += 1;
+            } else if saw_execute {
+                e504_streak = 0;
+            }
+            assert!(
+                e617_streak < 40,
+                "stuck in $E617 during execute (frame {frame} pc=${pc:04X})",
+            );
+            assert!(
+                e504_streak < 40,
+                "stuck in motor wait at $E504 (frame {frame} pc=${pc:04X} $08={:02X} $05={:02X})",
+                fw.mem[0x08],
+                fw.mem[0x05],
+            );
+            assert!(
+                e4ba_streak < 48,
+                "stuck in DELAY wait at $E4BA (frame {frame} pc=${pc:04X} $26={:02X} $27={:02X})",
+                fw.mem[0x26],
+                fw.mem[0x27],
+            );
+        }
+        assert!(saw_execute, "factory CBS demo never entered execute mode");
     }
 }

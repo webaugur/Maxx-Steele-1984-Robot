@@ -82,14 +82,8 @@ impl BootGate {
         }
     }
 
-    fn note_ui_painted(&mut self, ctx: &egui::Context) {
+    fn tick_await_paint(&mut self) {
         if self.phase != BootPhase::AwaitPaint {
-            return;
-        }
-        // If egui is painting us, the window is live. Some platforms never populate
-        // `inner_rect` early; do not block boot on that alone.
-        let obscured = ctx.input(|input| input.viewport().visible() == Some(false));
-        if obscured {
             return;
         }
         self.paint_passes += 1;
@@ -131,6 +125,7 @@ pub fn run_live_gui(cart: CartImage, label: impl Into<String>) -> Result<(), Str
     // Hold the 6502 until the window has painted and idled (see `BootGate`).
     fw.set_running(false);
     fw.set_speech_enabled(false);
+    fw.set_music_enabled(false);
     let app = LiveSimApp {
         firmware: fw,
         cart_label: cart_name,
@@ -667,7 +662,9 @@ fn deliver_key(app: &mut LiveSimApp, now: f64) {
 }
 
 fn release_boot_cpu(app: &mut LiveSimApp) {
+    app.firmware.warm_audio();
     app.firmware.set_speech_enabled(true);
+    app.firmware.set_music_enabled(true);
     app.firmware.set_running(true);
 }
 
@@ -675,7 +672,9 @@ impl eframe::App for LiveSimApp {
     fn logic(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         if self.boot_gate.holding_cpu() {
             match self.boot_gate.phase {
-                BootPhase::AwaitPaint => {}
+                BootPhase::AwaitPaint => {
+                    self.boot_gate.tick_await_paint();
+                }
                 BootPhase::AwaitIdle => {
                     if self.boot_gate.tick_await_idle() {
                         release_boot_cpu(self);
@@ -739,9 +738,9 @@ impl eframe::App for LiveSimApp {
                 let row_h = panel.height();
                 let col_w = remote_panel::REMOTE_PANEL_W;
                 let robot_w = (panel.width() - col_w * 2.0).max(0.0);
-                let remote_rect =
+                let trace_rect =
                     egui::Rect::from_min_size(panel.min, egui::vec2(col_w, row_h));
-                let trace_rect = egui::Rect::from_min_size(
+                let remote_rect = egui::Rect::from_min_size(
                     egui::pos2(panel.min.x + col_w, panel.min.y),
                     egui::vec2(col_w, row_h),
                 );
@@ -750,6 +749,7 @@ impl eframe::App for LiveSimApp {
                     egui::vec2(robot_w, row_h),
                 );
 
+                paint_trace_column(ui, self, trace_rect);
                 ui.scope_builder(egui::UiBuilder::new().max_rect(remote_rect), |ui| {
                     egui::ScrollArea::vertical()
                         .auto_shrink([false, false])
@@ -769,7 +769,6 @@ impl eframe::App for LiveSimApp {
                             remote_branding::paint_logo(ui, &mut self.branding);
                         });
                 });
-                paint_trace_column(ui, self, trace_rect);
                 ui.scope_builder(egui::UiBuilder::new().max_rect(robot_rect), |ui| {
                     paint_live_robot(
                         ui,
@@ -780,7 +779,6 @@ impl eframe::App for LiveSimApp {
                 });
             });
 
-        self.boot_gate.note_ui_painted(ui.ctx());
     }
 }
 

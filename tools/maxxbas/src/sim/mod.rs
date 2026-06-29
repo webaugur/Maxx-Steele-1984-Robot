@@ -1,5 +1,6 @@
 //! Unified Maxx Steele simulator — program trace, robot model, firmware CPU.
 
+mod audio;
 mod display;
 mod firmware;
 mod gui;
@@ -15,8 +16,10 @@ mod remote_panel;
 mod report;
 mod robot;
 mod emoji_font;
+mod music;
 mod speech;
 mod speech_font;
+mod speech_sam;
 mod trace;
 mod trace_breakpoint;
 mod visual;
