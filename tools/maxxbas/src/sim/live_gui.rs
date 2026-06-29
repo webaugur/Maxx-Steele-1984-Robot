@@ -367,7 +367,82 @@ fn trace_selection_text(text: &str, range: egui::text::CCursorRange) -> String {
     text.char_range(span).to_string()
 }
 
-fn paint_cpu_trace_panel(ui: &mut egui::Ui, app: &mut LiveSimApp) {
+fn paint_cpu_status_bar(ui: &mut egui::Ui, app: &mut LiveSimApp) {
+    let st = app.firmware.status();
+    with_toolbar_row(ui, |ui| {
+        ui.label(
+            egui::RichText::new(app.firmware.cart_copyright())
+                .strong()
+                .size(13.0),
+        );
+        ui.separator();
+        ui.label(
+            egui::RichText::new(&app.cart_label)
+                .strong()
+                .size(13.0),
+        );
+    });
+    with_toolbar_row(ui, |ui| {
+        paint_status_toolbar(ui, app, &st);
+    });
+}
+
+fn paint_cpu_transport_toolbar(ui: &mut egui::Ui, app: &mut LiveSimApp) {
+    let st = app.firmware.status();
+    with_toolbar_row(ui, |ui| {
+        let (halt_glyph, halt_tip) = if st.running {
+            (IEC_PAUSE, "Halt CPU (IEC 60417-5008 pause)")
+        } else {
+            (IEC_RUN, "Run CPU (IEC 60417-5014 start)")
+        };
+        let can_step = st.running == false && !app.boot_gate.holding_cpu();
+        if paint_toolbar_transport_btn(ui, halt_glyph, halt_tip, true) {
+            app.firmware.set_running(!st.running);
+        }
+        if paint_toolbar_transport_btn(ui, IEC_STEP_INSN, "Step one instruction", can_step) {
+            app.firmware.step_instruction_halted();
+            app.trace_display = app.firmware.trace_text();
+            ui.ctx().request_repaint();
+        }
+        if paint_toolbar_transport_btn(ui, IEC_STEP_FRAME, "Step one frame", can_step) {
+            app.firmware.step_frame_halted();
+            app.trace_display = app.firmware.trace_text();
+            ui.ctx().request_repaint();
+        }
+        if paint_toolbar_transport_btn(ui, IEC_RESET, "Reset CPU (power-on restart)", true) {
+            let _ = app.firmware.reset();
+            app.pending_key = None;
+            app.last_input = None;
+            app.speech_bubble = None;
+            if app.boot_gate.holding_cpu() {
+                app.boot_gate.force_live();
+                release_boot_cpu(app);
+            }
+        }
+    });
+    with_toolbar_row(ui, |ui| {
+        toolbar_chip(ui, "⚙", &st.cycles.to_string());
+        ui.separator();
+        let slider_w = ui.available_width().max(60.0);
+        ui.allocate_ui_with_layout(
+            egui::vec2(slider_w, ui.available_height()),
+            egui::Layout::left_to_right(egui::Align::Center),
+            |ui| {
+                ui.add(
+                    egui::Slider::new(
+                        &mut app.firmware.options.cycles_per_frame,
+                        500..=super::interactive::CYCLES_PER_FRAME_REALTIME * 4,
+                    )
+                    .logarithmic(true)
+                    .show_value(false),
+                );
+            },
+        );
+    });
+}
+
+fn paint_cpu_trace_toolbars(ui: &mut egui::Ui, app: &mut LiveSimApp) -> bool {
+    paint_cpu_status_bar(ui, app);
     let mut set_break_on_selection = false;
     with_toolbar_row(ui, |ui| {
         let trace_on = app.firmware.trace_enabled();
@@ -423,57 +498,100 @@ fn paint_cpu_trace_panel(ui: &mut egui::Ui, app: &mut LiveSimApp) {
             ui.colored_label(egui::Color32::from_rgb(255, 140, 80), hint);
         }
     });
-    ui.allocate_ui_with_layout(
-        egui::vec2(ui.available_width(), ui.available_height().max(60.0)),
-        egui::Layout::top_down(egui::Align::LEFT),
+    paint_cpu_transport_toolbar(ui, app);
+    set_break_on_selection
+}
+
+fn paint_trace_column(ui: &mut egui::Ui, app: &mut LiveSimApp, trace_rect: egui::Rect) {
+    let trace_w = trace_rect.width();
+    ui.scope_builder(
+        egui::UiBuilder::new()
+            .max_rect(trace_rect)
+            .layout(egui::Layout::top_down(egui::Align::LEFT)),
         |ui| {
-            egui::ScrollArea::vertical()
+            ui.spacing_mut().item_spacing = egui::vec2(0.0, 0.0);
+            ui.set_width(trace_w);
+            ui.set_min_width(trace_w);
+            ui.set_max_width(trace_w);
+            let set_break_on_selection = paint_cpu_trace_toolbars(ui, app);
+            let toolbar_bottom = ui.min_rect().bottom().max(trace_rect.top());
+            let trace_body_rect = egui::Rect::from_min_max(
+                egui::pos2(trace_rect.min.x, toolbar_bottom),
+                trace_rect.max,
+            );
+            ui.scope_builder(egui::UiBuilder::new().max_rect(trace_body_rect), |ui| {
+                paint_cpu_trace_frame(ui, app, set_break_on_selection);
+            });
+        },
+    );
+}
+
+fn paint_cpu_trace_frame(ui: &mut egui::Ui, app: &mut LiveSimApp, set_break_on_selection: bool) {
+    let field = ui.max_rect();
+    let trace_w = field.width();
+    let trace_h = field.height().max(60.0);
+
+    ui.scope_builder(
+        egui::UiBuilder::new()
+            .max_rect(field)
+            .layout(egui::Layout::top_down(egui::Align::LEFT)),
+        |ui| {
+            ui.set_min_size(egui::vec2(trace_w, trace_h));
+            ui.set_max_size(egui::vec2(trace_w, trace_h));
+            let mut output = egui::ScrollArea::vertical()
+                .id_salt("cpu_trace_scroll")
+                .content_margin(egui::Margin::ZERO)
                 .auto_shrink([false, false])
                 .stick_to_bottom(true)
+                .scroll_bar_visibility(egui::scroll_area::ScrollBarVisibility::AlwaysHidden)
                 .show(ui, |ui| {
-                    ui.set_min_height(ui.max_rect().height());
-                    let mut output = egui::TextEdit::multiline(&mut app.trace_display)
+                    ui.set_min_width(trace_w);
+                    ui.set_width(trace_w);
+                    ui.set_max_width(trace_w);
+                    ui.set_min_height(trace_h);
+                    egui::TextEdit::multiline(&mut app.trace_display)
                         .id(ui.id().with("cpu_trace_edit"))
                         .font(egui::TextStyle::Monospace)
-                        .desired_width(f32::INFINITY)
+                        .desired_width(trace_w)
+                        .min_size(egui::vec2(trace_w, trace_h))
+                        .margin(egui::Margin::ZERO)
+                        .frame(egui::Frame::NONE)
                         .interactive(true)
-                        .show(ui);
-                    if output.response.clicked() {
-                        if let Some(range) = output.cursor_range {
-                            if let Some((start, end)) = super::trace_breakpoint::expand_trace_selection(
-                                &app.trace_display,
-                                range.primary.index,
-                            ) {
-                                let expanded = egui::text::CCursorRange::two(
-                                    egui::text::CCursor::new(start),
-                                    egui::text::CCursor::new(end),
-                                );
-                                output.state.cursor.set_char_range(Some(expanded));
-                                output.state.store(ui.ctx(), output.response.id);
-                            }
-                        }
+                        .show(ui)
+                })
+                .inner;
+            if output.response.clicked() {
+                if let Some(range) = output.cursor_range {
+                    if let Some((start, end)) = super::trace_breakpoint::expand_trace_selection(
+                        &app.trace_display,
+                        range.primary.index,
+                    ) {
+                        let expanded = egui::text::CCursorRange::two(
+                            egui::text::CCursor::new(start),
+                            egui::text::CCursor::new(end),
+                        );
+                        output.state.cursor.set_char_range(Some(expanded));
+                        output.state.store(ui.ctx(), output.response.id);
                     }
-                    if set_break_on_selection {
-                        if let Some(range) = output.cursor_range {
-                            let selected = trace_selection_text(&app.trace_display, range);
-                            if let Some(bp) =
-                                super::trace_breakpoint::parse_trace_selection(&selected)
-                            {
-                                app.firmware.set_trace_breakpoint(Some(bp));
-                                app.trace_breakpoint_hint = None;
-                            } else if !selected.trim().is_empty() {
-                                app.trace_breakpoint_hint =
-                                    Some(format!("Unrecognized selection: {selected}"));
-                            } else {
-                                app.trace_breakpoint_hint =
-                                    Some("Select text in the trace first".into());
-                            }
-                        } else {
-                            app.trace_breakpoint_hint =
-                                Some("Select text in the trace first".into());
-                        }
+                }
+            }
+            if set_break_on_selection {
+                if let Some(range) = output.cursor_range {
+                    let selected = trace_selection_text(&app.trace_display, range);
+                    if let Some(bp) = super::trace_breakpoint::parse_trace_selection(&selected) {
+                        app.firmware.set_trace_breakpoint(Some(bp));
+                        app.trace_breakpoint_hint = None;
+                    } else if !selected.trim().is_empty() {
+                        app.trace_breakpoint_hint =
+                            Some(format!("Unrecognized selection: {selected}"));
+                    } else {
+                        app.trace_breakpoint_hint =
+                            Some("Select text in the trace first".into());
                     }
-                });
+                } else {
+                    app.trace_breakpoint_hint = Some("Select text in the trace first".into());
+                }
+            }
         },
     );
 }
@@ -608,146 +726,58 @@ impl eframe::App for LiveSimApp {
         let now = ui.input(|i| i.time);
         update_speech_bubble(self, now);
 
-        egui::Panel::top("toolbar")
-            .frame(egui::Frame {
-                inner_margin: egui::Margin::symmetric(6, 3),
-                ..Default::default()
-            })
-            .show_inside(ui, |ui| {
-            let window_tile = self.skins.window_tile(ui.ctx());
-            plastic_skin::paint_rect(ui, ui.clip_rect(), window_tile);
-
-            with_toolbar_row(ui, |ui| {
-                let st = self.firmware.status();
-                let (halt_glyph, halt_tip) = if st.running {
-                    (IEC_PAUSE, "Halt CPU (IEC 60417-5008 pause)")
-                } else {
-                    (IEC_RUN, "Run CPU (IEC 60417-5014 start)")
-                };
-                let can_step = st.running == false && !self.boot_gate.holding_cpu();
-                if paint_toolbar_transport_btn(ui, halt_glyph, halt_tip, true) {
-                    self.firmware.set_running(!st.running);
-                }
-                if paint_toolbar_transport_btn(ui, IEC_STEP_INSN, "Step one instruction", can_step) {
-                    self.firmware.step_instruction_halted();
-                    self.trace_display = self.firmware.trace_text();
-                    ui.ctx().request_repaint();
-                }
-                if paint_toolbar_transport_btn(ui, IEC_STEP_FRAME, "Step one frame", can_step) {
-                    self.firmware.step_frame_halted();
-                    self.trace_display = self.firmware.trace_text();
-                    ui.ctx().request_repaint();
-                }
-                if paint_toolbar_transport_btn(ui, IEC_RESET, "Reset CPU (power-on restart)", true) {
-                    let _ = self.firmware.reset();
-                    self.pending_key = None;
-                    self.last_input = None;
-                    self.speech_bubble = None;
-                    if self.boot_gate.holding_cpu() {
-                        self.boot_gate.force_live();
-                        release_boot_cpu(self);
-                    }
-                }
-                ui.separator();
-                toolbar_chip(ui, "⚙", &st.cycles.to_string());
-                ui.separator();
-                ui.add(
-                    egui::Slider::new(
-                        &mut self.firmware.options.cycles_per_frame,
-                        500..=super::interactive::CYCLES_PER_FRAME_REALTIME * 4,
-                    )
-                    .logarithmic(true)
-                    .show_value(false),
-                );
-                ui.separator();
-                ui.label(egui::RichText::new(&self.cart_label).strong());
-
-                let remaining = ui.available_width();
-                if remaining > 40.0 {
-                    ui.allocate_ui_with_layout(
-                        egui::vec2(remaining, ui.available_height()),
-                        egui::Layout::top_down(egui::Align::Max),
-                        |ui| {
-                            ui.horizontal(|ui| {
-                                paint_status_toolbar(ui, self, &st);
-                            });
-                        },
-                    );
-                }
-            });
-
-            });
-
         if !self.trace_editable {
             self.trace_display = self.firmware.trace_text();
         }
 
-        egui::Panel::left("remote")
-            .resizable(false)
-            .frame(egui::Frame {
-                inner_margin: egui::Margin::ZERO,
-                ..Default::default()
-            })
-            .default_width(remote_panel::REMOTE_PANEL_W)
-            .width_range(remote_panel::REMOTE_PANEL_W..=remote_panel::REMOTE_PANEL_W)
-            .show_inside(ui, |ui| {
-                ui.set_min_width(remote_panel::REMOTE_PANEL_W);
-                ui.set_max_width(remote_panel::REMOTE_PANEL_W);
-                let window_tile = self.skins.window_tile(ui.ctx());
-                plastic_skin::paint_rect(ui, ui.clip_rect(), window_tile);
-                egui::ScrollArea::vertical()
-                    .auto_shrink([false, false])
-                    .show(ui, |ui| {
-                        ui.set_width(remote_panel::REMOTE_SHELL_W);
-                        let now = ui.input(|i| i.time);
-                        let (key, _shell) = remote_panel::paint_transmitter_face(
-                            ui,
-                            &mut self.skins,
-                            &self.status_leds,
-                            now,
-                        );
-                        if let Some(key) = key {
-                            queue_key(self, key, true);
-                            ui.ctx().request_repaint();
-                        }
-                        remote_branding::paint_logo(ui, &mut self.branding);
-                    });
-            });
-
-        egui::Panel::left("cpu_trace")
-            .resizable(false)
-            .frame(egui::Frame {
-                inner_margin: egui::Margin::symmetric(6, 3),
-                ..Default::default()
-            })
-            .default_width(remote_panel::REMOTE_PANEL_W)
-            .width_range(remote_panel::REMOTE_PANEL_W..=remote_panel::REMOTE_PANEL_W)
-            .show_inside(ui, |ui| {
-                ui.set_min_width(remote_panel::REMOTE_PANEL_W);
-                ui.set_max_width(remote_panel::REMOTE_PANEL_W);
-                let window_tile = self.skins.window_tile(ui.ctx());
-                plastic_skin::paint_rect(ui, ui.clip_rect(), window_tile);
-                paint_cpu_trace_panel(ui, self);
-            });
-
         egui::CentralPanel::default()
-            .frame(egui::Frame {
-                inner_margin: egui::Margin::ZERO,
-                ..Default::default()
-            })
+            .frame(egui::Frame::NONE)
             .show_inside(ui, |ui| {
+                let panel = ui.clip_rect();
                 let window_tile = self.skins.window_tile(ui.ctx());
-                plastic_skin::paint_rect(ui, ui.clip_rect(), window_tile);
-                let (rect, _resp) = ui.allocate_exact_size(
-                    egui::vec2(ui.available_width(), ui.available_height().max(80.0)),
-                    egui::Sense::hover(),
+                plastic_skin::paint_rect(ui, panel, window_tile);
+                let row_h = panel.height();
+                let col_w = remote_panel::REMOTE_PANEL_W;
+                let robot_w = (panel.width() - col_w * 2.0).max(0.0);
+                let remote_rect =
+                    egui::Rect::from_min_size(panel.min, egui::vec2(col_w, row_h));
+                let trace_rect = egui::Rect::from_min_size(
+                    egui::pos2(panel.min.x + col_w, panel.min.y),
+                    egui::vec2(col_w, row_h),
                 );
-                paint_live_robot(
-                    ui,
-                    rect,
-                    &self.firmware.led_chars_settled(),
-                    self.speech_bubble.as_ref(),
+                let robot_rect = egui::Rect::from_min_size(
+                    egui::pos2(panel.min.x + col_w * 2.0, panel.min.y),
+                    egui::vec2(robot_w, row_h),
                 );
+
+                ui.scope_builder(egui::UiBuilder::new().max_rect(remote_rect), |ui| {
+                    egui::ScrollArea::vertical()
+                        .auto_shrink([false, false])
+                        .show(ui, |ui| {
+                            ui.set_width(remote_panel::REMOTE_SHELL_W);
+                            let now = ui.input(|i| i.time);
+                            let (key, _shell) = remote_panel::paint_transmitter_face(
+                                ui,
+                                &mut self.skins,
+                                &self.status_leds,
+                                now,
+                            );
+                            if let Some(key) = key {
+                                queue_key(self, key, true);
+                                ui.ctx().request_repaint();
+                            }
+                            remote_branding::paint_logo(ui, &mut self.branding);
+                        });
+                });
+                paint_trace_column(ui, self, trace_rect);
+                ui.scope_builder(egui::UiBuilder::new().max_rect(robot_rect), |ui| {
+                    paint_live_robot(
+                        ui,
+                        robot_rect,
+                        &self.firmware.led_chars_settled(),
+                        self.speech_bubble.as_ref(),
+                    );
+                });
             });
 
         self.boot_gate.note_ui_painted(ui.ctx());
@@ -799,7 +829,7 @@ fn paint_live_robot(ui: &egui::Ui, rect: egui::Rect, led: &str, speech: Option<&
 
     let scale = (rect.width() / DESIGN_W).min(rect.height() / DESIGN_H);
     let drawn = egui::vec2(DESIGN_W * scale, DESIGN_H * scale);
-    let origin = rect.center() - drawn * 0.5;
+    let origin = egui::pos2(rect.left() + (rect.width() - drawn.x) * 0.5, rect.top());
     let s = |v: f32| v * scale;
 
     let painter = ui.painter_at(rect).with_clip_rect(rect);

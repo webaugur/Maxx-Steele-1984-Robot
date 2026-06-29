@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Unified Maxx Steele command-line toolchain.
 
-Dispatches to the Rust `maxx` binary (tools/maxxbas/). Builds release on first
-use if the binary is missing.
+Dispatches to the Rust `maxx` binary (tools/maxxbas/). Rebuilds release when
+sources are newer than the binary (see tools/maxx_build.py).
 
   maxx compile program.bas -o program.532
   maxx check program.bas
@@ -10,69 +10,21 @@ use if the binary is missing.
   maxx list program.532 [--json]
   maxx upload program.bas --device maxx_cart
   maxx simulate program.532 [--json] [--image-out sim.bin]
+
+Agents: run `python3 tools/ensure_maxx_built` before telling the user to launch
+the GUI after code changes.
 """
 
 from __future__ import annotations
 
 import argparse
 import os
-import subprocess
 import sys
 from pathlib import Path
 
-from process_util import INTERRUPTED, main_guard, run
+from maxx_build import binary_version, build_maxx, ensure_maxx_built, find_maxx_binary
+from process_util import main_guard, run
 from project_paths import project_root
-
-CRATE_DIR = project_root() / "tools" / "maxxbas"
-RELEASE_BIN = CRATE_DIR / "target" / "release" / "maxx"
-DEBUG_BIN = CRATE_DIR / "target" / "debug" / "maxx"
-
-
-def find_maxx_binary() -> Path | None:
-    for candidate in (RELEASE_BIN, DEBUG_BIN):
-        if candidate.is_file():
-            return candidate
-    return None
-
-
-def binary_version(path: Path) -> str:
-    proc = subprocess.run(
-        [str(path), "--version"],
-        capture_output=True,
-        text=True,
-        check=False,
-    )
-    return (proc.stdout or proc.stderr or "").strip()
-
-
-def build_maxx(release: bool = True) -> Path:
-    profile = "release" if release else "debug"
-    cmd = [
-        "cargo",
-        "build",
-        f"--{profile}",
-        "--manifest-path",
-        str(CRATE_DIR / "Cargo.toml"),
-    ]
-    print("building maxx toolchain...", file=sys.stderr)
-    try:
-        subprocess.run(cmd, check=True)
-    except KeyboardInterrupt:
-        print("\nBuild interrupted.", file=sys.stderr)
-        raise SystemExit(INTERRUPTED) from None
-    path = RELEASE_BIN if release else DEBUG_BIN
-    if not path.is_file():
-        raise RuntimeError(f"build succeeded but {path} not found")
-    return path
-
-
-def ensure_maxx() -> Path:
-    if RELEASE_BIN.is_file():
-        return RELEASE_BIN
-    found = find_maxx_binary()
-    if found is not None:
-        return found
-    return build_maxx(release=True)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -88,20 +40,22 @@ def main(argv: list[str] | None = None) -> int:
         if binary is None:
             print(
                 "error: maxx binary not found; run without --no-build or "
-                "cargo build --release --manifest-path tools/maxxbas/Cargo.toml",
+                "python3 tools/ensure_maxx_built",
                 file=sys.stderr,
             )
             return 1
     elif args.debug_build:
         binary = find_maxx_binary() or build_maxx(release=False)
     else:
-        binary = ensure_maxx()
+        binary = ensure_maxx_built()
 
     env = os.environ.copy()
     tools_dir = str(project_root() / "tools")
     env["PATH"] = f"{tools_dir}{os.pathsep}{env.get('PATH', '')}"
 
-    if rest[:2] == ["simulate", "--gui"] or (len(rest) >= 2 and rest[0] == "simulate" and "--gui" in rest[1:]):
+    if rest[:2] == ["simulate", "--gui"] or (
+        len(rest) >= 2 and rest[0] == "simulate" and "--gui" in rest[1:]
+    ):
         ver = binary_version(binary)
         if ver:
             print(f"using {ver} ({binary})", file=sys.stderr)

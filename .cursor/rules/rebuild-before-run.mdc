@@ -1,0 +1,18 @@
+---
+description: Rebuild maxx before asking the user to run simulate/GUI or other maxx commands after code changes
+alwaysApply: true
+---
+
+After editing `tools/maxxbas/` (or any file that affects the maxx binary), **do not** tell the user to run `maxx`, `maxx simulate`, or `maxx simulate --gui` until you have verified a fresh build.
+
+**Required preflight (run it yourself, every time):**
+
+```bash
+python3 tools/ensure_maxx_built
+```
+
+- Exit code must be `0`.
+- Note the printed version (e.g. `ok: maxx 0.2.40`) and include it when you tell the user to relaunch.
+- If the command fails, fix the build and rerun until it passes.
+
+`tools/maxx` also auto-rebuilds when sources are newer than the release binary, but the agent must still run `ensure_maxx_built` before suggesting the user run the sim — do not skip this step.

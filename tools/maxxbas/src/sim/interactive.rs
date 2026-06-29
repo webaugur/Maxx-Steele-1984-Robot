@@ -1361,6 +1361,11 @@ impl InteractiveFirmware {
         self.trace_breakpoint.as_ref()
     }
 
+    /// Cartridge copyright field (17-byte `.532` header, trimmed).
+    pub fn cart_copyright(&self) -> String {
+        self.cart.copyright_str().trim_end().to_string()
+    }
+
     /// Recent instructions (newest at bottom), ready to copy/paste.
     pub fn trace_text(&self) -> String {
         let st = self.status();

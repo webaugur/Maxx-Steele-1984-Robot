@@ -1,0 +1,44 @@
+#!/usr/bin/env python3
+"""Preflight: rebuild maxx when sources changed, then print the release version.
+
+Agents must run this (and confirm exit 0) before telling the user to launch
+`maxx simulate --gui` or any other maxx command after editing tools/maxxbas.
+
+  python3 tools/ensure_maxx_built
+  python3 tools/ensure_maxx_built --force   # unconditional cargo build --release
+"""
+
+from __future__ import annotations
+
+import argparse
+import sys
+from pathlib import Path
+
+from process_util import main_guard
+from maxx_build import RELEASE_BIN, verify_maxx_built
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help="run cargo build --release even when the binary looks current",
+    )
+    args = parser.parse_args(argv)
+
+    try:
+        binary, version = verify_maxx_built(force=args.force)
+    except RuntimeError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 1
+
+    print(f"ok: {version}")
+    print(f"binary: {binary}")
+    if binary.resolve() != RELEASE_BIN.resolve():
+        print(f"warning: expected release binary at {RELEASE_BIN}", file=sys.stderr)
+    return 0
+
+
+if __name__ == "__main__":
+    main_guard(main)
