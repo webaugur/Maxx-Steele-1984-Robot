@@ -115,11 +115,18 @@ impl BootGate {
     }
 }
 
-pub fn run_live_gui(cart: CartImage, label: impl Into<String>) -> Result<(), String> {
+pub fn run_live_gui(cart: Option<CartImage>, label: impl Into<String>) -> Result<(), String> {
     let label = label.into();
-    let cart_name = short_label(&label);
+    let cart_name = if cart.is_some() {
+        short_label(&label)
+    } else {
+        "Internal ROM".to_string()
+    };
     let title = format!("Maxx Steele Live v{SIM_VERSION} — {cart_name}");
-    let mut fw = InteractiveFirmware::new(cart, title.clone())?;
+    let mut fw = match cart {
+        Some(cart) => InteractiveFirmware::new(cart, title.clone())?,
+        None => InteractiveFirmware::new_without_cart(title.clone())?,
+    };
     // Match hardware: digit then explicit ENTER (no auto-submit).
     fw.set_auto_submit_enter(false);
     // Hold the 6502 until the window has painted and idled (see `BootGate`).

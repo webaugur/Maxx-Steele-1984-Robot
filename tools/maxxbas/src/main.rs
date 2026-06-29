@@ -5,7 +5,7 @@ use std::process::ExitCode;
 use clap::{Parser, Subcommand};
 use maxxbas::{
     compile_to_output, decode_cart, default_output, format_listing, format_rom_listing,
-    format_simulation, input_kind, parse_source, program_bytes, resolve_input, run_gui,
+    format_simulation, input_kind, parse_source, program_bytes, resolve_input,
     run_live_gui,
     run_simulation, run_upload, upload_command, validate_cart_image, CartImage, Copyright,
     InputKind, SimulationOptions, CART_SIZE,
@@ -77,8 +77,8 @@ enum Commands {
     /// Simulate program + robot model + patched internal ROM (unified simulator)
     #[command(visible_alias = "sim")]
     Simulate {
-        /// .bas, .maxx, or .532
-        file: PathBuf,
+        /// .bas, .maxx, or .532 — omit with `--gui` to run internal ROM only (no cartridge)
+        file: Option<PathBuf>,
         #[arg(long)]
         json: bool,
         /// Skip 65C02 firmware boot simulation
@@ -165,7 +165,7 @@ fn run() -> Result<(), String> {
             plain,
             gui,
         } => cmd_simulate(
-            &file,
+            file.as_deref(),
             json,
             no_firmware,
             cycles,
@@ -281,7 +281,7 @@ fn cmd_upload(
 }
 
 fn cmd_simulate(
-    file: &Path,
+    file: Option<&Path>,
     json: bool,
     no_firmware: bool,
     cycles: u64,
@@ -292,13 +292,34 @@ fn cmd_simulate(
     plain: bool,
     gui: bool,
 ) -> Result<(), String> {
+    if gui {
+        if json {
+            eprintln!("note: --json ignored when --gui is set");
+        }
+        if no_firmware {
+            return Err("--no-firmware is not supported with --gui".into());
+        }
+        return match file {
+            Some(path) => {
+                let copyright = parse_copyright(copyright_key)?;
+                let resolved = resolve_input(path, copyright, None, tables_from)?;
+                let cart = CartImage::load(&resolved.path)?;
+                run_live_gui(Some(cart), path.display().to_string())
+            }
+            None => run_live_gui(None, "Internal ROM".to_string()),
+        };
+    }
+
+    let path = file.ok_or(
+        "simulate requires a firmware file, or use `maxx simulate --gui` for internal ROM only",
+    )?;
     let copyright = parse_copyright(copyright_key)?;
-    let resolved = resolve_input(file, copyright, None, tables_from)?;
+    let resolved = resolve_input(path, copyright, None, tables_from)?;
     let cart = CartImage::load(&resolved.path)?;
 
     let report = run_simulation(
         &cart,
-        &file.display().to_string(),
+        &path.display().to_string(),
         &SimulationOptions {
             max_cycles: cycles,
             inject_key: key,
@@ -308,16 +329,6 @@ fn cmd_simulate(
             plain,
         },
     )?;
-
-    if gui {
-        if json {
-            eprintln!("note: --json ignored when --gui is set");
-        }
-        if !no_firmware {
-            return run_live_gui(cart, file.display().to_string());
-        }
-        return run_gui(report);
-    }
 
     if json {
         println!("{}", serde_json::to_string_pretty(&report).map_err(|e| e.to_string())?);

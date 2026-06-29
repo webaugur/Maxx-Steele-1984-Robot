@@ -273,22 +273,31 @@ pub fn sync_music_voice_busy(mem: &mut [u8; 65536], player: &MusicPlayer, cpu_cy
     }
 }
 
-fn tune_for_play_hook(cpu_pc: u16, mem: &[u8; 65536]) -> Option<u8> {
+fn tune_for_play_hook(cpu_pc: u16, index_x: u8, mem: &[u8; 65536]) -> Option<u8> {
     match cpu_pc {
-        PLAY_JSR_GET_TUNE | ROM_GET_TUNE_POINTERS if mem[0x11] == PLAY_OPCODE => Some(mem[0x13]),
+        PLAY_JSR_GET_TUNE | ROM_GET_TUNE_POINTERS => {
+            if index_x <= 8 {
+                Some(index_x)
+            } else if cpu_pc == PLAY_JSR_GET_TUNE && mem[0x11] == PLAY_OPCODE {
+                Some(mem[0x13])
+            } else {
+                None
+            }
+        }
         _ => None,
     }
 }
 
 pub fn enter_play_tune(
     cpu_pc: u16,
+    index_x: u8,
     mem: &[u8; 65536],
     player: &mut MusicPlayer,
     audio: &mut AudioOutput,
     speech: &mut SpeechPlayer,
     cpu_cycles: u64,
 ) -> bool {
-    let Some(tune) = tune_for_play_hook(cpu_pc, mem) else {
+    let Some(tune) = tune_for_play_hook(cpu_pc, index_x, mem) else {
         return false;
     };
     if speech.speech_busy(cpu_cycles) {
@@ -340,7 +349,8 @@ mod tests {
         let mut speech = SpeechPlayer::new(true);
         audio.warm();
         assert!(enter_play_tune(
-            PLAY_JSR_GET_TUNE,
+            ROM_GET_TUNE_POINTERS,
+            6,
             &mem,
             &mut music,
             &mut audio,
@@ -348,6 +358,26 @@ mod tests {
             0,
         ));
         assert_eq!(music.last_tune(), Some(6));
+    }
+
+    #[test]
+    fn boot_startup_tune_uses_ef01_index_x() {
+        let mut mem = [0u8; 65536];
+        let mut audio = AudioOutput::new();
+        let mut music = MusicPlayer::new(true);
+        let mut speech = SpeechPlayer::new(true);
+        audio.warm();
+        assert!(enter_play_tune(
+            ROM_GET_TUNE_POINTERS,
+            1,
+            &mem,
+            &mut music,
+            &mut audio,
+            &mut speech,
+            0,
+        ));
+        assert_eq!(music.last_tune(), Some(1));
+        assert_eq!(rom_tune_label(1), Some("Immediate mode"));
         if audio.available() {
             assert!(
                 music.has_active_sink(),

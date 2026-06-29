@@ -1,6 +1,6 @@
 [package]
 name = "maxxbas"
-version = "0.2.75"
+version = "0.2.77"
 edition = "2021"
 description = "Maxx Steele toolchain — compile MaxxBAS, decode ROMs, upload to PicoROM"
 readme = "README.md"

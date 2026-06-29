@@ -198,7 +198,7 @@ pub struct InteractiveFirmware {
     pub options: InteractiveOptions,
     running: bool,
     pub label: String,
-    cart: CartImage,
+    cart: Option<CartImage>,
     irq_phase: u64,
     bus_state: Box<LiveBusState>,
     /// Set once firmware enters `$E60D`/`$E617` wait; stays set until reset.
@@ -970,10 +970,28 @@ fn emulate_speech_bus_wait(
 
 impl InteractiveFirmware {
     pub fn new(cart: CartImage, label: impl Into<String>) -> Result<Self, String> {
-        let factory_demo_cart = super::firmware::cart_returns_to_main_loop(&cart);
+        Self::boot(Some(cart), label)
+    }
+
+    /// Internal ROM only — no cartridge at `$A000` (hardware falls through to `$E0B6`).
+    pub fn new_without_cart(label: impl Into<String>) -> Result<Self, String> {
+        Self::boot(None, label)
+    }
+
+    pub fn has_cart(&self) -> bool {
+        self.cart.is_some()
+    }
+
+    fn boot(cart: Option<CartImage>, label: impl Into<String>) -> Result<Self, String> {
+        let factory_demo_cart = cart
+            .as_ref()
+            .is_some_and(super::firmware::cart_returns_to_main_loop);
         let patches = interactive_patches();
-        let mut mem = Box::new(super::firmware::build_memory_image(Some(&cart), &patches)?);
-        super::firmware::prepare_interactive_memory(mem.as_mut(), &cart);
+        let mut mem = Box::new(super::firmware::build_memory_image(
+            cart.as_ref(),
+            &patches,
+        )?);
+        super::firmware::prepare_interactive_memory(mem.as_mut(), cart.as_ref());
 
         let display = LedDisplay::default();
         let mut bus_state = Box::new(LiveBusState {
@@ -1029,8 +1047,8 @@ impl InteractiveFirmware {
 
     pub fn reset(&mut self) -> Result<(), String> {
         let patches = interactive_patches();
-        *self.mem = super::firmware::build_memory_image(Some(&self.cart), &patches)?;
-        super::firmware::prepare_interactive_memory(self.mem.as_mut(), &self.cart);
+        *self.mem = super::firmware::build_memory_image(self.cart.as_ref(), &patches)?;
+        super::firmware::prepare_interactive_memory(self.mem.as_mut(), self.cart.as_ref());
         self.display = LedDisplay::default();
         self.bus_state.radio_pending = None;
         self.bus_state.pending_digit = None;
@@ -1046,7 +1064,10 @@ impl InteractiveFirmware {
         self.irq_phase = 0;
         self.last_answer_digit = 0xFF;
         self.queue_auto_enter = false;
-        self.factory_demo_cart = super::firmware::cart_returns_to_main_loop(&self.cart);
+        self.factory_demo_cart = self
+            .cart
+            .as_ref()
+            .is_some_and(super::firmware::cart_returns_to_main_loop);
         self.keys_pressed = 0;
         self.music_decode_streak = 0;
         self.speech.stop();
@@ -1356,6 +1377,7 @@ impl InteractiveFirmware {
             emulate_factory_demo_waits(self.mem.as_mut(), &mut self.cpu, self.factory_demo_cart);
             super::music::enter_play_tune(
                 self.cpu.registers.program_counter,
+                u8::from(self.cpu.registers.index_x),
                 self.mem.as_ref(),
                 &mut self.music,
                 &mut self.audio,
@@ -1636,9 +1658,14 @@ impl InteractiveFirmware {
         self.trace_breakpoint.as_ref()
     }
 
-    /// Cartridge copyright field (17-byte `.532` header, trimmed).
+    /// Cartridge copyright field (17-byte `.532` header) or internal ROM title at `$E000`.
     pub fn cart_copyright(&self) -> String {
-        self.cart.copyright_str().trim_end().to_string()
+        if let Some(cart) = &self.cart {
+            return cart.copyright_str().trim_end().to_string();
+        }
+        String::from_utf8_lossy(&self.mem[0xE000..0xE011])
+            .trim_end()
+            .to_string()
     }
 
     /// Recent instructions (newest at bottom), ready to copy/paste.
@@ -1686,6 +1713,46 @@ mod tests {
     const MAXXOS: &[u8] = include_bytes!(
         "../../../../Cartridge/Examples/MaxxOS/Firmware/Binary/MaxxOS.532"
     );
+
+    #[test]
+    fn internal_rom_plays_startup_tune_1() {
+        let mut fw = InteractiveFirmware::new_without_cart("ROM").unwrap();
+        fw.warm_audio();
+        for frame in 0..3000 {
+            fw.step_frame();
+            if fw.music.last_tune() == Some(1) {
+                return;
+            }
+            if frame == 2999 {
+                panic!(
+                    "never played startup tune 1 (pc=${:04X} $11=${:02X} X=${:02X})",
+                    fw.cpu.registers.program_counter,
+                    fw.mem[0x11],
+                    u8::from(fw.cpu.registers.index_x),
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn internal_rom_reaches_keypad_poll_without_cart() {
+        let mut fw = InteractiveFirmware::new_without_cart("ROM").unwrap();
+        assert!(!fw.has_cart());
+        for frame in 0..1200 {
+            fw.step_frame();
+            if fw.in_keypad_poll() {
+                assert_eq!(fw.mem[0x0D], 0, "expected immediate mode after boot");
+                return;
+            }
+            if frame == 1199 {
+                panic!(
+                    "internal ROM never reached keypad poll (pc=${:04X} mode=${:02X})",
+                    fw.cpu.registers.program_counter,
+                    fw.mem[0x0D],
+                );
+            }
+        }
+    }
 
     #[test]
     fn maxxos_led_shows_prompt_eventually() {

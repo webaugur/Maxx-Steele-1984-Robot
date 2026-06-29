@@ -162,8 +162,10 @@ pub const ROM_KEYPAD_POLL: u16 = 0xE617;
 /// IRQ handler pointer installed at `$0078` on warm start.
 pub const IRQ_VECTOR_FDC8: u16 = 0xFDC8;
 
-pub fn prepare_interactive_memory(mem: &mut [u8; 65536], cart: &CartImage) {
-    maybe_bootstrap_cart_tables(mem, cart);
+pub fn prepare_interactive_memory(mem: &mut [u8; 65536], cart: Option<&CartImage>) {
+    if let Some(cart) = cart {
+        maybe_bootstrap_cart_tables(mem, cart);
+    }
     seed_warm_start_signature(mem);
     bootstrap_irq_vectors(mem);
 }
