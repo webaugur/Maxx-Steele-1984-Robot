@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Maxx SAM speech — drop-in replacement for macOS `say`.
+# Uses the same rustsam voice as the Maxx Steele simulator.
+set -euo pipefail
+BIN_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+exec "$BIN_DIR/maxx" say "$@"

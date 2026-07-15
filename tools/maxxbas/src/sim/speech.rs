@@ -4,12 +4,135 @@
 //! - `$F44B` — cart execute `SPEAK` (`$82`) / `SAY` (`$83`), operand in `$13`
 //! - `$F40F` — game / status `JSR` with phrase index in X (ROM if `X >= $10`, else RAM `$0500`)
 //! - `$F475` / `$F47E` — power-on / mode entry ROM phrases (X = `$10`–`$20`)
+//!
+//! CLI entry: [`synthesize_text`], [`play_text`], [`write_wav`] (see `maxx say` / `tools/bin/say`).
+
+use std::fs::File;
+use std::io::Write;
+use std::path::Path;
 
 use rodio::buffer::SamplesBuffer;
 use rodio::Sink;
 
 use super::audio::AudioOutput;
 use super::speech_sam::{self, SamError, SAM_SAMPLE_RATE};
+
+pub use super::speech_sam::{
+    all_voices, find_voice, format_voice_list, SamPreset, SamVoice,
+};
+
+/// Sample rate of SAM / `maxx say` output (Hz).
+pub const SAY_SAMPLE_RATE: u32 = SAM_SAMPLE_RATE;
+
+fn map_sam_err(e: SamError) -> String {
+    match e {
+        SamError::Recite(err) => format!("SAM reciter: {err:?}"),
+        SamError::Parse(err) => format!("SAM parser: {err:?}"),
+        SamError::Empty => "SAM produced no audio".into(),
+    }
+}
+
+/// Synthesize English text with the Maxx “Little Robot” SAM voice.
+pub fn synthesize_text(text: &str) -> Result<Vec<f32>, String> {
+    synthesize_text_with(text, SamPreset::Robot, false)
+}
+
+/// Synthesize English text with a classic SAM preset and optional sing mode.
+pub fn synthesize_text_with(
+    text: &str,
+    preset: SamPreset,
+    sing: bool,
+) -> Result<Vec<f32>, String> {
+    synthesize_text_voice(text, preset.voice(), sing)
+}
+
+/// Synthesize English text with any registered voice (SAM or macOS-name approx).
+pub fn synthesize_text_voice(
+    text: &str,
+    voice: &SamVoice,
+    sing: bool,
+) -> Result<Vec<f32>, String> {
+    let trimmed = text.trim();
+    if trimmed.is_empty() {
+        return Err("empty text".into());
+    }
+    speech_sam::synthesize_voice(trimmed, voice, sing).map_err(map_sam_err)
+}
+
+/// Resolve a Maxx phrase index (`0x00`–`0x0F` RAM, `0x10`–`0x20` ROM, `0x3F` laugh).
+pub fn resolve_phrase_text(index: u8) -> Result<&'static str, String> {
+    phrase_label(index).ok_or_else(|| {
+        format!(
+            "unknown phrase index ${index:02X} (use 0x00–0x03 RAM, 0x10–0x20 ROM, or 0x3F)"
+        )
+    })
+}
+
+/// Play mono f32 samples on the default audio device (blocks until finished).
+pub fn play_samples(samples: &[f32]) -> Result<(), String> {
+    if samples.is_empty() {
+        return Err("no samples to play".into());
+    }
+    let mut audio = AudioOutput::new();
+    audio.warm();
+    let sink = audio
+        .open_sink()
+        .ok_or_else(|| "could not open audio output device".to_string())?;
+    sink.set_volume(1.0);
+    sink.append(SamplesBuffer::new(1, SAM_SAMPLE_RATE, samples.to_vec()));
+    sink.sleep_until_end();
+    Ok(())
+}
+
+/// Speak English text with SAM (blocks until finished).
+pub fn play_text(text: &str) -> Result<(), String> {
+    play_text_with(text, SamPreset::Robot, false)
+}
+
+/// Speak English text with a classic preset / sing mode (blocks until finished).
+pub fn play_text_with(text: &str, preset: SamPreset, sing: bool) -> Result<(), String> {
+    play_text_voice(text, preset.voice(), sing)
+}
+
+/// Speak with any registered voice (blocks until finished).
+pub fn play_text_voice(text: &str, voice: &SamVoice, sing: bool) -> Result<(), String> {
+    let samples = synthesize_text_voice(text, voice, sing)?;
+    play_samples(&samples)
+}
+
+/// Write mono 16-bit PCM WAV at [`SAY_SAMPLE_RATE`].
+pub fn write_wav(path: &Path, samples: &[f32]) -> Result<(), String> {
+    if samples.is_empty() {
+        return Err("no samples to write".into());
+    }
+    let mut pcm = Vec::with_capacity(samples.len() * 2);
+    for &s in samples {
+        let v = (s.clamp(-1.0, 1.0) * 32767.0).round() as i16;
+        pcm.extend_from_slice(&v.to_le_bytes());
+    }
+    let data_len = pcm.len() as u32;
+    let sample_rate = SAM_SAMPLE_RATE;
+    let byte_rate = sample_rate * 2; // mono 16-bit
+    let mut out = File::create(path).map_err(|e| format!("{}: {e}", path.display()))?;
+    out.write_all(b"RIFF").map_err(|e| e.to_string())?;
+    out.write_all(&(36 + data_len).to_le_bytes())
+        .map_err(|e| e.to_string())?;
+    out.write_all(b"WAVEfmt ").map_err(|e| e.to_string())?;
+    out.write_all(&16u32.to_le_bytes()).map_err(|e| e.to_string())?; // PCM chunk size
+    out.write_all(&1u16.to_le_bytes()).map_err(|e| e.to_string())?; // PCM format
+    out.write_all(&1u16.to_le_bytes()).map_err(|e| e.to_string())?; // mono
+    out.write_all(&sample_rate.to_le_bytes())
+        .map_err(|e| e.to_string())?;
+    out.write_all(&byte_rate.to_le_bytes())
+        .map_err(|e| e.to_string())?;
+    out.write_all(&2u16.to_le_bytes()).map_err(|e| e.to_string())?; // block align
+    out.write_all(&16u16.to_le_bytes()).map_err(|e| e.to_string())?; // bits/sample
+    out.write_all(b"data").map_err(|e| e.to_string())?;
+    out.write_all(&data_len.to_le_bytes())
+        .map_err(|e| e.to_string())?;
+    out.write_all(&pcm).map_err(|e| e.to_string())?;
+    Ok(())
+}
 
 /// Match interactive sim frame rate (`455_000 / 60` cycles per frame at 60 Hz).
 pub(crate) const SPEECH_CYCLES_PER_SEC: u64 = 455_000;

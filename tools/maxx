@@ -10,6 +10,7 @@ sources are newer than the binary (see tools/maxx_build.py).
   maxx list program.532 [--json]
   maxx upload program.bas --device maxx_cart
   maxx simulate program.532 [--json] [--image-out sim.bin]
+  maxx say "Hello. I am Maxx Steele."   # SAM speech (tools/bin/say wrapper)
 
 Agents: run `python3 tools/ensure_maxx_built` before telling the user to launch
 the GUI after code changes.
