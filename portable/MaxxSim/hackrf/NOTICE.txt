@@ -1,0 +1,11 @@
+hackrf_info and hackrf_transfer are separate programs from the HackRF project:
+
+  https://github.com/greatscottgadgets/hackrf
+
+Copyright 2012-2022 Michael Ossmann, Jared Boone, Benjamin Vernoux,
+and other contributors.
+
+License: GPL-2.0-or-later. The full text is COPYING in this folder.
+
+The Maxx simulator does not link these programs. It runs them.
+The simulator itself stays under its own MIT OR Apache-2.0 license.

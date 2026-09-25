@@ -117,6 +117,14 @@ impl BootGate {
     }
 }
 
+/// `MaxxSim/<os>/maxx` stores egui state in `MaxxSim/config`, on the same drive.
+fn portable_config_dir() -> Option<std::path::PathBuf> {
+    let exe = std::env::current_exe().ok()?;
+    let dir = exe.parent()?.parent()?.join("config");
+    std::fs::create_dir_all(&dir).ok()?;
+    Some(dir)
+}
+
 pub fn run_live_gui(cart: Option<CartImage>, label: impl Into<String>) -> Result<(), String> {
     let label = label.into();
     let cart_name = if cart.is_some() {
@@ -156,12 +164,15 @@ pub fn run_live_gui(cart: Option<CartImage>, label: impl Into<String>) -> Result
         hackrf: super::hackrf_ook::HackRfTx::new(),
         mouse_held: None,
     };
-    let options = eframe::NativeOptions {
+    let mut options = eframe::NativeOptions {
         viewport: egui::ViewportBuilder::default()
             .with_inner_size([1100.0, 860.0])
             .with_min_inner_size([720.0, 600.0]),
         ..Default::default()
     };
+    // Portable layout is MaxxSim/{windows,linux,macos}/maxx with config one level up.
+    // A dev build lands in target/config instead of the host profile.
+    options.persistence_path = portable_config_dir();
     eframe::run_native(&title, options, Box::new(|cc| {
         super::ui_font::install(&cc.egui_ctx);
         super::remote_font::install(&cc.egui_ctx);

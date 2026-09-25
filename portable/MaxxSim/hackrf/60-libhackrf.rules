@@ -1,0 +1,7 @@
+# HackRF One. Installing this file needs root, once, on the computer:
+#   sudo cp 60-libhackrf.rules /etc/udev/rules.d/
+#   sudo udevadm control --reload-rules && sudo udevadm trigger
+SUBSYSTEM=="usb", ATTR{idVendor}=="1d50", ATTR{idProduct}=="6089", MODE="660", GROUP="plugdev", ENV{ID_SOFTWARE_RADIO}="1"
+SUBSYSTEM=="usb", ATTR{idVendor}=="1d50", ATTR{idProduct}=="604b", MODE="660", GROUP="plugdev", ENV{ID_SOFTWARE_RADIO}="1"
+SUBSYSTEM=="usb", ATTR{idVendor}=="1d50", ATTR{idProduct}=="cc15", MODE="660", GROUP="plugdev", ENV{ID_SOFTWARE_RADIO}="1"
+SUBSYSTEM=="usb", ATTR{idVendor}=="1fc9", ATTR{idProduct}=="000c", MODE="660", GROUP="plugdev", ENV{ID_SOFTWARE_RADIO}="1"

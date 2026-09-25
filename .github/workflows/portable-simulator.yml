@@ -1,0 +1,130 @@
+name: Portable simulator
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    tags: ["v*"]
+    paths:
+      - "tools/maxxbas/**"
+      - "tools/sam-say/**"
+      - "Mainboard/Firmware/Binary/Maxxrom.64"
+      - "portable/**"
+      - ".github/workflows/portable-simulator.yml"
+
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: System libraries
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y pkg-config libasound2-dev libxkbcommon-dev libwayland-dev libx11-dev libegl1-mesa-dev
+      - name: Build
+        run: cargo build --release --manifest-path tools/maxxbas/Cargo.toml
+      - uses: actions/upload-artifact@v4
+        with:
+          name: maxx-linux
+          path: tools/maxxbas/target/release/maxx
+
+      - name: Bundle HackRF tools
+        run: |
+          sudo apt-get install -y hackrf patchelf
+          dest=hackrf-linux
+          mkdir -p "$dest"
+          cp /usr/bin/hackrf_info /usr/bin/hackrf_transfer "$dest/"
+          lib=$(ldd /usr/bin/hackrf_transfer | awk '/libhackrf\.so/{print $3; exit}')
+          cp "$lib" "$dest/libhackrf.so.0"
+          patchelf --set-rpath '$ORIGIN' "$dest/hackrf_info" "$dest/hackrf_transfer"
+          cp /usr/share/common-licenses/GPL-2 "$dest/COPYING"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: hackrf-linux
+          path: hackrf-linux/
+
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Build
+        run: cargo build --release --manifest-path tools/maxxbas/Cargo.toml
+      - uses: actions/upload-artifact@v4
+        with:
+          name: maxx-windows
+          path: tools/maxxbas/target/release/maxx.exe
+
+      - name: Bundle HackRF tools
+        shell: pwsh
+        run: |
+          $vcpkg = "$env:RUNNER_TEMP\vcpkg"
+          git clone --depth 1 https://github.com/microsoft/vcpkg.git $vcpkg
+          & "$vcpkg\bootstrap-vcpkg.bat"
+          & "$vcpkg\vcpkg.exe" install libusb:x64-windows pthreads:x64-windows
+          git clone --depth 1 --branch v2026.01.3 https://github.com/greatscottgadgets/hackrf.git "$env:RUNNER_TEMP\hackrf"
+          $inc = "$vcpkg\installed\x64-windows\include"
+          $lib = "$vcpkg\installed\x64-windows\lib\libusb-1.0.lib"
+          cmake -S "$env:RUNNER_TEMP\hackrf\host" -B "$env:RUNNER_TEMP\hackrf\host\build" `
+            -DCMAKE_TOOLCHAIN_FILE="$vcpkg\scripts\buildsystems\vcpkg.cmake" `
+            -DENABLE_HACKRF_SWEEP=OFF `
+            -DLIBUSB_INCLUDE_DIR="$inc" `
+            -DLIBUSB_LIBRARIES="$lib"
+          cmake --build "$env:RUNNER_TEMP\hackrf\host\build" --config Release
+          $dest = "hackrf-windows"
+          New-Item -ItemType Directory -Force $dest | Out-Null
+          Copy-Item "$env:RUNNER_TEMP\hackrf\host\build\hackrf-tools\src\Release\hackrf_info.exe" $dest
+          Copy-Item "$env:RUNNER_TEMP\hackrf\host\build\hackrf-tools\src\Release\hackrf_transfer.exe" $dest
+          Copy-Item "$vcpkg\installed\x64-windows\bin\libusb-1.0.dll" $dest
+          Copy-Item "$env:RUNNER_TEMP\hackrf\host\build\libhackrf\src\Release\hackrf.dll" $dest -ErrorAction SilentlyContinue
+          curl.exe -fsSL -o "$dest\COPYING" https://raw.githubusercontent.com/greatscottgadgets/hackrf/v2026.01.3/COPYING
+      - uses: actions/upload-artifact@v4
+        with:
+          name: hackrf-windows
+          path: hackrf-windows/
+
+  macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Build
+        run: cargo build --release --manifest-path tools/maxxbas/Cargo.toml
+      - uses: actions/upload-artifact@v4
+        with:
+          name: maxx-macos
+          path: tools/maxxbas/target/release/maxx
+
+      - name: Bundle HackRF tools
+        run: |
+          brew install hackrf
+          prefix="$(brew --prefix hackrf)"
+          dest=hackrf-macos
+          mkdir -p "$dest"
+          cp "$prefix/bin/hackrf_info" "$prefix/bin/hackrf_transfer" "$dest/"
+          lib=$(otool -L "$dest/hackrf_transfer" | awk '/libhackrf/{print $1; exit}')
+          cp "$lib" "$dest/libhackrf.dylib"
+          install_name_tool -change "$lib" "@loader_path/libhackrf.dylib" "$dest/hackrf_info"
+          install_name_tool -change "$lib" "@loader_path/libhackrf.dylib" "$dest/hackrf_transfer"
+          curl -fsSL -o "$dest/COPYING" https://raw.githubusercontent.com/greatscottgadgets/hackrf/v2026.01.3/COPYING
+      - uses: actions/upload-artifact@v4
+        with:
+          name: hackrf-macos
+          path: hackrf-macos/
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [linux, windows, macos]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: dist/**/*

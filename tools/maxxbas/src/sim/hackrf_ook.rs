@@ -323,12 +323,70 @@ fn ensure_radio(
     }
 }
 
+/// `MaxxSim/hackrf/<os>/` next to the Start scripts. `PATH` is the fallback.
+fn bundled_os_dir(exe: &std::path::Path) -> Option<std::path::PathBuf> {
+    let os = if cfg!(windows) {
+        "windows"
+    } else if cfg!(target_os = "macos") {
+        "macos"
+    } else {
+        "linux"
+    };
+    Some(exe.parent()?.parent()?.join("hackrf").join(os))
+}
+
+fn tool_path(name: &str) -> Result<std::path::PathBuf, String> {
+    let file = if cfg!(windows) {
+        format!("{name}.exe")
+    } else {
+        name.to_string()
+    };
+    if let Some(dir) = std::env::current_exe()
+        .ok()
+        .as_deref()
+        .and_then(bundled_os_dir)
+    {
+        let candidate = dir.join(&file);
+        if candidate.is_file() {
+            return Ok(candidate);
+        }
+    }
+    which::which(name).map_err(|_| format!("{name} not on PATH"))
+}
+
+fn hackrf_command(name: &str) -> Result<Command, String> {
+    let path = tool_path(name)?;
+    let mut cmd = Command::new(&path);
+    #[cfg(unix)]
+    if let (Some(dir), Some(bundle)) = (
+        path.parent(),
+        std::env::current_exe()
+            .ok()
+            .as_deref()
+            .and_then(bundled_os_dir),
+    ) {
+        if path.starts_with(&bundle) {
+            let key = if cfg!(target_os = "macos") {
+                "DYLD_LIBRARY_PATH"
+            } else {
+                "LD_LIBRARY_PATH"
+            };
+            let mut value = dir.as_os_str().to_owned();
+            if let Some(old) = std::env::var_os(key) {
+                value.push(":");
+                value.push(old);
+            }
+            cmd.env(key, value);
+        }
+    }
+    Ok(cmd)
+}
+
 /// `hackrf_info` prints "No HackRF boards found." on stdout and exits 1.
 /// One stderr line is enough; do not launch `hackrf_transfer`, which then
 /// dumps its whole usage text on stdout.
 fn probe_hackrf() -> Result<(), String> {
-    let path = which::which("hackrf_info").map_err(|_| "hackrf_info not on PATH".to_string())?;
-    let out = Command::new(path)
+    let out = hackrf_command("hackrf_info")?
         .stdout(Stdio::piped())
         .stderr(Stdio::inherit())
         .output()
@@ -340,12 +398,10 @@ fn probe_hackrf() -> Result<(), String> {
 }
 
 fn spawn_hackrf() -> Result<(Child, ChildStdin), String> {
-    let path = which::which("hackrf_transfer")
-        .map_err(|_| "hackrf_transfer not on PATH".to_string())?;
     let freq = CENTER_HZ.to_string();
     let rate = SAMPLE_RATE_HZ.to_string();
     let gain = TX_VGA_DB.to_string();
-    let mut child = Command::new(path)
+    let mut child = hackrf_command("hackrf_transfer")?
         .args([
             "-t", "-", "-f", &freq, "-s", &rate, "-a", "0", "-x", &gain,
         ])
@@ -415,6 +471,16 @@ fn trim_err(err: &str) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn bundled_tools_sit_beside_the_start_scripts() {
+        let exe = std::path::Path::new("/stick/MaxxSim/linux/maxx");
+        let dir = bundled_os_dir(exe).unwrap();
+        assert_eq!(
+            dir.parent().unwrap(),
+            std::path::Path::new("/stick/MaxxSim/hackrf")
+        );
+    }
 
     #[test]
     fn frame_is_29_ms_at_2_msps() {
