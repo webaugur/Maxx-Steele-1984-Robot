@@ -3,8 +3,9 @@
 set -eu
 ROOT=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 python3 "$ROOT/tools/ensure_maxx_built"
-install -m 0755 "$ROOT/tools/maxxbas/target/release/maxx" "$ROOT/portable/MaxxSim/linux/maxx"
-echo "ok: $ROOT/portable/MaxxSim/linux/maxx"
+mkdir -p "$ROOT/portable/MaxxSim/maxx/linux"
+install -m 0755 "$ROOT/tools/maxxbas/target/release/maxx" "$ROOT/portable/MaxxSim/maxx/linux/maxx"
+echo "ok: $ROOT/portable/MaxxSim/maxx/linux/maxx"
 
 HACKRF="$ROOT/portable/MaxxSim/hackrf/linux"
 mkdir -p "$HACKRF"

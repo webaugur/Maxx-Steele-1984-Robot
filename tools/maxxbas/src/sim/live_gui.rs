@@ -117,10 +117,18 @@ impl BootGate {
     }
 }
 
-/// `MaxxSim/<os>/maxx` stores egui state in `MaxxSim/config`, on the same drive.
+/// `MaxxSim/maxx/<os>/maxx` stores egui state in `MaxxSim/config`, on the same drive.
+/// A normal dev binary has no Start script three levels up, so it keeps the host profile.
 fn portable_config_dir() -> Option<std::path::PathBuf> {
     let exe = std::env::current_exe().ok()?;
-    let dir = exe.parent()?.parent()?.join("config");
+    let root = exe.parent()?.parent()?.parent()?;
+    let portable = root.join("Start-Linux.sh").is_file()
+        || root.join("Start-Windows.bat").is_file()
+        || root.join("Start-Mac.command").is_file();
+    if !portable {
+        return None;
+    }
+    let dir = root.join("config");
     std::fs::create_dir_all(&dir).ok()?;
     Some(dir)
 }

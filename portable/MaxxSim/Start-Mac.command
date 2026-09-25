@@ -1,10 +1,10 @@
 #!/bin/sh
 # Open the live simulator. Internal ROM, or carts/default.532 when that file exists.
 ROOT=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
-BIN="$ROOT/macos/maxx"
+BIN="$ROOT/maxx/macos/maxx"
 if [ ! -f "$BIN" ]; then
   echo "Missing $BIN" >&2
-  echo "Download the macOS artifact from GitHub Actions into macos/." >&2
+  echo "The macOS program belongs in maxx/macos/." >&2
   exit 1
 fi
 chmod +x "$BIN" 2>/dev/null || true

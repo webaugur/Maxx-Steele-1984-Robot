@@ -323,7 +323,7 @@ fn ensure_radio(
     }
 }
 
-/// `MaxxSim/hackrf/<os>/` next to the Start scripts. `PATH` is the fallback.
+/// `MaxxSim/maxx/<os>/maxx` looks in `MaxxSim/hackrf/<os>/`. `PATH` is the fallback.
 fn bundled_os_dir(exe: &std::path::Path) -> Option<std::path::PathBuf> {
     let os = if cfg!(windows) {
         "windows"
@@ -332,7 +332,7 @@ fn bundled_os_dir(exe: &std::path::Path) -> Option<std::path::PathBuf> {
     } else {
         "linux"
     };
-    Some(exe.parent()?.parent()?.join("hackrf").join(os))
+    Some(exe.parent()?.parent()?.parent()?.join("hackrf").join(os))
 }
 
 fn tool_path(name: &str) -> Result<std::path::PathBuf, String> {
@@ -474,7 +474,7 @@ mod tests {
 
     #[test]
     fn bundled_tools_sit_beside_the_start_scripts() {
-        let exe = std::path::Path::new("/stick/MaxxSim/linux/maxx");
+        let exe = std::path::Path::new("/stick/MaxxSim/maxx/linux/maxx");
         let dir = bundled_os_dir(exe).unwrap();
         assert_eq!(
             dir.parent().unwrap(),

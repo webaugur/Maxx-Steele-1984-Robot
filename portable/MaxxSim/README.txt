@@ -20,18 +20,19 @@ Put a cartridge image at:
 The launcher loads it. With no default.532, the simulator runs the internal
 ROM only. Any other image:
 
-  linux/maxx simulate --gui carts/some-other.532
-  windows\maxx.exe simulate --gui carts\some-other.532
+  maxx/linux/maxx simulate --gui carts/some-other.532
+  maxx\windows\maxx.exe simulate --gui carts\some-other.532
 
 Window size and other GUI state are written to config\ on this stick, not
 into the computer's user profile.
 
 Programs
 --------
-  windows\maxx.exe     Windows 10 or later, 64-bit. Needs a normal OpenGL driver.
-  linux\maxx           Needs libasound, and a desktop OpenGL stack
-                       (libGL or EGL, libxkbcommon, Wayland or X11).
-  macos\maxx           Unsigned. The first launch: right-click, Open.
+  maxx\windows\maxx.exe   Windows 10 or later, 64-bit. Needs a normal OpenGL driver.
+  maxx/linux/maxx         Needs libasound, and a desktop OpenGL stack
+                          (libGL or EGL, libxkbcommon, Wayland or X11).
+  maxx/macos/maxx         Unsigned. The first launch: right-click the Start
+                          script, then Open.
 
 The same program still has the command-line tools (compile, upload, say).
 Only the Start scripts default to the GUI.
@@ -62,8 +63,8 @@ Linux, from the git repo:
 
   sh portable/build_linux.sh
 
-That copies the release binary to linux/maxx.
+That copies the release binary to maxx/linux/maxx.
 
-Windows and macOS binaries come from the GitHub Actions workflow
-"Portable simulator". Download the artifacts into windows\ and macos\.
-The macOS file is not signed. Gatekeeper will ask for a right-click Open.
+The GitHub Release is one zip, MaxxSim.zip. Unzip it and double-click
+Start-Windows.bat, Start-Mac.command, or Start-Linux.sh. Each script
+runs that computer's program with simulate --gui.
