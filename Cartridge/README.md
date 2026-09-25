@@ -23,3 +23,9 @@ Example firmware is complete ([`Examples/`](Examples/)).
 - [x] [`Examples/UltraMaxx/PICOROM.md`](Examples/UltraMaxx/PICOROM.md) — PicoROM P28 adaptation for U1 ([PicoROM](https://github.com/wickerwaka/PicoROM))
 - [x] [`Model3D/`](Model3D/) — cartridge STEP assembly (shell + PCB placeholder + 44-pos edge)
 - [x] [`Photos/`](Photos/) — cartridge card photo
+
+Simulator GUI, in-place CBS program editing:
+
+- [ ] Edit the loaded program's opcode steps ([#43](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/43))
+- [ ] Save the edited program as a `.532` ([#44](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/44))
+- [ ] Edit speech-phrase and music tables beside those steps ([#45](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/45))

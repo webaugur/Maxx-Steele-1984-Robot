@@ -114,6 +114,12 @@ Example firmware is complete ([`Cartridge/Examples/`](Cartridge/Examples/)).
 - [x] [`Cartridge/Model3D/`](Cartridge/Model3D/) — cartridge STEP assembly ([#28](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/28)) — PCB layout still TBD
 - [x] [`Cartridge/Photos/`](Cartridge/Photos/) — cartridge card photo
 
+**Simulator GUI** — edit a loaded CBS program in place (opcode pairs, not a new language)
+
+- [ ] Edit the loaded program's opcode steps ([#43](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/43))
+- [ ] Save the edited program as a `.532` ([#44](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/44))
+- [ ] Edit speech-phrase and music tables beside those steps ([#45](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/45))
+
 ### Chassis
 
 Most content present (manuals, photos, firmware, datasheets, sounds). Disassembly guide: [`Docs/Mechanical/`](../Docs/Mechanical/).
