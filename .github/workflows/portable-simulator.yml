@@ -172,9 +172,11 @@ jobs:
           chmod 0755 "$root/Start-Linux.sh" "$root/Start-Mac.command" \
             "$root/hackrf/linux/hackrf_info" "$root/hackrf/linux/hackrf_transfer" \
             "$root/hackrf/macos/hackrf_info" "$root/hackrf/macos/hackrf_transfer"
-          (cd out && zip -r MaxxSim.zip MaxxSim)
+          # v0.2.80 -> MaxxSim-0.2.80.zip
+          ver="${GITHUB_REF_NAME#v}"
+          (cd out && zip -r "MaxxSim-${ver}.zip" MaxxSim)
       - name: Publish GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           generate_release_notes: true
-          files: out/MaxxSim.zip
+          files: out/MaxxSim-*.zip

@@ -65,6 +65,6 @@ Linux, from the git repo:
 
 That copies the release binary to maxx/linux/maxx.
 
-The GitHub Release is one zip, MaxxSim.zip. Unzip it and double-click
+The GitHub Release is one zip, MaxxSim-0.2.80.zip for that version. Unzip it and double-click
 Start-Windows.bat, Start-Mac.command, or Start-Linux.sh. Each script
 runs that computer's program with simulate --gui.

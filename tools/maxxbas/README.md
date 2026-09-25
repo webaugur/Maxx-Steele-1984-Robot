@@ -61,7 +61,7 @@ maxx simulate hello.532 --cycles 30000     # more cycles to reach key-loop trap
 
 The toolbar **TX** button (off by default) also sends that key as 27.095 MHz OOK through `hackrf_transfer`, at about 645 baud, while the on-screen robot keeps running. TX VGA starts at 0 dB and the RF amp stays off. If no HackRF is plugged in, the simulator prints `HackRF not found` on stderr and keeps running. The picture is what the robot should do; a mismatch is a hardware fault. Details: [`Transmitter/transmitter-architecture.md`](../../Transmitter/transmitter-architecture.md#envelope-baud-rate).
 
-A USB copy lives in [`portable/MaxxSim`](../../portable/MaxxSim/README.txt). The Start scripts open the GUI. Window state is stored in `config/` next to those scripts, via `current_exe()`, not in the host profile. `sh portable/build_linux.sh` fills in `maxx/linux/maxx` and `hackrf/linux/`. Double-click `Start-Linux.sh` (or the Windows or Mac script) to run `simulate --gui`. The GitHub Release is one `MaxxSim.zip` with those folders. The simulator looks for HackRF tools in `hackrf/<os>/` before `PATH`.
+A USB copy lives in [`portable/MaxxSim`](../../portable/MaxxSim/README.txt). The Start scripts open the GUI. Window state is stored in `config/` next to those scripts, via `current_exe()`, not in the host profile. `sh portable/build_linux.sh` fills in `maxx/linux/maxx` and `hackrf/linux/`. Double-click `Start-Linux.sh` (or the Windows or Mac script) to run `simulate --gui`. The GitHub Release is one `MaxxSim-<version>.zip` with those folders. The simulator looks for HackRF tools in `hackrf/<os>/` before `PATH`.
 
 `--gui --no-firmware` keeps the older step-playback window (program list + kinematic preview, no live CPU).
 
