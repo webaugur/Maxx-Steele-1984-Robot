@@ -65,7 +65,9 @@ The four `.dat.txt` sidecars are annotation placeholders for the 06:50–06:54 p
 3. Set the `recfile` variable to a project-relative path (e.g. `tools/rfcap/captures/2021.02.14.06.50.10.dat`) or a filename under `tools/rfcap/captures/`.
 4. Tune for **27 MHz** RF and inspect OOK timing (~1.55 ms/bit, ~29 ms packet repeat).
 
-See [`Transmitter/transmitter-architecture.md`](../../Transmitter/transmitter-architecture.md) for how the transmitter MCU is clocked at the **455 kHz IF** reference so OOK serial data stays coherent with the RF envelope the receiver demodulates.
+See [`Transmitter/transmitter-architecture.md`](../../Transmitter/transmitter-architecture.md) for how the transmitter MCU is clocked at the **455 kHz IF** reference so OOK serial data stays coherent with the RF envelope the receiver demodulates. The envelope is about **645 baud** (1.55 ms per cell).
+
+The live simulator can transmit that same envelope: toolbar **TX** in `maxx simulate --gui` runs `hackrf_transfer` at this capture center, **27.095 MHz**, 2 MS/s, TX VGA 0 dB, RF amp off. The on-screen robot keeps running so it can be compared with the real one.
 
 ## TODO
 

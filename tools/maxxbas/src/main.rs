@@ -5,11 +5,11 @@ use std::process::ExitCode;
 use clap::{Parser, Subcommand};
 use maxxbas::{
     compile_to_output, decode_cart, default_output, find_voice, format_listing, format_rom_listing,
-    format_simulation, format_voice_list, input_kind, parse_source, play_samples, program_bytes,
-    resolve_input, resolve_phrase_text, run_live_gui, run_simulation, run_upload, seed_boop_rng,
-    split_statements, synthesize_boop, synthesize_boop_for_statement, synthesize_text_voice,
-    upload_command, validate_cart_image, write_wav, CartImage, Copyright, InputKind,
-    SimulationOptions, CART_SIZE,
+    format_simulation, format_voice_list, input_kind, parse_source, play_samples,
+    play_samples_with_mouth, program_bytes, resolve_input, resolve_phrase_text, run_live_gui,
+    run_simulation, run_upload, seed_boop_rng, split_statements, synthesize_boop,
+    synthesize_boop_for_statement, synthesize_text_voice, upload_command, validate_cart_image,
+    write_wav, CartImage, Copyright, InputKind, SimulationOptions, CART_SIZE,
 };
 
 #[derive(Parser)]
@@ -135,6 +135,9 @@ enum Commands {
         /// Force a named boop pattern (implies --boop): greet, curious, happy, affirm, …
         #[arg(long, value_name = "NAME")]
         boop_pattern: Option<String>,
+        /// Animate ASCII mouth on stderr while audio plays (same chatter as live GUI)
+        #[arg(long)]
+        mouth: bool,
         /// Speak a built-in Maxx phrase by index (e.g. 0x10 or 16)
         #[arg(long, value_name = "INDEX")]
         phrase: Option<String>,
@@ -225,6 +228,7 @@ fn run() -> Result<(), String> {
             sing,
             boop,
             boop_pattern,
+            mouth,
             phrase,
             print,
             dry_run,
@@ -236,6 +240,7 @@ fn run() -> Result<(), String> {
             sing,
             boop,
             boop_pattern.as_deref(),
+            mouth,
             phrase.as_deref(),
             print,
             dry_run,
@@ -265,6 +270,7 @@ fn cmd_say(
     sing: bool,
     boop: bool,
     boop_pattern: Option<&str>,
+    mouth: bool,
     phrase: Option<&str>,
     print: bool,
     dry_run: bool,
@@ -412,11 +418,18 @@ fn cmd_say(
                 format!(", boops=[{}]", boop_names.join(", "))
             }
         );
+        if mouth {
+            eprintln!("note: --mouth only animates during live playback (omit -o to see it)");
+        }
     } else {
         if !boop_names.is_empty() {
             eprintln!("boops: {}", boop_names.join(", "));
         }
-        play_samples(&samples)?;
+        if mouth {
+            play_samples_with_mouth(&samples)?;
+        } else {
+            play_samples(&samples)?;
+        }
     }
     Ok(())
 }

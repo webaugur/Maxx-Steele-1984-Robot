@@ -1,0 +1,20 @@
+[package]
+name = "sam-say"
+version = "0.1.0"
+edition = "2021"
+description = "SAM (Software Automatic Mouth) speech, robot boops, and mouth helpers — shared library"
+readme = "README.md"
+license = "MIT OR Apache-2.0"
+keywords = ["sam", "tts", "speech", "robot", "rustsam"]
+categories = ["multimedia::audio"]
+
+[features]
+default = ["playback"]
+# rodio playback + AudioOutput (disable for synth-only dependents)
+playback = ["dep:rodio"]
+
+[dependencies]
+rustsam = { git = "https://github.com/thedjinn/rustsam", version = "0.1.0" }
+rodio = { version = "0.21", default-features = false, features = ["playback"], optional = true }
+
+[dev-dependencies]

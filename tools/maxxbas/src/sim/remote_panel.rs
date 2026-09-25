@@ -246,13 +246,19 @@ pub fn remote_keypad_shell_height() -> f32 {
     grid_h + KEY_H_POWER + REMOTE_BEZEL * 2.0
 }
 
+/// Click is the one-shot firmware press. `held` stays set while the pointer is down.
+pub struct RemoteGesture {
+    pub clicked: Option<RemoteKey>,
+    pub held: Option<RemoteKey>,
+}
+
 /// Full transmitter face: RF LED strip flush on top, keypad frame directly below.
 pub fn paint_transmitter_face(
     ui: &mut egui::Ui,
     skins: &mut PlasticSkins,
     leds: &super::remote_branding::RemoteStatusLeds,
     now: f64,
-) -> (Option<RemoteKey>, egui::Rect) {
+) -> (RemoteGesture, egui::Rect) {
     let led_h = super::remote_branding::status_led_strip_h(REMOTE_SHELL_W);
     let shell_h = led_h + remote_keypad_shell_height();
     let (shell_rect, _) =
@@ -266,12 +272,15 @@ pub fn paint_transmitter_face(
         shell_rect.right_bottom(),
     );
 
-    let mut pressed = None;
+    let mut gesture = RemoteGesture {
+        clicked: None,
+        held: None,
+    };
     ui.allocate_new_ui(egui::UiBuilder::new().max_rect(led_rect), |ui| {
         super::remote_branding::paint_status_leds(ui, leds, now);
     });
     ui.allocate_new_ui(egui::UiBuilder::new().max_rect(keypad_rect), |ui| {
-        pressed = paint_remote_keypad(ui);
+        gesture = paint_remote_keypad(ui);
     });
 
     if ui.is_rect_visible(shell_rect) {
@@ -280,12 +289,15 @@ pub fn paint_transmitter_face(
         paint_led_keypad_seam(ui, led_rect, keypad_rect);
     }
 
-    (pressed, shell_rect)
+    (gesture, shell_rect)
 }
 
 /// Key grid only — caller provides the remote-grey shell behind this.
-pub fn paint_remote_keypad(ui: &mut egui::Ui) -> Option<RemoteKey> {
-    let mut pressed = None;
+fn paint_remote_keypad(ui: &mut egui::Ui) -> RemoteGesture {
+    let mut gesture = RemoteGesture {
+        clicked: None,
+        held: None,
+    };
     let pad_rect = ui.available_rect_before_wrap();
     let box_left = pad_rect.left() + REMOTE_BEZEL;
     let grid_h = KEY_H * KEY_GRID_ROWS as f32 + REMOTE_KEY_GAP * (KEY_GRID_ROWS as f32 - 1.0);
@@ -306,22 +318,35 @@ pub fn paint_remote_keypad(ui: &mut egui::Ui) -> Option<RemoteKey> {
         for (col, def) in row.iter().enumerate() {
             let x = key_area.left() + col as f32 * (KEY_W + REMOTE_KEY_GAP);
             let rect = egui::Rect::from_min_size(egui::pos2(x, y), egui::vec2(KEY_W, KEY_H));
-            if let Some(k) = paint_key_at(ui, *def, rect) {
-                pressed = Some(k);
+            let touch = paint_key_at(ui, *def, rect);
+            if touch.clicked {
+                gesture.clicked = Some(def.key);
+            }
+            if touch.held {
+                gesture.held = Some(def.key);
             }
         }
         y += KEY_H + REMOTE_KEY_GAP;
     }
 
-    if let Some(k) = paint_power_key_at(ui, power_rect) {
-        pressed = Some(k);
+    let power = paint_power_key_at(ui, power_rect);
+    if power.clicked {
+        gesture.clicked = Some(RemoteKey::PowerStop);
+    }
+    if power.held {
+        gesture.held = Some(RemoteKey::PowerStop);
     }
 
     if ui.is_rect_visible(well_rect) {
         paint_button_box_frame(ui, well_rect.union(power_rect));
     }
 
-    pressed
+    gesture
+}
+
+struct KeyTouch {
+    clicked: bool,
+    held: bool,
 }
 
 fn paint_button_box_frame(ui: &egui::Ui, rect: egui::Rect) {
@@ -341,8 +366,8 @@ fn paint_button_box_frame(ui: &egui::Ui, rect: egui::Rect) {
     );
 }
 
-fn paint_key_at(ui: &mut egui::Ui, def: KeyDef, rect: egui::Rect) -> Option<RemoteKey> {
-    let response = ui.allocate_rect(rect, egui::Sense::click());
+fn paint_key_at(ui: &mut egui::Ui, def: KeyDef, rect: egui::Rect) -> KeyTouch {
+    let response = ui.allocate_rect(rect, egui::Sense::click_and_drag());
     if ui.is_rect_visible(rect) {
         let painter = ui.painter_at(rect);
         paint_recessed_key(
@@ -353,15 +378,14 @@ fn paint_key_at(ui: &mut egui::Ui, def: KeyDef, rect: egui::Rect) -> Option<Remo
         );
         paint_key_labels(&painter, def, rect);
     }
-    if response.clicked() {
-        Some(def.key)
-    } else {
-        None
+    KeyTouch {
+        clicked: response.clicked(),
+        held: response.is_pointer_button_down_on(),
     }
 }
 
-fn paint_power_key_at(ui: &mut egui::Ui, rect: egui::Rect) -> Option<RemoteKey> {
-    let response = ui.allocate_rect(rect, egui::Sense::click());
+fn paint_power_key_at(ui: &mut egui::Ui, rect: egui::Rect) -> KeyTouch {
+    let response = ui.allocate_rect(rect, egui::Sense::click_and_drag());
     if ui.is_rect_visible(rect) {
         paint_raised_power_key(ui, rect, response.hovered(), response.is_pointer_button_down_on());
         paint_bold_text(
@@ -372,10 +396,9 @@ fn paint_power_key_at(ui: &mut egui::Ui, rect: egui::Rect) -> Option<RemoteKey> 
             POWER_KEY_LABEL,
         );
     }
-    if response.clicked() {
-        Some(RemoteKey::PowerStop)
-    } else {
-        None
+    KeyTouch {
+        clicked: response.clicked(),
+        held: response.is_pointer_button_down_on(),
     }
 }
 

@@ -5,8 +5,10 @@
 
 mod audio;
 mod boop;
+mod mouth;
 mod display;
 mod firmware;
+mod hackrf_ook;
 mod gui;
 mod interactive;
 mod keypad;
@@ -34,11 +36,13 @@ pub use boop::{
     synthesize_boop, synthesize_boop_for_statement, synthesize_random_boop, trailing_punctuation,
     BoopPattern, PATTERNS as BOOP_PATTERNS,
 };
+pub use mouth::{ascii_mouth_frame, ascii_mouth_line, mouth_open};
 pub use gui::run_gui;
 pub use live_gui::run_live_gui;
 pub use report::{format_human, run_simulation, SimulationOptions, SimulationReport};
 pub use speech::{
-    all_voices, find_voice, format_voice_list, play_samples, play_text, play_text_voice,
-    play_text_with, resolve_phrase_text, synthesize_text, synthesize_text_voice,
-    synthesize_text_with, write_wav, SamPreset, SamVoice, SAY_SAMPLE_RATE,
+    all_voices, find_voice, format_voice_list, play_samples, play_samples_while,
+    play_samples_with_mouth, play_text, play_text_voice, play_text_with, resolve_phrase_text,
+    synthesize_text, synthesize_text_voice, synthesize_text_with, write_wav, SamPreset, SamVoice,
+    SAY_SAMPLE_RATE,
 };

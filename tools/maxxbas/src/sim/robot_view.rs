@@ -10,6 +10,8 @@ use super::robot::RobotState;
 use super::visual::action_glyph;
 
 /// Plan grid (bottom) + animated front view (top), matching the offline storyboard GUI.
+///
+/// `mouth_open` is `0.0..=1.0` (closed → open) for live speech; pass `0.0` when idle.
 pub fn paint_robot_playfield(
     painter: &egui::Painter,
     rect: egui::Rect,
@@ -17,6 +19,7 @@ pub fn paint_robot_playfield(
     kind: &StepKind,
     led: Option<&str>,
     show_action_banner: bool,
+    mouth_open: f32,
 ) {
     painter.rect_filled(rect, 8.0, egui::Color32::from_gray(28));
 
@@ -33,7 +36,7 @@ pub fn paint_robot_playfield(
     );
 
     paint_plan_view(painter, plan_rect, state);
-    paint_front_view(painter, robot_rect, state, kind, led);
+    paint_front_view(painter, robot_rect, state, kind, led, mouth_open);
 
     if show_action_banner {
         let banner = action_glyph(kind);
@@ -111,6 +114,7 @@ pub fn paint_front_view(
     state: &RobotState,
     kind: &StepKind,
     led: Option<&str>,
+    mouth_open: f32,
 ) {
     painter.rect_filled(rect, 6.0, egui::Color32::from_gray(32));
     painter.text(
@@ -167,13 +171,15 @@ pub fn paint_front_view(
     let face = led
         .filter(|s| !s.trim().is_empty())
         .unwrap_or_else(|| opcode_display_for_kind(kind));
+    // LED text slightly above center so mouth has room below
     painter.text(
-        head_rect.center(),
+        egui::pos2(head_rect.center().x, head_rect.center().y - 4.0),
         egui::Align2::CENTER_CENTER,
         face,
         egui::FontId::monospace(18.0),
         egui::Color32::from_rgb(80, 255, 120),
     );
+    paint_mouth(painter, head_rect, mouth_open);
 
     let arm_y = body_top + 38.0;
     let arm_drop = (state.arms.min(64) as f32 / 64.0) * 30.0;
@@ -219,6 +225,32 @@ pub fn paint_front_view(
             egui::Stroke::new(2.0, egui::Color32::from_rgb(100, 220, 255)),
             egui::StrokeKind::Outside,
         );
+    }
+}
+
+/// Mouth under the head LED: closed stroke or open ellipse from `mouth_open` (0..=1).
+fn paint_mouth(painter: &egui::Painter, head: egui::Rect, mouth_open: f32) {
+    let open = mouth_open.clamp(0.0, 1.0);
+    let cx = head.center().x;
+    let y = head.bottom() - 6.0;
+    let half_w = head.width() * 0.22;
+    let color = egui::Color32::from_rgb(60, 220, 140);
+    if open < 0.08 {
+        painter.line_segment(
+            [egui::pos2(cx - half_w, y), egui::pos2(cx + half_w, y)],
+            egui::Stroke::new(2.0, color),
+        );
+    } else {
+        let h = 2.0 + open * 9.0;
+        let mouth = egui::Rect::from_center_size(egui::pos2(cx, y - h * 0.15), egui::vec2(half_w * 2.0, h));
+        painter.rect_filled(mouth, h * 0.45, color);
+        // dark interior gap for open mouth
+        if open > 0.35 {
+            let inner = mouth.shrink2(egui::vec2(2.5, 1.5 + open));
+            if inner.width() > 2.0 && inner.height() > 1.0 {
+                painter.rect_filled(inner, h * 0.35, egui::Color32::from_gray(12));
+            }
+        }
     }
 }
 

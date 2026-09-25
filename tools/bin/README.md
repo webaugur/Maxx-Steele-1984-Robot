@@ -27,7 +27,8 @@ export PATH="$(git -C /path/to/Maxx-Steele rev-parse --show-toplevel)/tools/bin:
 ### `say` — Maxx SAM speech
 
 Drop-in style replacement for macOS `say`, using Software Automatic Mouth
-(rustsam). Default voice is **Little Robot** (same as the interactive simulator).
+via the shared [`sam-say`](../sam-say/) crate (rustsam). Default voice is
+**Little Robot** (same as the interactive simulator).
 
 ```bash
 say "Hello. I am Maxx Steele."
@@ -37,6 +38,10 @@ say -v Alex "Hello."                # macOS name → SAM approximation
 say -v Zarvox -s "I am a robot"     # novelty + sing mode
 say --phrase 0x10                   # built-in ROM phrase
 say -f notes.txt
+# Nursery rhyme demos (file input; safe with ! via -f)
+EX=tools/maxxbas/assets/speech/examples
+say -f "$EX/twinkle.txt"
+say --boop -f "$EX/humpty.txt"
 echo "I'm ready." | say
 say -o clip.wav "Good play."
 ```
@@ -52,6 +57,14 @@ mapped to different formant presets. They will not sound like macOS.
 voice *names*) are registered — see `say -v ?`. Reciter is English-only.
 
 **`-s` / `--sing`**: SAM sing mode (steadier pitch for melodic speech).
+
+**`--mouth`**: Animate a one-line ASCII mouth on stderr while audio plays (same
+chatter model as the live GUI head mouth). Requires live playback (not `-o` alone).
+
+```bash
+say --mouth 'Hello. I am Maxx Steele.'
+say --mouth --boop -f tools/maxxbas/assets/speech/examples/little-moira-bots.txt
+```
 
 **`--boop`**: After each statement (split on `.` `!` `?`), play a Maxx-style
 emotive beep-boop. Pattern is chosen from **punctuation** (with light word cues);

@@ -60,9 +60,28 @@ That keeps the transmitted envelope **phase-coherent** with the demodulated IF w
 | [`tools/rfcap/README.md`](../tools/rfcap/README.md) | GNU Radio IQ captures of live OOK packets |
 | [GNU Radio OOK capture demo](https://www.instagram.com/p/CLOjig8nCJS/) | Screen recording of the `RemoteSpectrum` flowgraph plotting RF data |
 | [`DataSheets/National-COP411L.pdf`](../DataSheets/National-COP411L.pdf) | COP411L datasheet |
+| [`Firmware/Arduino/`](Firmware/Arduino/) | Bare ATmega328P keypad scanner, nRF905 remote |
 
 ## COP411L clock notes
 
 The COP411L divides CKI internally; instruction cycle time scales directly with the 455 kHz input. At this clock rate the MCU is slow by modern standards, but sufficient for keyboard debounce, short packet assembly, and bit-banged RF keying — and it matches the receiver IF reference by design.
 
 Unused COP411 pins on the production board (MOSI, SCK, G2, NRESET) are left unconnected per the original layout.
+
+## Envelope baud rate
+
+The OOK cell is the symbol. There is no UART start or stop bit. The 27 MHz figure is the RF carrier, not this rate.
+
+| Figure | Value |
+|--------|--------|
+| Measured cell | ~1.55 ms |
+| Baud from that cell | 1 / 1.55 ms ≈ **645 baud** |
+| COP411L instruction time | 455 kHz ÷ 8 ≈ 17.6 µs |
+
+455 kHz sits in the COP411L divide-by-8 CKI window (0.2–0.5 MHz). One instruction is about 17.6 µs, inside the datasheet’s 16–40 µs instruction cycle. A divide-by-4 cycle at this resonator would be about 8.8 µs, which is shorter than that minimum.
+
+1.55 ms / 17.6 µs ≈ 88 instructions. An 88-cycle cell is 88 × 8 / 455000 = **1.547 ms**, or **646 baud**. The published 1.55 ms measurement and that instruction count are the same cell.
+
+Most keys are 11 bits (about 17 ms of cells) inside a 29 ms repeat. Power/Stop is 13 bits (about 20.2 ms) inside a 21 ms repeat. The cell rate stays about 645 baud. The idle gap between packets is part of the frame, not extra baud.
+
+The replacement link does not send this waveform over the air. [`Firmware/Arduino/`](Firmware/Arduino/) sends key letters on an nRF905. [`Receiver/Firmware/Arduino/`](../Receiver/Firmware/Arduino/) rebuilds the 1.55 ms cells on RadioIn. `BIT_US` there starts at 1550.

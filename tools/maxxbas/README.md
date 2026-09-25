@@ -2,6 +2,8 @@
 
 Rust implementation of the Maxx Steele toolchain. The **`maxx`** binary is the primary command-line entry point.
 
+SAM speech, boops, and mouth helpers live in the shared crate **[`sam-say`](../sam-say/)** (`path = "../sam-say"`). Other projects can depend on that crate without pulling in the full Maxx simulator.
+
 ## Quick start
 
 ```bash
@@ -56,6 +58,8 @@ maxx simulate hello.532 --cycles 30000     # more cycles to reach key-loop trap
 ```
 
 `--gui` (default, with firmware) opens a **live simulator**: patched internal ROM runs in an embedded 65C02, with an on-screen **remote transmitter** (layout from `Transmitter/Photos/Product/Remote-Front.svg`). Key presses are modeled as a direct wire to zero-page `$75`; the ROM keypad path (`$E617` / `$E6A4`) latches into `$15` as on hardware. LED writes to `$1200` update the robot face display.
+
+The toolbar **TX** button (off by default) also sends that key as 27.095 MHz OOK through `hackrf_transfer`, at about 645 baud, while the on-screen robot keeps running. TX VGA starts at 0 dB and the RF amp stays off. If no HackRF is plugged in, the simulator prints `HackRF not found` on stderr and keeps running. The picture is what the robot should do; a mismatch is a hardware fault. Details: [`Transmitter/transmitter-architecture.md`](../../Transmitter/transmitter-architecture.md#envelope-baud-rate).
 
 `--gui --no-firmware` keeps the older step-playback window (program list + kinematic preview, no live CPU).
 

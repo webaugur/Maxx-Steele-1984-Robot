@@ -1,7 +1,4 @@
-//! Shared rodio output for speech and music — one device, multiple mixer sinks.
-//!
-//! Local to maxxbas so music + sim share one stream type. Speech CLI playback
-//! also uses [`sam_say::AudioOutput`] via `sam_say::play_*`.
+//! Shared rodio output — one device, multiple mixer sinks (feature `playback`).
 
 use rodio::{OutputStream, OutputStreamBuilder, Sink};
 

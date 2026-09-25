@@ -133,7 +133,7 @@ Matrix wiring refs: [`keyboard-matrix-reference-1.png`](../../Transmitter/Photos
 
 - Carrier: **27 MHz** on-off keying
 - MCU clock: **455 kHz** ceramic resonator (IF reference)
-- Bit period: ~**1.55 ms**; packet repeat ~**29 ms** (Power/Stop ~**21 ms**)
+- Bit period: ~**1.55 ms** → about **645 baud**; packet repeat ~**29 ms** (Power/Stop ~**21 ms**)
 
 Details: [`Transmitter/transmitter-architecture.md`](../../Transmitter/transmitter-architecture.md), [`tools/rfcap/`](../../tools/rfcap/).
 

@@ -11,6 +11,7 @@
 | [`transmitter-architecture.md`](transmitter-architecture.md) | 455 kHz IF clock, OOK protocol, signal path |
 | [`transmitter-bom.md`](transmitter-bom.md) | Bill of materials |
 | [`remote-keypad.md`](remote-keypad.md) | Faceplate button names and matrix map (A–Y) |
+| [`Firmware/Arduino/`](Firmware/Arduino/) | Bare ATmega328P keypad scanner, nRF905 remote |
 | [`tools/rfcap/`](../tools/rfcap/) | GNU Radio flowgraphs and 27 MHz OOK IQ captures |
 | [GNU Radio OOK capture demo](https://www.instagram.com/p/CLOjig8nCJS/) | Screen recording of `RemoteSpectrum` plotting RF data |
 

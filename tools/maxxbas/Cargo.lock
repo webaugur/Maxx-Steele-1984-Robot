@@ -2089,7 +2089,7 @@ dependencies = [
  "pretty_assertions",
  "resvg",
  "rodio",
- "rustsam",
+ "sam-say",
  "serde",
  "serde_json",
  "tempfile",
@@ -3192,6 +3192,14 @@ dependencies = [
  "unicode-ccc",
  "unicode-properties",
  "unicode-script",
+]
+
+[[package]]
+name = "sam-say"
+version = "0.1.0"
+dependencies = [
+ "rodio",
+ "rustsam",
 ]
 
 [[package]]

@@ -5,6 +5,7 @@
 | Path | Description |
 |------|-------------|
 | [`KiCAD/`](KiCAD/) | KiCad 10 schematic — open [`Receiver-27MHz.kicad_pro`](KiCAD/Receiver-27MHz.kicad_pro) |
+| [`Firmware/Arduino/`](Firmware/Arduino/) | nRF905 receiver that bit-bangs the OOK envelope into RadioIn |
 
 Shared symbols: [`libraries/`](../libraries/).
 

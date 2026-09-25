@@ -232,5 +232,6 @@ fn paint_robot(ui: &egui::Ui, rect: egui::Rect, step: &RobotStep) {
         &step.kind,
         None,
         true,
+        0.0,
     );
 }

@@ -26,13 +26,14 @@ pub use input::{
 pub use parse::{parse_source, program_bytes, Instruction};
 pub use upload::{picorom_size_token, run_upload, upload_command, PICOROM_SIZES};
 pub use sim::{
-    all_voices, find_boop, find_voice, format_human as format_simulation, format_voice_list,
-    play_samples, play_text, play_text_voice, play_text_with, random_boop, resolve_phrase_text,
-    run_gui, run_live_gui, run_simulation, seed_boop_rng, select_boop_for_statement,
-    split_statements, synthesize_boop, synthesize_boop_for_statement, synthesize_random_boop,
-    synthesize_text, synthesize_text_voice, synthesize_text_with, trailing_punctuation, write_wav,
-    BoopPattern, SamPreset, SamVoice, SimulationOptions, SimulationReport, BOOP_PATTERNS,
-    SAY_SAMPLE_RATE,
+    all_voices, ascii_mouth_frame, ascii_mouth_line, find_boop, find_voice,
+    format_human as format_simulation, format_voice_list, mouth_open, play_samples,
+    play_samples_while, play_samples_with_mouth, play_text, play_text_voice, play_text_with,
+    random_boop, resolve_phrase_text, run_gui, run_live_gui, run_simulation, seed_boop_rng,
+    select_boop_for_statement, split_statements, synthesize_boop, synthesize_boop_for_statement,
+    synthesize_random_boop, synthesize_text, synthesize_text_voice, synthesize_text_with,
+    trailing_punctuation, write_wav, BoopPattern, SamPreset, SamVoice, SimulationOptions,
+    SimulationReport, BOOP_PATTERNS, SAY_SAMPLE_RATE,
 };
 pub use validate::{validate_cart, validate_cart_image};
 

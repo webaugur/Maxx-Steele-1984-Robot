@@ -5,11 +5,7 @@
 //! - `$F40F` — game / status `JSR` with phrase index in X (ROM if `X >= $10`, else RAM `$0500`)
 //! - `$F475` / `$F47E` — power-on / mode entry ROM phrases (X = `$10`–`$20`)
 //!
-//! CLI entry: [`synthesize_text`], [`play_text`], [`write_wav`] (see `maxx say` / `tools/bin/say`).
-
-use std::fs::File;
-use std::io::Write;
-use std::path::Path;
+//! Synthesis/playback: shared [`sam_say`] crate. CLI: `maxx say` / `tools/bin/say`.
 
 use rodio::buffer::SamplesBuffer;
 use rodio::Sink;
@@ -20,6 +16,7 @@ use super::speech_sam::{self, SamError, SAM_SAMPLE_RATE};
 pub use super::speech_sam::{
     all_voices, find_voice, format_voice_list, SamPreset, SamVoice,
 };
+pub use sam_say::{play_samples, play_samples_while, play_samples_with_mouth, write_wav};
 
 /// Sample rate of SAM / `maxx say` output (Hz).
 pub const SAY_SAMPLE_RATE: u32 = SAM_SAMPLE_RATE;
@@ -68,22 +65,6 @@ pub fn resolve_phrase_text(index: u8) -> Result<&'static str, String> {
     })
 }
 
-/// Play mono f32 samples on the default audio device (blocks until finished).
-pub fn play_samples(samples: &[f32]) -> Result<(), String> {
-    if samples.is_empty() {
-        return Err("no samples to play".into());
-    }
-    let mut audio = AudioOutput::new();
-    audio.warm();
-    let sink = audio
-        .open_sink()
-        .ok_or_else(|| "could not open audio output device".to_string())?;
-    sink.set_volume(1.0);
-    sink.append(SamplesBuffer::new(1, SAM_SAMPLE_RATE, samples.to_vec()));
-    sink.sleep_until_end();
-    Ok(())
-}
-
 /// Speak English text with SAM (blocks until finished).
 pub fn play_text(text: &str) -> Result<(), String> {
     play_text_with(text, SamPreset::Robot, false)
@@ -98,40 +79,6 @@ pub fn play_text_with(text: &str, preset: SamPreset, sing: bool) -> Result<(), S
 pub fn play_text_voice(text: &str, voice: &SamVoice, sing: bool) -> Result<(), String> {
     let samples = synthesize_text_voice(text, voice, sing)?;
     play_samples(&samples)
-}
-
-/// Write mono 16-bit PCM WAV at [`SAY_SAMPLE_RATE`].
-pub fn write_wav(path: &Path, samples: &[f32]) -> Result<(), String> {
-    if samples.is_empty() {
-        return Err("no samples to write".into());
-    }
-    let mut pcm = Vec::with_capacity(samples.len() * 2);
-    for &s in samples {
-        let v = (s.clamp(-1.0, 1.0) * 32767.0).round() as i16;
-        pcm.extend_from_slice(&v.to_le_bytes());
-    }
-    let data_len = pcm.len() as u32;
-    let sample_rate = SAM_SAMPLE_RATE;
-    let byte_rate = sample_rate * 2; // mono 16-bit
-    let mut out = File::create(path).map_err(|e| format!("{}: {e}", path.display()))?;
-    out.write_all(b"RIFF").map_err(|e| e.to_string())?;
-    out.write_all(&(36 + data_len).to_le_bytes())
-        .map_err(|e| e.to_string())?;
-    out.write_all(b"WAVEfmt ").map_err(|e| e.to_string())?;
-    out.write_all(&16u32.to_le_bytes()).map_err(|e| e.to_string())?; // PCM chunk size
-    out.write_all(&1u16.to_le_bytes()).map_err(|e| e.to_string())?; // PCM format
-    out.write_all(&1u16.to_le_bytes()).map_err(|e| e.to_string())?; // mono
-    out.write_all(&sample_rate.to_le_bytes())
-        .map_err(|e| e.to_string())?;
-    out.write_all(&byte_rate.to_le_bytes())
-        .map_err(|e| e.to_string())?;
-    out.write_all(&2u16.to_le_bytes()).map_err(|e| e.to_string())?; // block align
-    out.write_all(&16u16.to_le_bytes()).map_err(|e| e.to_string())?; // bits/sample
-    out.write_all(b"data").map_err(|e| e.to_string())?;
-    out.write_all(&data_len.to_le_bytes())
-        .map_err(|e| e.to_string())?;
-    out.write_all(&pcm).map_err(|e| e.to_string())?;
-    Ok(())
 }
 
 /// Match interactive sim frame rate (`455_000 / 60` cycles per frame at 60 Hz).

@@ -153,6 +153,8 @@ pub fn run_live_gui(cart: Option<CartImage>, label: impl Into<String>) -> Result
         },
         speech_bubble: None,
         trace_breakpoint_hint: None,
+        hackrf: super::hackrf_ook::HackRfTx::new(),
+        mouse_held: None,
     };
     let options = eframe::NativeOptions {
         viewport: egui::ViewportBuilder::default()
@@ -185,6 +187,8 @@ struct LiveSimApp {
     status_leds: RemoteStatusLeds,
     speech_bubble: Option<SpeechBubble>,
     trace_breakpoint_hint: Option<String>,
+    hackrf: super::hackrf_ook::HackRfTx,
+    mouse_held: Option<RemoteKey>,
 }
 
 #[derive(Clone)]
@@ -226,6 +230,44 @@ fn poll_keyboard(ctx: &egui::Context) -> Option<RemoteKey> {
         }
         None
     })
+}
+
+fn poll_keyboard_held(ctx: &egui::Context) -> Option<RemoteKey> {
+    const ROW: &[(egui::Key, u8)] = &[
+        (egui::Key::Num0, 0),
+        (egui::Key::Num1, 1),
+        (egui::Key::Num2, 2),
+        (egui::Key::Num3, 3),
+        (egui::Key::Num4, 4),
+        (egui::Key::Num5, 5),
+        (egui::Key::Num6, 6),
+        (egui::Key::Num7, 7),
+        (egui::Key::Num8, 8),
+        (egui::Key::Num9, 9),
+    ];
+    ctx.input(|input| {
+        for &(key, digit) in ROW {
+            if input.key_down(key) {
+                return RemoteKey::from_digit(digit);
+            }
+        }
+        if input.key_down(egui::Key::Enter) {
+            return Some(RemoteKey::Enter);
+        }
+        None
+    })
+}
+
+fn sync_hackrf(app: &mut LiveSimApp, ctx: &egui::Context) {
+    let held = if app.hackrf.is_enabled() {
+        app.mouse_held.or_else(|| poll_keyboard_held(ctx))
+    } else {
+        None
+    };
+    app.hackrf.note_held(held);
+    if app.hackrf.is_enabled() {
+        ctx.request_repaint_after(std::time::Duration::from_millis(16));
+    }
 }
 
 fn queue_key(app: &mut LiveSimApp, key: RemoteKey, remote: bool) {
@@ -412,6 +454,16 @@ fn paint_cpu_transport_toolbar(ui: &mut egui::Ui, app: &mut LiveSimApp) {
             app.firmware.step_frame_halted();
             app.trace_display = app.firmware.trace_text();
             ui.ctx().request_repaint();
+        }
+        if paint_toolbar_key_btn(
+            ui,
+            "TX",
+            "Transmit 27 MHz OOK on the HackRF. The on-screen robot still runs.",
+            ToolbarKeyMode::Toggle {
+                active: app.hackrf.is_enabled(),
+            },
+        ) {
+            app.hackrf.toggle();
         }
         if paint_toolbar_transport_btn(ui, IEC_RESET, "Reset CPU (power-on restart)", true) {
             let _ = app.firmware.reset();
@@ -627,6 +679,9 @@ fn paint_status_toolbar(
     if let Some((remote, key)) = app.last_input {
         toolbar_chip(ui, if remote { "RF" } else { "KY" }, &key.to_string());
     }
+    if let Some(tx) = app.hackrf.status_label() {
+        toolbar_chip(ui, "TX", &tx);
+    }
     if st.answer < 0x0A {
         toolbar_chip(ui, "$35", &st.answer.to_string());
     }
@@ -706,6 +761,7 @@ impl eframe::App for LiveSimApp {
         }
 
         self.status_leds.power_on = self.firmware.status().running;
+        sync_hackrf(self, ctx);
 
         if self.pending_key.is_none() {
             if let Some(key) = poll_keyboard(ctx) {
@@ -765,13 +821,14 @@ impl eframe::App for LiveSimApp {
                         .show(ui, |ui| {
                             ui.set_width(remote_panel::REMOTE_SHELL_W);
                             let now = ui.input(|i| i.time);
-                            let (key, _shell) = remote_panel::paint_transmitter_face(
+                            let (gesture, _shell) = remote_panel::paint_transmitter_face(
                                 ui,
                                 &mut self.skins,
                                 &self.status_leds,
                                 now,
                             );
-                            if let Some(key) = key {
+                            self.mouse_held = gesture.held;
+                            if let Some(key) = gesture.clicked {
                                 queue_key(self, key, true);
                                 ui.ctx().request_repaint();
                             }
@@ -781,10 +838,10 @@ impl eframe::App for LiveSimApp {
                 ui.scope_builder(egui::UiBuilder::new().max_rect(robot_rect), |ui| {
                     let led = self.firmware.led_chars_settled();
                     let pose = self.firmware.live_robot_pose();
-                    paint_live_robot(ui, robot_rect, &led, pose, self.speech_bubble.as_ref());
+                    paint_live_robot(ui, robot_rect, &led, pose, self.speech_bubble.as_ref(), now);
                 });
             });
-
+        sync_hackrf(self, ui.ctx());
     }
 }
 
@@ -829,6 +886,7 @@ fn paint_live_robot(
     led: &str,
     pose: &LiveRobotPose,
     speech: Option<&SpeechBubble>,
+    now: f64,
 ) {
     if rect.width() < 8.0 || rect.height() < 8.0 || !ui.is_rect_visible(rect) {
         return;
@@ -836,6 +894,8 @@ fn paint_live_robot(
 
     let painter = ui.painter_at(rect).with_clip_rect(rect);
     let display = if led.trim().is_empty() { None } else { Some(led) };
+    let talking = speech.is_some();
+    let mouth = super::mouth::mouth_open(talking, now);
     robot_view::paint_robot_playfield(
         &painter,
         rect,
@@ -843,6 +903,7 @@ fn paint_live_robot(
         &pose.active_kind,
         display,
         false,
+        mouth,
     );
 
     if let Some(bubble) = speech {
