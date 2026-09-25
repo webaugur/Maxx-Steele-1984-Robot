@@ -64,20 +64,22 @@ jobs:
           & "$vcpkg\bootstrap-vcpkg.bat"
           & "$vcpkg\vcpkg.exe" install libusb:x64-windows pthreads:x64-windows
           git clone --depth 1 --branch v2026.01.3 https://github.com/greatscottgadgets/hackrf.git "$env:RUNNER_TEMP\hackrf"
-          $inc = "$vcpkg\installed\x64-windows\include"
+          # vcpkg puts the header at include/libusb-1.0/libusb.h. hackrf.c includes "libusb.h".
+          $inc = "$vcpkg\installed\x64-windows\include\libusb-1.0"
           $lib = "$vcpkg\installed\x64-windows\lib\libusb-1.0.lib"
           cmake -S "$env:RUNNER_TEMP\hackrf\host" -B "$env:RUNNER_TEMP\hackrf\host\build" `
             -DCMAKE_TOOLCHAIN_FILE="$vcpkg\scripts\buildsystems\vcpkg.cmake" `
             -DENABLE_HACKRF_SWEEP=OFF `
             -DLIBUSB_INCLUDE_DIR="$inc" `
             -DLIBUSB_LIBRARIES="$lib"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           cmake --build "$env:RUNNER_TEMP\hackrf\host\build" --config Release
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           $dest = "hackrf-windows"
           New-Item -ItemType Directory -Force $dest | Out-Null
-          Copy-Item "$env:RUNNER_TEMP\hackrf\host\build\hackrf-tools\src\Release\hackrf_info.exe" $dest
-          Copy-Item "$env:RUNNER_TEMP\hackrf\host\build\hackrf-tools\src\Release\hackrf_transfer.exe" $dest
-          Copy-Item "$vcpkg\installed\x64-windows\bin\libusb-1.0.dll" $dest
-          Copy-Item "$env:RUNNER_TEMP\hackrf\host\build\libhackrf\src\Release\hackrf.dll" $dest -ErrorAction SilentlyContinue
+          Get-ChildItem "$env:RUNNER_TEMP\hackrf\host\build" -Recurse -Include hackrf_info.exe,hackrf_transfer.exe,hackrf.dll |
+            Copy-Item -Destination $dest
+          Copy-Item "$vcpkg\installed\x64-windows\bin\*.dll" $dest
           curl.exe -fsSL -o "$dest\COPYING" https://raw.githubusercontent.com/greatscottgadgets/hackrf/v2026.01.3/COPYING
       - uses: actions/upload-artifact@v4
         with:
@@ -99,14 +101,32 @@ jobs:
       - name: Bundle HackRF tools
         run: |
           brew install hackrf
-          prefix="$(brew --prefix hackrf)"
+          brew_root="$(brew --prefix)"
           dest=hackrf-macos
           mkdir -p "$dest"
-          cp "$prefix/bin/hackrf_info" "$prefix/bin/hackrf_transfer" "$dest/"
-          lib=$(otool -L "$dest/hackrf_transfer" | awk '/libhackrf/{print $1; exit}')
-          cp "$lib" "$dest/libhackrf.dylib"
-          install_name_tool -change "$lib" "@loader_path/libhackrf.dylib" "$dest/hackrf_info"
-          install_name_tool -change "$lib" "@loader_path/libhackrf.dylib" "$dest/hackrf_transfer"
+          cp "$(brew --prefix hackrf)/bin/hackrf_info" "$(brew --prefix hackrf)/bin/hackrf_transfer" "$dest/"
+          # Homebrew records @rpath/libhackrf.0.dylib, which is not a file path.
+          copy_dep() {
+            bin="$1"
+            otool -L "$bin" | awk 'NR>1 {print $1}' | while read -r dep; do
+              case "$dep" in
+                /usr/lib/*|/System/*) continue ;;
+              esac
+              base=$(basename "$dep")
+              if [ ! -f "$dest/$base" ]; then
+                src="$dep"
+                if [ ! -f "$src" ]; then
+                  src=$(find "$brew_root" -name "$base" -type f | head -1)
+                fi
+                cp "$src" "$dest/$base"
+                install_name_tool -id "@loader_path/$base" "$dest/$base"
+                copy_dep "$dest/$base"
+              fi
+              install_name_tool -change "$dep" "@loader_path/$base" "$bin"
+            done
+          }
+          copy_dep "$dest/hackrf_info"
+          copy_dep "$dest/hackrf_transfer"
           curl -fsSL -o "$dest/COPYING" https://raw.githubusercontent.com/greatscottgadgets/hackrf/v2026.01.3/COPYING
       - uses: actions/upload-artifact@v4
         with:
