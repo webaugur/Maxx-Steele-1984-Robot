@@ -108,17 +108,24 @@ jobs:
           # Homebrew records @rpath/libhackrf.0.dylib, which is not a file path.
           copy_dep() {
             bin="$1"
-            otool -L "$bin" | awk 'NR>1 {print $1}' | while read -r dep; do
+            # No pipe: a failure inside `while read` would not stop the step.
+            deps=$(otool -L "$bin" | awk 'NR>1 {print $1}')
+            for dep in $deps; do
               case "$dep" in
                 /usr/lib/*|/System/*) continue ;;
               esac
               base=$(basename "$dep")
-              if [ ! -f "$dest/$base" ]; then
+              if [ ! -e "$dest/$base" ]; then
                 src="$dep"
-                if [ ! -f "$src" ]; then
-                  src=$(find "$brew_root" -name "$base" -type f | head -1)
+                if [ ! -e "$src" ]; then
+                  # Homebrew ships libhackrf.0.dylib as a symlink. -type f misses it.
+                  src=$(find "$brew_root" -name "$base" \( -type f -o -type l \) | head -1)
                 fi
-                cp "$src" "$dest/$base"
+                if [ -z "$src" ]; then
+                  echo "could not find $dep" >&2
+                  exit 1
+                fi
+                cp -L "$src" "$dest/$base"
                 install_name_tool -id "@loader_path/$base" "$dest/$base"
                 copy_dep "$dest/$base"
               fi
