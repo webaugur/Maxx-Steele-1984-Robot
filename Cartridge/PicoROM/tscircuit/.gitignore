@@ -1,0 +1,5 @@
+node_modules/
+dist/
+.tscircuit/
+*.circuit.circuit.json
+*.log

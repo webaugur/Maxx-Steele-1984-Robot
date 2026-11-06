@@ -1,5 +1,7 @@
 # UltraMaxx cartridge on PicoROM
 
+> **Primary hardware path is now [`../../PicoROM/`](../../PicoROM/).** That tscircuit schematic carries an upstream PicoROM **P28** module (integrated RP2040, DIP-28) and leaves the Maxx edge unwired. It does not treat a Raspberry Pi Pico as firmware-compatible, and it does not add a second 7400 driver. The notes below describe an older idea: seat a P28 in the factory CBSDemo U1 socket. That idea stays as history. It is blocked by the same unknown J1 / U2 / U3 nets ([#46](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/46)).
+
 Use a [PicoROM P28](https://github.com/wickerwaka/PicoROM) (28-pin DIP ROM emulator) instead of burning U1 on the **CBSDemo-class** cartridge PCB. UltraMaxx shares the same board layout and glue logic as [`../CBSDemo/`](../CBSDemo/); only the 4 KB ROM image (copyright string) differs.
 
 ## Hardware (from CBSDemo rev 0.1)

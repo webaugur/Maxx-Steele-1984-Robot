@@ -106,11 +106,13 @@ KiCad project: [`Receiver/KiCAD/Receiver-27MHz.kicad_pro`](Receiver/KiCAD/Receiv
 
 Example firmware is complete ([`Cartridge/Examples/`](Cartridge/Examples/)).
 
-**Partial** — schematic rev 0.1 from PCB photo; PCB layout not started
+**Partial** — factory CBSDemo KiCad schematic is reference evidence (rev 0.1). Primary new schematic is a preliminary PicoROM P28 carrier in tscircuit. PCB layout not started. J1 is electrically unresolved.
 
-- [x] [`Cartridge/Examples/CBSDemo/KiCAD/`](Cartridge/Examples/CBSDemo/KiCAD/) — CBSDemo cartridge schematic ([#25](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/25)) — PCB layout still open
+- [x] [`Cartridge/Examples/CBSDemo/KiCAD/`](Cartridge/Examples/CBSDemo/KiCAD/) — CBSDemo reference schematic ([#26](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/26)). PCB layout still open ([#25](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/25)).
+- [x] [`Cartridge/PicoROM/`](Cartridge/PicoROM/) — tscircuit source for an upstream PicoROM P28 carrier. Preliminary: every J1 finger is an open `UNRESOLVED_J1_*` net. Not fab-ready.
+- [ ] Electrical map of J1, U2, and U3 before any of those nets are tied to the P28 ([#46](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/46))
 - [x] [`Cartridge/Examples/UltraMaxx/KiCAD/`](Cartridge/Examples/UltraMaxx/KiCAD/) — UltraMaxx hardware pointer ([#27](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/27))
-- [x] [`Cartridge/Examples/UltraMaxx/PICOROM.md`](Cartridge/Examples/UltraMaxx/PICOROM.md) — PicoROM P28 adaptation for U1 (based on CBSDemo; [wickerwaka/PicoROM](https://github.com/wickerwaka/PicoROM))
+- [x] [`Cartridge/Examples/UltraMaxx/PICOROM.md`](Cartridge/Examples/UltraMaxx/PICOROM.md) — historical note: P28 in the factory U1 socket. Primary schematic is [`Cartridge/PicoROM/`](Cartridge/PicoROM/).
 - [x] [`Cartridge/Model3D/`](Cartridge/Model3D/) — cartridge STEP assembly ([#28](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/28)) — PCB layout still TBD
 - [x] [`Cartridge/Photos/`](Cartridge/Photos/) — cartridge card photo
 
