@@ -106,18 +106,20 @@ KiCad project: [`Receiver/KiCAD/Receiver-27MHz.kicad_pro`](Receiver/KiCAD/Receiv
 
 Example firmware is complete ([`Cartridge/Examples/`](Cartridge/Examples/)).
 
-**Partial** — schematic rev 0.1 from PCB photo; PCB layout not started
+**Partial** — factory CBSDemo KiCad schematic is reference evidence (rev 0.1). Primary new schematic is a preliminary Pico RP2040 plus DIP 245 circuit wired to the chosen J400 reference map. That map is not continuity-tested. PCB layout not started. The P28 sheet remains an open-edge reference.
 
-- [x] [`Cartridge/Examples/CBSDemo/KiCAD/`](Cartridge/Examples/CBSDemo/KiCAD/) — CBSDemo cartridge schematic ([#25](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/25)) — PCB layout still open
+- [x] [`Cartridge/Examples/CBSDemo/KiCAD/`](Cartridge/Examples/CBSDemo/KiCAD/) — CBSDemo reference schematic ([#26](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/26)). PCB layout still open ([#25](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/25)).
+- [x] [`Cartridge/PicoROM/`](Cartridge/PicoROM/) — tscircuit source for the Pico plus DIP 245 schematic on the chosen J400 reference map, plus a separate open-edge P28 reference sheet. Not fab-ready. Not continuity-tested.
+- [ ] Electrical map of J1, U2, and U3 before any of those nets are tied to the P28 ([#46](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/46))
 - [x] [`Cartridge/Examples/UltraMaxx/KiCAD/`](Cartridge/Examples/UltraMaxx/KiCAD/) — UltraMaxx hardware pointer ([#27](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/27))
-- [x] [`Cartridge/Examples/UltraMaxx/PICOROM.md`](Cartridge/Examples/UltraMaxx/PICOROM.md) — PicoROM P28 adaptation for U1 (based on CBSDemo; [wickerwaka/PicoROM](https://github.com/wickerwaka/PicoROM))
+- [x] [`Cartridge/Examples/UltraMaxx/PICOROM.md`](Cartridge/Examples/UltraMaxx/PICOROM.md) — historical note: P28 in the factory U1 socket. Primary schematic is [`Cartridge/PicoROM/`](Cartridge/PicoROM/).
 - [x] [`Cartridge/Model3D/`](Cartridge/Model3D/) — cartridge STEP assembly ([#28](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/28)) — PCB layout still TBD
 - [x] [`Cartridge/Photos/`](Cartridge/Photos/) — cartridge card photo
 
 **Simulator GUI** — edit a loaded CBS program in place (opcode pairs, not a new language)
 
-- [ ] Edit the loaded program's opcode steps ([#43](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/43))
-- [ ] Save the edited program as a `.532` ([#44](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/44))
+- [x] Edit the loaded program's opcode steps ([#43](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/43))
+- [x] Save the edited program as a `.532` ([#44](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/44))
 - [ ] Edit speech-phrase and music tables beside those steps ([#45](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/45))
 
 ### Chassis

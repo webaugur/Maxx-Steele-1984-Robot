@@ -158,7 +158,13 @@ jobs:
           mkdir -p "$root/hackrf/linux" "$root/hackrf/macos" "$root/hackrf/windows"
           mkdir -p "$root/carts" "$root/config"
           cp portable/MaxxSim/Start-Linux.sh portable/MaxxSim/Start-Windows.bat \
-            portable/MaxxSim/Start-Mac.command portable/MaxxSim/README.txt "$root/"
+            portable/MaxxSim/Start-Mac.command \
+            portable/MaxxSim/Register-Linux.sh portable/MaxxSim/Register-Windows.bat \
+            portable/MaxxSim/Register-Mac.command \
+            portable/MaxxSim/README.txt "$root/"
+          cp -a portable/MaxxSim/icons portable/MaxxSim/mime portable/MaxxSim/Maxx.app "$root/"
+          chmod 0755 "$root/Register-Linux.sh" "$root/Register-Mac.command" \
+            "$root/Maxx.app/Contents/MacOS/Maxx"
           cp portable/MaxxSim/carts/README.txt "$root/carts/"
           cp portable/MaxxSim/config/README.txt "$root/config/"
           cp portable/MaxxSim/hackrf/COPYING portable/MaxxSim/hackrf/NOTICE.txt \

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+  <mime-type type="application/x-maxx-cartridge">
+    <comment>Maxx Steele cartridge</comment>
+    <glob pattern="*.532"/>
+    <magic priority="60">
+      <match type="string" offset="2" value="(c) 1985 CBS Toys"/>
+      <match type="string" offset="2" value="(c) UltraMaxx"/>
+    </magic>
+  </mime-type>
+</mime-info>

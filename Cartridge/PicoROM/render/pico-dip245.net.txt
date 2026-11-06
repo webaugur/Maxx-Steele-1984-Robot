@@ -1,0 +1,532 @@
+COMPONENTS:
+ - J_PICO: J_PICO, source_component
+ - U_ADDR: SN74LVC245AN, dip20
+ - U_AHI: SN74LVC245AN, dip20
+ - U_CTL: SN74LVC245AN, dip20
+ - U_DATA: SN74HCT245N, dip20
+ - R_OE: 10kΩ axial resistor
+ - R_BASE: 10kΩ axial resistor
+ - R_BASE_PD: 100kΩ axial resistor
+ - D_VSYS: D_VSYS, source_component
+ - Q_OE: Q_OE, source_component
+ - C_ADDR: 100nF axial_nonpolarized capacitor
+ - C_AHI: 100nF axial_nonpolarized capacitor
+ - C_CTL: 100nF axial_nonpolarized capacitor
+ - C_DATA: 100nF axial_nonpolarized capacitor
+ - J1: J1, source_component
+
+NET: PICO_A0
+  - U_ADDR A1
+  - J_PICO GP10
+
+NET: PICO_A1
+  - U_ADDR A2
+  - J_PICO GP11
+
+NET: PICO_A2
+  - U_ADDR A3
+  - J_PICO GP12
+
+NET: PICO_A3
+  - U_ADDR A4
+  - J_PICO GP13
+
+NET: PICO_A4
+  - U_ADDR A5
+  - J_PICO GP14
+
+NET: PICO_A5
+  - U_ADDR A6
+  - J_PICO GP15
+
+NET: PICO_A6
+  - U_ADDR A7
+  - J_PICO GP16
+
+NET: PICO_A7
+  - U_ADDR A8
+  - J_PICO GP17
+
+NET: J400_A0
+  - J1 A0
+  - U_ADDR B1
+
+NET: J400_A1
+  - J1 A1
+  - U_ADDR B2
+
+NET: J400_A2
+  - J1 A2
+  - U_ADDR B3
+
+NET: J400_A3
+  - J1 A3
+  - U_ADDR B4
+
+NET: J400_A4
+  - J1 A4
+  - U_ADDR B5
+
+NET: J400_A5
+  - J1 A5
+  - U_ADDR B6
+
+NET: J400_A6
+  - J1 A6
+  - U_ADDR B7
+
+NET: J400_A7
+  - J1 A7
+  - U_ADDR B8
+
+NET: PICO_A8
+  - U_AHI A1
+  - J_PICO GP18
+
+NET: PICO_A9
+  - U_AHI A2
+  - J_PICO GP19
+
+NET: PICO_A10
+  - U_AHI A3
+  - J_PICO GP20
+
+NET: PICO_A11
+  - U_AHI A4
+  - J_PICO GP21
+
+NET: PICO_A12
+  - U_AHI A5
+  - J_PICO GP22
+
+NET: PICO_A13
+  - U_AHI A6
+  - J_PICO GP26
+
+NET: PICO_A14
+  - U_AHI A7
+  - J_PICO GP27
+
+NET: PICO_A15
+  - U_AHI A8
+  - J_PICO GP28
+
+NET: J400_A8
+  - J1 A8
+  - U_AHI B1
+
+NET: J400_A9
+  - J1 A9
+  - U_AHI B2
+
+NET: J400_A10
+  - J1 A10
+  - U_AHI B3
+
+NET: J400_A11
+  - J1 A11
+  - U_AHI B4
+
+NET: J400_A12
+  - J1 A12
+  - U_AHI B5
+
+NET: J400_A13
+  - J1 A13
+  - U_AHI B6
+
+NET: J400_A14
+  - J1 A14
+  - U_AHI B7
+
+NET: J400_A15
+  - J1 A15
+  - U_AHI B8
+
+NET: PICO_OEB
+  - U_CTL A1
+  - J_PICO GP8
+
+NET: J400_OEB
+  - J1 OEB
+  - U_CTL B1
+
+NET: J400_WRB
+  - J1 WRB
+  - U_CTL B2
+
+NET: PICO_3V3
+  - C_CTL pin1 (+)
+  - U_CTL VCC
+  - C_AHI pin1 (+)
+  - U_AHI VCC
+  - C_ADDR pin1 (+)
+  - U_ADDR VCC
+  - J_PICO 3V3
+
+NET: PICO_D0
+  - U_DATA A1
+  - J_PICO GP0
+
+NET: PICO_D1
+  - U_DATA A2
+  - J_PICO GP1
+
+NET: PICO_D2
+  - U_DATA A3
+  - J_PICO GP2
+
+NET: PICO_D3
+  - U_DATA A4
+  - J_PICO GP3
+
+NET: PICO_D4
+  - U_DATA A5
+  - J_PICO GP4
+
+NET: PICO_D5
+  - U_DATA A6
+  - J_PICO GP5
+
+NET: PICO_D6
+  - U_DATA A7
+  - J_PICO GP6
+
+NET: PICO_D7
+  - U_DATA A8
+  - J_PICO GP7
+
+NET: J400_D0
+  - J1 D0
+  - U_DATA B1
+
+NET: J400_D1
+  - J1 D1
+  - U_DATA B2
+
+NET: J400_D2
+  - J1 D2
+  - U_DATA B3
+
+NET: J400_D3
+  - J1 D3
+  - U_DATA B4
+
+NET: J400_D4
+  - J1 D4
+  - U_DATA B5
+
+NET: J400_D5
+  - J1 D5
+  - U_DATA B6
+
+NET: J400_D6
+  - J1 D6
+  - U_DATA B7
+
+NET: J400_D7
+  - J1 D7
+  - U_DATA B8
+
+NET: PICO_VSYS
+  - D_VSYS pin2 (-)
+  - J_PICO VSYS
+
+NET: VSW_ASSUMED_5V
+  - R_OE pin2
+  - D_VSYS pin1 (+)
+  - C_DATA pin1 (+)
+  - J1 VSW
+  - U_DATA VCC
+  - U_DATA DIR
+
+NET: HCT_nOE
+  - Q_OE pin1
+  - R_OE pin1
+  - U_DATA nOE
+
+NET: PICO_DATA_nOE
+  - R_BASE pin1
+  - J_PICO GP9
+
+NET: Q_OE_BASE
+  - R_BASE_PD pin1
+  - R_BASE pin2
+  - Q_OE pin2
+
+NET: GND
+  - J1 GND_43
+  - J1 GND_1
+  - U_DATA GND
+  - R_BASE_PD pin2
+  - Q_OE pin3
+  - C_DATA pin2 (-)
+  - C_CTL pin2 (-)
+  - U_CTL GND
+  - U_CTL nOE
+  - U_CTL DIR
+  - U_CTL B8
+  - U_CTL B7
+  - U_CTL B6
+  - U_CTL B5
+  - U_CTL B4
+  - U_CTL B3
+  - C_AHI pin2 (-)
+  - U_AHI GND
+  - U_AHI nOE
+  - U_AHI DIR
+  - C_ADDR pin2 (-)
+  - U_ADDR GND
+  - U_ADDR nOE
+  - U_ADDR DIR
+  - J_PICO AGND
+  - J_PICO GND38
+  - J_PICO GND28
+  - J_PICO GND23
+  - J_PICO GND18
+  - J_PICO GND13
+  - J_PICO GND8
+  - J_PICO GND3
+
+
+EMPTY NET PINS:
+  - J_PICO RUN
+  - J_PICO ADC_VREF
+  - J_PICO 3V3_EN
+  - J_PICO VBUS
+  - U_CTL A2
+  - U_CTL A3
+  - U_CTL A4
+  - U_CTL A5
+  - U_CTL A6
+  - U_CTL A7
+  - U_CTL A8
+  - J1 VBAT
+  - J1 AUDIO_IN
+  - J1 F2
+  - J1 SA0
+  - J1 WEB
+  - J1 SA1
+  - J1 BIGSPACEB
+  - J1 SA2
+  - J1 MNMIB
+  - J1 SA3
+  - J1 RESETSYSB
+  - J1 CT
+  - J1 DOUT
+  - J1 DREQ
+  - J1 ASTRB
+
+COMPONENT_PINS:
+J_PICO
+- pin1(GP0): NETS(PICO_D0)
+- pin2(GP1): NETS(PICO_D1)
+- pin3(GND3): NETS(GND)
+- pin4(GP2): NETS(PICO_D2)
+- pin5(GP3): NETS(PICO_D3)
+- pin6(GP4): NETS(PICO_D4)
+- pin7(GP5): NETS(PICO_D5)
+- pin8(GND8): NETS(GND)
+- pin9(GP6): NETS(PICO_D6)
+- pin10(GP7): NETS(PICO_D7)
+- pin11(GP8): NETS(PICO_OEB)
+- pin12(GP9): NETS(PICO_DATA_nOE)
+- pin13(GND13): NETS(GND)
+- pin14(GP10): NETS(PICO_A0)
+- pin15(GP11): NETS(PICO_A1)
+- pin16(GP12): NETS(PICO_A2)
+- pin17(GP13): NETS(PICO_A3)
+- pin18(GND18): NETS(GND)
+- pin19(GP14): NETS(PICO_A4)
+- pin20(GP15): NETS(PICO_A5)
+- pin21(GP16): NETS(PICO_A6)
+- pin22(GP17): NETS(PICO_A7)
+- pin23(GND23): NETS(GND)
+- pin24(GP18): NETS(PICO_A8)
+- pin25(GP19): NETS(PICO_A9)
+- pin26(GP20): NETS(PICO_A10)
+- pin27(GP21): NETS(PICO_A11)
+- pin28(GND28): NETS(GND)
+- pin29(GP22): NETS(PICO_A12)
+- pin30(RUN): NETS(PICO_RUN_OPEN)
+- pin31(GP26): NETS(PICO_A13)
+- pin32(GP27): NETS(PICO_A14)
+- pin33(AGND): NETS(GND)
+- pin34(GP28): NETS(PICO_A15)
+- pin35(ADC_VREF): NETS(PICO_ADC_VREF_OPEN)
+- pin36(3V3): NETS(PICO_3V3)
+- pin37(3V3_EN): NETS(PICO_3V3_EN_OPEN)
+- pin38(GND38): NETS(GND)
+- pin39(VSYS): NETS(PICO_VSYS)
+- pin40(VBUS): NETS(PICO_VBUS_USB_ONLY)
+
+U_ADDR (SN74LVC245AN)
+- pin1(DIR): NETS(GND)
+- pin2(A1): NETS(PICO_A0)
+- pin3(A2): NETS(PICO_A1)
+- pin4(A3): NETS(PICO_A2)
+- pin5(A4): NETS(PICO_A3)
+- pin6(A5): NETS(PICO_A4)
+- pin7(A6): NETS(PICO_A5)
+- pin8(A7): NETS(PICO_A6)
+- pin9(A8): NETS(PICO_A7)
+- pin10(GND): NETS(GND)
+- pin11(B8): NETS(J400_A7)
+- pin12(B7): NETS(J400_A6)
+- pin13(B6): NETS(J400_A5)
+- pin14(B5): NETS(J400_A4)
+- pin15(B4): NETS(J400_A3)
+- pin16(B3): NETS(J400_A2)
+- pin17(B2): NETS(J400_A1)
+- pin18(B1): NETS(J400_A0)
+- pin19(nOE): NETS(GND)
+- pin20(VCC): NETS(PICO_3V3)
+
+U_AHI (SN74LVC245AN)
+- pin1(DIR): NETS(GND)
+- pin2(A1): NETS(PICO_A8)
+- pin3(A2): NETS(PICO_A9)
+- pin4(A3): NETS(PICO_A10)
+- pin5(A4): NETS(PICO_A11)
+- pin6(A5): NETS(PICO_A12)
+- pin7(A6): NETS(PICO_A13)
+- pin8(A7): NETS(PICO_A14)
+- pin9(A8): NETS(PICO_A15)
+- pin10(GND): NETS(GND)
+- pin11(B8): NETS(J400_A15)
+- pin12(B7): NETS(J400_A14)
+- pin13(B6): NETS(J400_A13)
+- pin14(B5): NETS(J400_A12)
+- pin15(B4): NETS(J400_A11)
+- pin16(B3): NETS(J400_A10)
+- pin17(B2): NETS(J400_A9)
+- pin18(B1): NETS(J400_A8)
+- pin19(nOE): NETS(GND)
+- pin20(VCC): NETS(PICO_3V3)
+
+U_CTL (SN74LVC245AN)
+- pin1(DIR): NETS(GND)
+- pin2(A1): NETS(PICO_OEB)
+- pin3(A2): NETS(WRB_NO_FREE_GPIO)
+- pin4(A3): NETS(LVC_SPARE_3)
+- pin5(A4): NETS(LVC_SPARE_4)
+- pin6(A5): NETS(LVC_SPARE_5)
+- pin7(A6): NETS(LVC_SPARE_6)
+- pin8(A7): NETS(LVC_SPARE_7)
+- pin9(A8): NETS(LVC_SPARE_8)
+- pin10(GND): NETS(GND)
+- pin11(B8): NETS(GND)
+- pin12(B7): NETS(GND)
+- pin13(B6): NETS(GND)
+- pin14(B5): NETS(GND)
+- pin15(B4): NETS(GND)
+- pin16(B3): NETS(GND)
+- pin17(B2): NETS(J400_WRB)
+- pin18(B1): NETS(J400_OEB)
+- pin19(nOE): NETS(GND)
+- pin20(VCC): NETS(PICO_3V3)
+
+U_DATA (SN74HCT245N)
+- pin1(DIR): NETS(VSW_ASSUMED_5V)
+- pin2(A1): NETS(PICO_D0)
+- pin3(A2): NETS(PICO_D1)
+- pin4(A3): NETS(PICO_D2)
+- pin5(A4): NETS(PICO_D3)
+- pin6(A5): NETS(PICO_D4)
+- pin7(A6): NETS(PICO_D5)
+- pin8(A7): NETS(PICO_D6)
+- pin9(A8): NETS(PICO_D7)
+- pin10(GND): NETS(GND)
+- pin11(B8): NETS(J400_D7)
+- pin12(B7): NETS(J400_D6)
+- pin13(B6): NETS(J400_D5)
+- pin14(B5): NETS(J400_D4)
+- pin15(B4): NETS(J400_D3)
+- pin16(B3): NETS(J400_D2)
+- pin17(B2): NETS(J400_D1)
+- pin18(B1): NETS(J400_D0)
+- pin19(nOE): NETS(HCT_nOE)
+- pin20(VCC): NETS(VSW_ASSUMED_5V)
+
+R_OE (10kΩ axial)
+- pin1(anode, pos, left): NETS(HCT_nOE)
+- pin2(cathode, neg, right): NETS(VSW_ASSUMED_5V)
+
+R_BASE (10kΩ axial)
+- pin1(anode, pos, left): NETS(PICO_DATA_nOE)
+- pin2(cathode, neg, right): NETS(Q_OE_BASE)
+
+R_BASE_PD (100kΩ axial)
+- pin1(anode, pos, left): NETS(Q_OE_BASE)
+- pin2(cathode, neg, right): NETS(GND)
+
+D_VSYS (1N5817)
+- pin1(pos, anode, left): NETS(VSW_ASSUMED_5V)
+- pin2(neg, cathode, right): NETS(PICO_VSYS)
+
+Q_OE
+- pin1(collector, c): NETS(HCT_nOE)
+- pin2(base, b): NETS(Q_OE_BASE)
+- pin3(emitter, e): NETS(GND)
+
+C_ADDR (100nF axial_nonpolarized)
+- pin1(pos, anode): NETS(PICO_3V3)
+- pin2(neg, cathode): NETS(GND)
+
+C_AHI (100nF axial_nonpolarized)
+- pin1(pos, anode): NETS(PICO_3V3)
+- pin2(neg, cathode): NETS(GND)
+
+C_CTL (100nF axial_nonpolarized)
+- pin1(pos, anode): NETS(PICO_3V3)
+- pin2(neg, cathode): NETS(GND)
+
+C_DATA (100nF axial_nonpolarized)
+- pin1(pos, anode): NETS(VSW_ASSUMED_5V)
+- pin2(neg, cathode): NETS(GND)
+
+J1
+- pin1(GND_1): NETS(GND)
+- pin2(A15): NETS(J400_A15)
+- pin3(A14): NETS(J400_A14)
+- pin4(A13): NETS(J400_A13)
+- pin5(A12): NETS(J400_A12)
+- pin6(A11): NETS(J400_A11)
+- pin7(A7): NETS(J400_A7)
+- pin8(A8): NETS(J400_A8)
+- pin9(A6): NETS(J400_A6)
+- pin10(A9): NETS(J400_A9)
+- pin11(A5): NETS(J400_A5)
+- pin12(OEB): NETS(J400_OEB)
+- pin13(A4): NETS(J400_A4)
+- pin14(WRB): NETS(J400_WRB)
+- pin15(A3): NETS(J400_A3)
+- pin16(A10): NETS(J400_A10)
+- pin17(A2): NETS(J400_A2)
+- pin18(A1): NETS(J400_A1)
+- pin19(D7): NETS(J400_D7)
+- pin20(A0): NETS(J400_A0)
+- pin21(D6): NETS(J400_D6)
+- pin22(D0): NETS(J400_D0)
+- pin23(D5): NETS(J400_D5)
+- pin24(D1): NETS(J400_D1)
+- pin25(D4): NETS(J400_D4)
+- pin26(D2): NETS(J400_D2)
+- pin27(AUDIO_IN): NETS(J400_AUDIO_IN_UNUSED)
+- pin28(D3): NETS(J400_D3)
+- pin29(F2): NETS(J400_F2_UNUSED)
+- pin30(SA0): NETS(J400_SA0_UNUSED)
+- pin31(WEB): NETS(J400_WEB_UNUSED)
+- pin32(SA1): NETS(J400_SA1_UNUSED)
+- pin33(BIGSPACEB): NETS(J400_BIGSPACEB_UNUSED)
+- pin34(SA2): NETS(J400_SA2_UNUSED)
+- pin35(MNMIB): NETS(J400_MNMIB_UNUSED)
+- pin36(SA3): NETS(J400_SA3_UNUSED)
+- pin37(RESETSYSB): NETS(J400_RESETSYSB_UNUSED)
+- pin38(CT): NETS(J400_CT_UNUSED)
+- pin39(VBAT): NETS(J400_VBAT_NOT_LOGIC)
+- pin40(DOUT): NETS(J400_DOUT_UNUSED)
+- pin41(VSW): NETS(VSW_ASSUMED_5V)
+- pin42(DREQ): NETS(J400_DREQ_UNUSED)
+- pin43(GND_43): NETS(GND)
+- pin44(ASTRB): NETS(J400_ASTRB_UNUSED)

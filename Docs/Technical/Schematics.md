@@ -43,9 +43,11 @@ COP411L (U1), 455 kHz clock, 27 MHz OOK stage.
 
 | Asset | Path | Status |
 |-------|------|--------|
-| KiCad (CBSDemo) | [`Cartridge/Examples/CBSDemo/KiCAD/CBSDemo.kicad_pro`](../../Cartridge/Examples/CBSDemo/KiCAD/CBSDemo.kicad_pro) | Active (rev 0.1) |
-| KiCad (UltraMaxx) | [`Cartridge/Examples/UltraMaxx/KiCAD/`](../../Cartridge/Examples/UltraMaxx/KiCAD/) (same PCB as CBSDemo) | Active |
-| PicoROM (UltraMaxx U1) | [`Cartridge/Examples/UltraMaxx/PICOROM.md`](../../Cartridge/Examples/UltraMaxx/PICOROM.md) | Active |
+| KiCad (CBSDemo) | [`Cartridge/Examples/CBSDemo/KiCAD/CBSDemo.kicad_pro`](../../Cartridge/Examples/CBSDemo/KiCAD/CBSDemo.kicad_pro) | Reference evidence (rev 0.1). Factory EPROM card. |
+| tscircuit (Pico RP2040 + DIP 245) | [`Cartridge/PicoROM/`](../../Cartridge/PicoROM/) | Chosen reference wiring from the J400 CSV. Not continuity-tested. Not a PCB. |
+| tscircuit (PicoROM P28 carrier) | [`Cartridge/PicoROM/tscircuit/picorom-carrier.circuit.tsx`](../../Cartridge/PicoROM/tscircuit/picorom-carrier.circuit.tsx) | Reference module only. Edge nets stay open. |
+| KiCad (UltraMaxx) | [`Cartridge/Examples/UltraMaxx/KiCAD/`](../../Cartridge/Examples/UltraMaxx/KiCAD/) (same PCB as CBSDemo) | Reference pointer |
+| PicoROM notes (socket-in-U1, historical) | [`Cartridge/Examples/UltraMaxx/PICOROM.md`](../../Cartridge/Examples/UltraMaxx/PICOROM.md) | Superseded as the primary path by `Cartridge/PicoROM/` |
 
 ---
 

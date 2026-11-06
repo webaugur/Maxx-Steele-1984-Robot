@@ -8,7 +8,9 @@ if [ ! -f "$BIN" ]; then
   exit 1
 fi
 chmod +x "$BIN" 2>/dev/null || true
-if [ -f "$ROOT/carts/default.532" ]; then
+if [ $# -ge 1 ]; then
+  exec "$BIN" simulate --gui "$1"
+elif [ -f "$ROOT/carts/default.532" ]; then
   exec "$BIN" simulate --gui "$ROOT/carts/default.532"
 else
   exec "$BIN" simulate --gui

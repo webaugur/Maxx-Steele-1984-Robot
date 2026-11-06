@@ -25,6 +25,8 @@ Follow these steps to open the Maxx Steele chassis for inspection or repair. Com
 
 5. Lay Maxx **face down** and remove the **twelve screws** holding the back of the case to the front.
 
+The community source uses twelve in the removal steps and fourteen in the reassembly steps. Both numbers are copied as written. [Chapter 8](../Technical/08-Community-Reference-Guide.md) records that pair. No single count was substituted.
+
 ---
 
 ## Remove the head / remote holder

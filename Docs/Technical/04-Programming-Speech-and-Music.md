@@ -23,6 +23,8 @@ Phrases are indexed phoneme strings in internal ROM. The driver at **`$F3D5`** o
 
 Phoneme code tables reside at **`$F567`** / **`$F4DB`** (140 entries). Until the full **`$F4DB`** table is transcribed, treat phrase indices as opaque IDs.
 
+A community LC8100 phrase list (indices 16–32) and an LC3100 word table with ROM addresses are copied, uncorrected, in [Chapter 8](08-Community-Reference-Guide.md). That copy includes the printed token `OD6B` on Indicate and the phrase spelling "Max Steele". It is not a replacement for the `$F4DB` transcription.
+
 Demo examples:
 
 ```
