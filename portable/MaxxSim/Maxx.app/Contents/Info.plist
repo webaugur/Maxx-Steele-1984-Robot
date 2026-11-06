@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>CFBundleName</key>
+  <string>Maxx</string>
+  <key>CFBundleDisplayName</key>
+  <string>Maxx Steele</string>
+  <key>CFBundleIdentifier</key>
+  <string>com.maxxsteele.simulator</string>
+  <key>CFBundleVersion</key>
+  <string>0.2.80</string>
+  <key>CFBundleShortVersionString</key>
+  <string>0.2.80</string>
+  <key>CFBundleExecutable</key>
+  <string>Maxx</string>
+  <key>CFBundlePackageType</key>
+  <string>APPL</string>
+  <key>CFBundleIconFile</key>
+  <string>rom-chip</string>
+  <key>CFBundleDocumentTypes</key>
+  <array>
+    <dict>
+      <key>CFBundleTypeName</key>
+      <string>Maxx Steele cartridge</string>
+      <key>CFBundleTypeRole</key>
+      <string>Viewer</string>
+      <key>CFBundleTypeExtensions</key>
+      <array>
+        <string>532</string>
+      </array>
+      <key>CFBundleTypeIconFile</key>
+      <string>rom-chip</string>
+      <key>LSItemContentTypes</key>
+      <array>
+        <string>com.maxxsteele.cartridge</string>
+      </array>
+    </dict>
+  </array>
+  <key>UTExportedTypeDeclarations</key>
+  <array>
+    <dict>
+      <key>UTTypeIdentifier</key>
+      <string>com.maxxsteele.cartridge</string>
+      <key>UTTypeDescription</key>
+      <string>Maxx Steele cartridge</string>
+      <key>UTTypeConformsTo</key>
+      <array>
+        <string>public.data</string>
+      </array>
+      <key>UTTypeTagSpecification</key>
+      <dict>
+        <key>public.filename-extension</key>
+        <array>
+          <string>532</string>
+        </array>
+      </dict>
+    </dict>
+  </array>
+</dict>
+</plist>

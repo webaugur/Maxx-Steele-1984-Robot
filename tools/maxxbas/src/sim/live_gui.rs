@@ -119,15 +119,21 @@ impl BootGate {
 
 /// `MaxxSim/maxx/<os>/maxx` stores egui state in `MaxxSim/config`, on the same drive.
 /// A normal dev binary has no Start script three levels up, so it keeps the host profile.
-fn portable_config_dir() -> Option<std::path::PathBuf> {
+fn portable_bundle_root() -> Option<std::path::PathBuf> {
     let exe = std::env::current_exe().ok()?;
     let root = exe.parent()?.parent()?.parent()?;
     let portable = root.join("Start-Linux.sh").is_file()
         || root.join("Start-Windows.bat").is_file()
         || root.join("Start-Mac.command").is_file();
-    if !portable {
-        return None;
+    if portable {
+        Some(root.to_path_buf())
+    } else {
+        None
     }
+}
+
+fn portable_config_dir() -> Option<std::path::PathBuf> {
+    let root = portable_bundle_root()?;
     let dir = root.join("config");
     std::fs::create_dir_all(&dir).ok()?;
     Some(dir)
@@ -171,6 +177,7 @@ pub fn run_live_gui(cart: Option<CartImage>, label: impl Into<String>) -> Result
         trace_breakpoint_hint: None,
         hackrf: super::hackrf_ook::HackRfTx::new(),
         mouse_held: None,
+        program_editor: super::program_editor::ProgramEditor::new(),
     };
     let mut options = eframe::NativeOptions {
         viewport: egui::ViewportBuilder::default()
@@ -208,6 +215,7 @@ struct LiveSimApp {
     trace_breakpoint_hint: Option<String>,
     hackrf: super::hackrf_ook::HackRfTx,
     mouse_held: Option<RemoteKey>,
+    program_editor: super::program_editor::ProgramEditor,
 }
 
 #[derive(Clone)]
@@ -473,6 +481,21 @@ fn paint_cpu_transport_toolbar(ui: &mut egui::Ui, app: &mut LiveSimApp) {
             app.firmware.step_frame_halted();
             app.trace_display = app.firmware.trace_text();
             ui.ctx().request_repaint();
+        }
+        if paint_toolbar_key_btn(
+            ui,
+            "P",
+            "Edit the loaded cartridge's opcode steps",
+            ToolbarKeyMode::Toggle {
+                active: app.program_editor.open,
+            },
+        ) {
+            app.program_editor.open = !app.program_editor.open;
+            if app.program_editor.open {
+                let root = portable_bundle_root();
+                let path = super::program_editor::default_save_path(root.as_deref());
+                app.program_editor.load_from(&app.firmware, path);
+            }
         }
         if paint_toolbar_key_btn(
             ui,
@@ -861,6 +884,11 @@ impl eframe::App for LiveSimApp {
                 });
             });
         sync_hackrf(self, ui.ctx());
+        super::program_editor::paint_program_editor(
+            ui.ctx(),
+            &mut self.program_editor,
+            &mut self.firmware,
+        );
     }
 }
 

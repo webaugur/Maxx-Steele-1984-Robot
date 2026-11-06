@@ -4,9 +4,13 @@ Maxx Steele simulator — portable copy
 Copy this whole MaxxSim folder onto a USB stick. Double-click the launcher
 for the computer you are on. It opens the live GUI. No installer.
 
-  Start-Windows.bat
-  Start-Mac.command
-  Start-Linux.sh          if the stick drops the execute bit:  bash Start-Linux.sh
+  Start-Windows.bat      runs  maxx\windows\maxx.exe simulate --gui
+  Start-Mac.command      runs  maxx/macos/maxx simulate --gui
+  Start-Linux.sh         runs  maxx/linux/maxx simulate --gui
+                         if the stick drops the execute bit:  bash Start-Linux.sh
+
+A .532 file passed to a Start script opens that cartridge. With no file,
+carts/default.532 is used when it exists.
 
 The internal robot ROM, patches, fonts, logo, and music are inside the
 program. You do not copy those separately.
@@ -25,6 +29,20 @@ ROM only. Any other image:
 
 Window size and other GUI state are written to config\ on this stick, not
 into the computer's user profile.
+
+Double-click a .532 file
+------------------------
+Run the register script once on that computer. It points .532 files at
+simulate --gui and uses icons/rom-chip (a DIP EPROM). Run it again if the
+USB drive letter or mount path changes.
+
+  Register-Windows.bat     current user, no administrator
+  Register-Mac.command     Launch Services. Right-click Maxx.app, Open, once.
+  Register-Linux.sh        your user MIME database and ~/.magic
+
+The file is recognized by the copyright at byte 2: "(c) 1985 CBS Toys" or
+"(c) UltraMaxx". After Register-Linux.sh, `file something.532` says
+"Maxx Steele cartridge".
 
 Programs
 --------

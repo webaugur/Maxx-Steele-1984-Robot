@@ -985,6 +985,44 @@ impl InteractiveFirmware {
         self.cart.is_some()
     }
 
+    /// Opcode pairs of the loaded cartridge, including the trailing `FF FF`.
+    /// `None` when the internal ROM is running with no cartridge.
+    pub fn program_pairs(&self) -> Option<Result<Vec<(u8, u8)>, String>> {
+        let cart = self.cart.as_ref()?;
+        Some(
+            crate::decode::decode_cart(cart)
+                .map(|trace| trace.steps.iter().map(|s| (s.opcode, s.operand)).collect()),
+        )
+    }
+
+    /// Replace the program pairs and reset so the copy stub loads the new list.
+    pub fn set_program_pairs(&mut self, pairs: &[(u8, u8)]) -> Result<(), String> {
+        let original = self
+            .cart
+            .as_ref()
+            .ok_or("no cartridge program is loaded")?
+            .data
+            .clone();
+        let img = crate::emit::emit_edited_cart(&original, pairs).map_err(|e| e.to_string())?;
+        if let Some(cart) = self.cart.as_mut() {
+            cart.data = img;
+        }
+        self.reset()
+    }
+
+    pub fn write_cart_file(&self, path: &std::path::Path) -> Result<(), String> {
+        let cart = self
+            .cart
+            .as_ref()
+            .ok_or("no cartridge program is loaded")?;
+        if let Some(parent) = path.parent() {
+            if !parent.as_os_str().is_empty() {
+                std::fs::create_dir_all(parent).map_err(|e| format!("{}: {e}", parent.display()))?;
+            }
+        }
+        std::fs::write(path, &cart.data).map_err(|e| format!("{}: {e}", path.display()))
+    }
+
     fn boot(cart: Option<CartImage>, label: impl Into<String>) -> Result<Self, String> {
         let factory_demo_cart = cart
             .as_ref()

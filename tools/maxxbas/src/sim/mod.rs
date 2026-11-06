@@ -14,6 +14,7 @@ mod interactive;
 mod keypad;
 mod live_gui;
 mod patches;
+mod program_editor;
 mod plastic_skin;
 mod remote_branding;
 mod remote_font;
