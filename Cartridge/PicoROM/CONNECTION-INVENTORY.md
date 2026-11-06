@@ -27,7 +27,7 @@ The module's own buffers stay inside the module:
 | VCC (pin 28) | 41 `VSW` | `VSW_ASSUMED_5V` |
 | GND (pin 14) | 1 and 43 `GND` | `GND` |
 | — | 39 `VBAT` | `J400_VBAT_NOT_LOGIC` |
-| — | `WRB` and the sound, audio, and CPU straps | `J400_*_UNUSED` |
+| — | `WRB` and the sound, audio, and CPU straps | `NC_*` |
 
 `WRB` is not a 27C512 pin on this module. Pin 27 is A14.
 

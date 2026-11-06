@@ -18,14 +18,13 @@
 import { p28PinLabels } from "./src/p28-pinout"
 import { j400PinLabels, j400Pins } from "./src/j400-edge"
 
-const Trace = ({ from, to }: { from: string; to: string }) => (
-  <trace from={from} to={to} />
-)
-
-const share = (p28Pin: string, j1Pin: string, net: string) => [
-  <Trace key={`p28-${net}`} from={`U_P28.${p28Pin}`} to={`net.${net}`} />,
-  <Trace key={`j1-${net}`} from={`J1.${j1Pin}`} to={`net.${net}`} />,
-]
+const Join = ({
+  net,
+  pins,
+}: {
+  net: string
+  pins: string[]
+}) => <netlabel net={net} connectsTo={pins} inline />
 
 const addr = [
   "A0",
@@ -66,22 +65,14 @@ export default () => (
   >
     <schematicsheet
       name="carrier"
-      displayName="1 PicoROM-28 on the J400 map"
+      displayName="PicoROM-28 wired to J400"
       sheetIndex={0}
-      sheetWidth="220mm"
-      sheetHeight="180mm"
-    />
-    <schematicsheet
-      name="notes"
-      displayName="2 Module power and what this sheet is not"
-      sheetIndex={1}
-      sheetWidth="190mm"
-      sheetHeight="90mm"
+      sheetWidth="200mm"
+      sheetHeight="110mm"
     />
 
     <schematicsection name="mod" displayName="Upstream PicoROM-28 module" />
     <schematicsection name="edge" displayName="J400 reference map" />
-    <schematicsection name="notesec" displayName="Checks are not a power-up" />
 
     <chip
       name="U_P28"
@@ -89,9 +80,10 @@ export default () => (
       footprint="dip28"
       schSheetName="carrier"
       schSectionName="mod"
-      schX={-1.2}
+      schX={-6}
       schY={0}
-      schWidth={1.77}
+      schWidth={3.2}
+      schFacingDirection="right"
       pcbX={-22}
       pcbY={0}
       pinLabels={p28PinLabels}
@@ -102,11 +94,11 @@ export default () => (
       schPinArrangement={{
         leftSide: {
           direction: "top-to-bottom",
-          pins: [...addr],
+          pins: ["nCE"],
         },
         rightSide: {
           direction: "top-to-bottom",
-          pins: [...data, "nCE", "nOE"],
+          pins: [...addr, ...data, "nOE"],
         },
         topSide: { direction: "left-to-right", pins: ["VCC"] },
         bottomSide: { direction: "left-to-right", pins: ["GND"] },
@@ -120,101 +112,57 @@ export default () => (
       gender="female"
       schSheetName="carrier"
       schSectionName="edge"
-      schX={3.2}
+      schX={6}
       schY={0}
       pcbX={22}
       pcbY={0}
       pcbRotation={90}
-      schWidth={1.15}
+      schWidth={2.4}
       pinLabels={j400PinLabels}
-      schFacingDirection="right"
+      schFacingDirection="left"
     />
 
-    {addr.flatMap((name) => share(name, name, `J400_${name}`))}
-    {data.flatMap((name) => share(name, name, `J400_${name}`))}
-    {share("nOE", "OEB", "J400_OEB")}
-    <Trace from="U_P28.nCE" to="net.GND" />
-    <Trace from="U_P28.VCC" to="net.VSW_ASSUMED_5V" />
-    <Trace from="J1.VSW" to="net.VSW_ASSUMED_5V" />
-    <Trace from="U_P28.GND" to="net.GND" />
-    <Trace from="J1.GND_1" to="net.GND" />
-    <Trace from="J1.GND_43" to="net.GND" />
+    {addr.map((name) => (
+      <Join key={name} net={`J400_${name}`} pins={[`U_P28.${name}`, `J1.${name}`]} />
+    ))}
+    {data.map((name) => (
+      <Join key={name} net={`J400_${name}`} pins={[`U_P28.${name}`, `J1.${name}`]} />
+    ))}
+    <Join net="J400_OEB" pins={["U_P28.nOE", "J1.OEB"]} />
+    <Join
+      net="GND"
+      pins={["U_P28.nCE", "U_P28.GND", "J1.GND_1", "J1.GND_43"]}
+    />
+    <Join net="VSW_ASSUMED_5V" pins={["U_P28.VCC", "J1.VSW"]} />
 
     {j400Pins
       .filter(([, name]) => !connectedJ1.has(name))
       .map(([, name]) => (
-        <Trace
+        <Join
           key={name}
-          from={`J1.${name}`}
-          to={`net.${name === "VBAT" ? "J400_VBAT_NOT_LOGIC" : `J400_${name}_UNUSED`}`}
+          net={name === "VBAT" ? "J400_VBAT_NOT_LOGIC" : `NC_${name}`}
+          pins={[`J1.${name}`]}
         />
       ))}
 
     <schematictext
       schSheetName="carrier"
       schSectionName="mod"
-      schX={-2}
-      schY={5.2}
+      schX={0}
+      schY={5.4}
       anchor="center"
       color="#9b1c1c"
       fontSize={0.28}
-      text="PRELIMINARY. NOT A PCB. NOT CONTINUITY-TESTED."
+      text="WIRES JOIN U_P28 TO J400. NOT A CONTINUITY TEST."
     />
     <schematictext
       schSheetName="carrier"
-      schSectionName="mod"
-      schX={-2}
-      schY={-5.2}
+      schSectionName="edge"
+      schX={0}
+      schY={-5.4}
       anchor="center"
       fontSize={0.18}
-      text="U_P28 is PicoROM-28 rev 1.10. /CE strapped low. OEB is /OE. No external HCT."
-    />
-
-    <schematictext
-      schSheetName="notes"
-      schSectionName="notesec"
-      schX={0}
-      schY={2.2}
-      anchor="center"
-      color="#9b1c1c"
-      fontSize={0.28}
-      text="NO EXTERNAL HCT245. BUFFERS ARE INSIDE THE MODULE."
-    />
-    <schematictext
-      schSheetName="notes"
-      schSectionName="notesec"
-      schX={0}
-      schY={1.2}
-      anchor="center"
-      fontSize={0.18}
-      text="ASSUMED VSW = 5 V on pin 28. Confirm 4.5-5.5 V, spikes included, before power. No 7805. VBAT open."
-    />
-    <schematictext
-      schSheetName="notes"
-      schSectionName="notesec"
-      schX={0}
-      schY={0.4}
-      anchor="center"
-      fontSize={0.18}
-      text="Module Schottkys OR USB and pin 28. This sheet does not short USB to VSW."
-    />
-    <schematictext
-      schSheetName="notes"
-      schSectionName="notesec"
-      schX={0}
-      schY={-0.6}
-      anchor="center"
-      fontSize={0.18}
-      text="Stock firmware P28_27C512_70ns. Address GPIO0-15, data GPIO16-23. Not a bare Pico map."
-    />
-    <schematictext
-      schSheetName="notes"
-      schSectionName="notesec"
-      schX={0}
-      schY={-1.6}
-      anchor="center"
-      fontSize={0.18}
-      text="Upstream quotes 70 ns / 40 ns on its own bench. This repo has no robot scope capture."
+      text="A0-A15 and D0-D7 are wired. OEB is /OE. /CE is GND. VSW is pin 28. NC_ labels do not touch the module."
     />
   </board>
 )

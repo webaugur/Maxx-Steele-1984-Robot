@@ -104,7 +104,7 @@ The only active part is a PicoROM-28 module. There is no external HCT or LVC.
 | GND lines 1 and 43 | `GND` | pin 14 |
 | VSW | `VSW_ASSUMED_5V` | pin 28 |
 | VBAT | `J400_VBAT_NOT_LOGIC` | none |
-| WRB, Audio Input, F2, SA0–SA3, WEB, BIGSPACEB, MNMIB, RESETSYSB, CT, DOUT, DREQ, ASTRB | `J400_*_UNUSED` | none |
+| WRB, Audio Input, F2, SA0–SA3, WEB, BIGSPACEB, MNMIB, RESETSYSB, CT, DOUT, DREQ, ASTRB | `NC_*` | none |
 
 The bare-Pico split GPIO map is not this design. A Pico header does not expose the consecutive `BOARD_28P` pins, and this sheet does not use that header.
 

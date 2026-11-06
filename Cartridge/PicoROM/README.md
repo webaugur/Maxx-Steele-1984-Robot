@@ -1,6 +1,8 @@
 # PicoROM-28 cartridge schematic (preliminary)
 
-The working schematic is an upstream [PicoROM-28](https://github.com/wickerwaka/PicoROM) module on the J400 line numbers in [`J400-cartridge-port-pinout.csv`](J400-cartridge-port-pinout.csv). The circuit is [`tscircuit/picorom-carrier.circuit.tsx`](tscircuit/picorom-carrier.circuit.tsx). It is the chosen reference mapping. It is not a continuity-tested pinout, and it is not a fabrication or power-up release.
+The working schematic is an upstream [PicoROM-28](https://github.com/wickerwaka/PicoROM) module on the J400 line numbers in [`J400-cartridge-port-pinout.csv`](J400-cartridge-port-pinout.csv). The circuit is [`tscircuit/picorom-carrier.circuit.tsx`](tscircuit/picorom-carrier.circuit.tsx). The picture below is generated from that source. It is the chosen reference mapping. It is not a continuity-tested pinout, and it is not a fabrication or power-up release.
+
+![PicoROM-28 wired to J400](render/picorom-carrier-schematic.png)
 
 A bare Raspberry Pi Pico with external DIP 245 buffers is not this design. That split GPIO map cannot run stock PicoROM firmware. It is no longer in this project. The supported part is the PicoROM-28 module, whose RP2040 pinout is inside the module.
 

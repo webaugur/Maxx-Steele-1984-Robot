@@ -83,7 +83,45 @@ test("P28 carrier uses the module pins and no external buffer", () => {
   assert.ok(on("GND").includes("J1.GND_43"))
   assert.deepEqual(on("VSW_ASSUMED_5V"), ["J1.VSW", "U_P28.VCC"].sort())
   assert.deepEqual(on("J400_VBAT_NOT_LOGIC"), ["J1.VBAT"])
-  assert.deepEqual(on("J400_WRB_UNUSED"), ["J1.WRB"])
+  assert.deepEqual(on("NC_WRB"), ["J1.WRB"])
+
+  const p28 = pins.filter((pin) => pin.ref === "U_P28")
+  const j1 = pins.filter((pin) => pin.ref === "J1")
+  assert.equal(p28.length, 28)
+  assert.equal(j1.length, 44)
+  const shares = (left, right) =>
+    left.nets.some((net) => right.nets.includes(net))
+  let busEndpoints = 0
+  for (const name of [
+    ...Array.from({ length: 16 }, (_, bit) => `A${bit}`),
+    ...Array.from({ length: 8 }, (_, bit) => `D${bit}`),
+  ]) {
+    const u = p28.find((pin) => pin.name === name)
+    const j = j1.find((pin) => pin.name === name)
+    assert.ok(u && j, name)
+    assert.equal(shares(u, j), true, `${name} endpoints differ`)
+    assert.equal(u.nets.length, 1)
+    assert.equal(j.nets.length, 1)
+    busEndpoints += 2
+  }
+  const nce = p28.find((pin) => pin.name === "nCE")
+  const uGnd = p28.find((pin) => pin.name === "GND")
+  const g1 = j1.find((pin) => pin.name === "GND_1")
+  const g43 = j1.find((pin) => pin.name === "GND_43")
+  assert.equal(shares(nce, uGnd) && shares(uGnd, g1) && shares(g1, g43), true)
+  const vcc = p28.find((pin) => pin.name === "VCC")
+  const vsw = j1.find((pin) => pin.name === "VSW")
+  const noe = p28.find((pin) => pin.name === "nOE")
+  const oeb = j1.find((pin) => pin.name === "OEB")
+  assert.equal(shares(vcc, vsw), true)
+  assert.equal(shares(noe, oeb), true)
+  const moduleNets = new Set(p28.flatMap((pin) => pin.nets))
+  const nc = j1.filter((pin) => pin.nets.every((net) => !moduleNets.has(net)))
+  assert.equal(nc.length, 16)
+  assert.equal(busEndpoints, 48)
+  console.log(
+    `endpoints bus=${busEndpoints} power=2 ground=4 oe=2 nc=${nc.length} p28=${p28.length} j1=${j1.length}`,
+  )
 
   const numberOf = (ref, name) => {
     const pin = pins.find((item) => item.ref === ref && item.name === name)
