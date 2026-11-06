@@ -7,6 +7,7 @@ COMPONENTS:
  - R_OE: 10kΩ axial resistor
  - R_BASE: 10kΩ axial resistor
  - R_BASE_PD: 100kΩ axial resistor
+ - D_VSYS: D_VSYS, source_component
  - Q_OE: Q_OE, source_component
  - C_ADDR: 100nF axial_nonpolarized capacitor
  - C_AHI: 100nF axial_nonpolarized capacitor
@@ -227,9 +228,15 @@ NET: J400_D7
   - J1 D7
   - U_DATA B8
 
-NET: HCT_5V_UNSOURCED
+NET: PICO_VSYS
+  - D_VSYS pin2 (-)
+  - J_PICO VSYS
+
+NET: VSW_ASSUMED_5V
   - R_OE pin2
+  - D_VSYS pin1 (+)
   - C_DATA pin1 (+)
+  - J1 VSW
   - U_DATA VCC
   - U_DATA DIR
 
@@ -286,7 +293,6 @@ EMPTY NET PINS:
   - J_PICO RUN
   - J_PICO ADC_VREF
   - J_PICO 3V3_EN
-  - J_PICO VSYS
   - J_PICO VBUS
   - U_CTL A2
   - U_CTL A3
@@ -295,7 +301,6 @@ EMPTY NET PINS:
   - U_CTL A6
   - U_CTL A7
   - U_CTL A8
-  - J1 VSW
   - J1 VBAT
   - J1 AUDIO_IN
   - J1 F2
@@ -352,7 +357,7 @@ J_PICO
 - pin36(3V3): NETS(PICO_3V3)
 - pin37(3V3_EN): NETS(PICO_3V3_EN_OPEN)
 - pin38(GND38): NETS(GND)
-- pin39(VSYS): NETS(PICO_VSYS_OPEN)
+- pin39(VSYS): NETS(PICO_VSYS)
 - pin40(VBUS): NETS(PICO_VBUS_USB_ONLY)
 
 U_ADDR (SN74LVC245AN)
@@ -422,7 +427,7 @@ U_CTL (SN74LVC245AN)
 - pin20(VCC): NETS(PICO_3V3)
 
 U_DATA (SN74HCT245N)
-- pin1(DIR): NETS(HCT_5V_UNSOURCED)
+- pin1(DIR): NETS(VSW_ASSUMED_5V)
 - pin2(A1): NETS(PICO_D0)
 - pin3(A2): NETS(PICO_D1)
 - pin4(A3): NETS(PICO_D2)
@@ -441,11 +446,11 @@ U_DATA (SN74HCT245N)
 - pin17(B2): NETS(J400_D1)
 - pin18(B1): NETS(J400_D0)
 - pin19(nOE): NETS(HCT_nOE)
-- pin20(VCC): NETS(HCT_5V_UNSOURCED)
+- pin20(VCC): NETS(VSW_ASSUMED_5V)
 
 R_OE (10kΩ axial)
 - pin1(anode, pos, left): NETS(HCT_nOE)
-- pin2(cathode, neg, right): NETS(HCT_5V_UNSOURCED)
+- pin2(cathode, neg, right): NETS(VSW_ASSUMED_5V)
 
 R_BASE (10kΩ axial)
 - pin1(anode, pos, left): NETS(PICO_DATA_nOE)
@@ -454,6 +459,10 @@ R_BASE (10kΩ axial)
 R_BASE_PD (100kΩ axial)
 - pin1(anode, pos, left): NETS(Q_OE_BASE)
 - pin2(cathode, neg, right): NETS(GND)
+
+D_VSYS (1N5817)
+- pin1(pos, anode, left): NETS(VSW_ASSUMED_5V)
+- pin2(neg, cathode, right): NETS(PICO_VSYS)
 
 Q_OE
 - pin1(collector, c): NETS(HCT_nOE)
@@ -473,7 +482,7 @@ C_CTL (100nF axial_nonpolarized)
 - pin2(neg, cathode): NETS(GND)
 
 C_DATA (100nF axial_nonpolarized)
-- pin1(pos, anode): NETS(HCT_5V_UNSOURCED)
+- pin1(pos, anode): NETS(VSW_ASSUMED_5V)
 - pin2(neg, cathode): NETS(GND)
 
 J1
@@ -517,7 +526,7 @@ J1
 - pin38(CT): NETS(J400_CT_UNUSED)
 - pin39(VBAT): NETS(J400_VBAT_NOT_LOGIC)
 - pin40(DOUT): NETS(J400_DOUT_UNUSED)
-- pin41(VSW): NETS(J400_VSW_UNTRUSTED)
+- pin41(VSW): NETS(VSW_ASSUMED_5V)
 - pin42(DREQ): NETS(J400_DREQ_UNUSED)
 - pin43(GND_43): NETS(GND)
 - pin44(ASTRB): NETS(J400_ASTRB_UNUSED)

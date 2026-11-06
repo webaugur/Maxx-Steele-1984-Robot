@@ -1,6 +1,6 @@
 # Connection inventory
 
-The wired cartridge is [`tscircuit/pico-dip245.circuit.tsx`](tscircuit/pico-dip245.circuit.tsx). Its J400 names come from [`J400-cartridge-port-pinout.csv`](J400-cartridge-port-pinout.csv), the chosen reference mapping. `npm test` checks that A0–A15, D0–D7, and OEB meet the Pico only through the DIP 245s, that WRB stops on `WRB_NO_FREE_GPIO`, that VBAT and VSW are each a single pin, that the HCT 5 V net is unsourced and is not VSW, and that OEB is not the HCT output-enable net. That test is a netlist check of the chosen map. It is not a continuity test.
+The wired cartridge is [`tscircuit/pico-dip245.circuit.tsx`](tscircuit/pico-dip245.circuit.tsx). Its J400 names come from [`J400-cartridge-port-pinout.csv`](J400-cartridge-port-pinout.csv), the chosen reference mapping. `npm test` checks that A0–A15, D0–D7, and OEB meet the Pico only through the DIP 245s, that WRB stops on `WRB_NO_FREE_GPIO`, that VBAT is a single pin, that VSW feeds the HCT and only the anode of the VSYS Schottky, and that OEB is not the HCT output-enable net. That test is a netlist check of the chosen map. It is not a continuity test.
 
 ## P28 reference carrier
 

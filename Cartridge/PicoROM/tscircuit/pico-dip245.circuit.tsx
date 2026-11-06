@@ -3,8 +3,9 @@
  * wired to J400 line numbers from the community reference-guide pinout.
  *
  * That pinout is explicitly unverified. OEB is not tied to the HCT output
- * enable. VBAT is a nominal 10 V gel cell and is not wired. VSW is
- * untrusted and is not an HCT or Pico supply. The HCT 5 V net has no source.
+ * enable. VBAT is not connected. VSW is the assumed nominal 5 V rail for
+ * the HCT and, through a Schottky, for Pico VSYS. Verify that rail before
+ * powering. No 7805.
  * Stock PicoROM P28 firmware does not use this GPIO map. The map is a
  * proposal and has not been compiled or flashed.
  */
@@ -140,6 +141,7 @@ export default () => (
     <resistor name="R_OE" resistance="10k" footprint="axial" schSheetName="hct" schSectionName="hctSec" schX={4} schY={2.6} pcbX={48} pcbY={28} />
     <resistor name="R_BASE" resistance="10k" footprint="axial" schSheetName="hct" schSectionName="hctSec" schX={4} schY={1.2} pcbX={48} pcbY={16} />
     <resistor name="R_BASE_PD" resistance="100k" footprint="axial" schSheetName="hct" schSectionName="hctSec" schX={4} schY={0.2} pcbX={48} pcbY={4} />
+    <diode name="D_VSYS" manufacturerPartNumber="1N5817" footprint="axial" schSheetName="pico" schSectionName="picoSec" schX={4} schY={1} pcbX={-30} pcbY={40} pcbRotation={180} />
     <transistor name="Q_OE" type="npn" footprint="to92" schSheetName="hct" schSectionName="hctSec" schX={6.2} schY={1.4} pcbX={40} pcbY={-20} />
     <capacitor name="C_ADDR" capacitance="100nF" footprint="axial" schSheetName="lvc" schSectionName="lvcSec" schX={-6} schY={3.4} pcbX={12} pcbY={46} />
     <capacitor name="C_AHI" capacitance="100nF" footprint="axial" schSheetName="lvc" schSectionName="lvcSec" schX={0} schY={3.4} pcbX={12} pcbY={14} />
@@ -172,7 +174,7 @@ export default () => (
       ["J_PICO.ADC_VREF", "net.PICO_ADC_VREF_OPEN"],
       ["J_PICO.3V3", "net.PICO_3V3"],
       ["J_PICO.3V3_EN", "net.PICO_3V3_EN_OPEN"],
-      ["J_PICO.VSYS", "net.PICO_VSYS_OPEN"],
+      ["J_PICO.VSYS", "net.PICO_VSYS"],
       ["J_PICO.VBUS", "net.PICO_VBUS_USB_ONLY"],
       ["J_PICO.GND3", "net.GND"],
       ["J_PICO.GND8", "net.GND"],
@@ -248,14 +250,16 @@ export default () => (
     {ties(lo.map((bit) => [`U_DATA.B${bit + 1}`, `net.J400_D${bit}`] as const))}
     {ties(lo.map((bit) => [`J1.D${bit}`, `net.J400_D${bit}`] as const))}
     {ties([
-      ["U_DATA.DIR", "net.HCT_5V_UNSOURCED"],
-      ["U_DATA.VCC", "net.HCT_5V_UNSOURCED"],
-      ["J1.VSW", "net.J400_VSW_UNTRUSTED"],
-      ["C_DATA.pin1", "net.HCT_5V_UNSOURCED"],
+      ["U_DATA.DIR", "net.VSW_ASSUMED_5V"],
+      ["U_DATA.VCC", "net.VSW_ASSUMED_5V"],
+      ["J1.VSW", "net.VSW_ASSUMED_5V"],
+      ["C_DATA.pin1", "net.VSW_ASSUMED_5V"],
       ["C_DATA.pin2", "net.GND"],
+      ["D_VSYS.pin1", "net.VSW_ASSUMED_5V"],
+      ["D_VSYS.pin2", "net.PICO_VSYS"],
       ["U_DATA.nOE", "net.HCT_nOE"],
       ["R_OE.pin1", "net.HCT_nOE"],
-      ["R_OE.pin2", "net.HCT_5V_UNSOURCED"],
+      ["R_OE.pin2", "net.VSW_ASSUMED_5V"],
       ["Q_OE.collector", "net.HCT_nOE"],
       ["Q_OE.emitter", "net.GND"],
       ["Q_OE.base", "net.Q_OE_BASE"],
@@ -277,14 +281,14 @@ export default () => (
     <schematictext schSheetName="lvc" schSectionName="lvcSec" schX={0} schY={4.4} anchor="center" color="#9b1c1c" fontSize={0.22} text="CANDIDATE SN74LVC245AN PDIP. STOCK UNCONFIRMED. VCC IS PICO 3V3." />
     <schematictext schSheetName="lvc" schSectionName="lvcSec" schX={0} schY={3.8} anchor="center" fontSize={0.16} text="DIR low: J400 B side toward Pico. WRB is buffered and stops. It has no free GPIO." />
     <schematictext schSheetName="hct" schSectionName="hctSec" schX={0} schY={3.5} anchor="center" color="#9b1c1c" fontSize={0.22} text="CANDIDATE SN74HCT245N PDIP. STOCK UNCONFIRMED." />
-    <schematictext schSheetName="hct" schSectionName="hctSec" schX={0} schY={4.4} anchor="center" fontSize={0.16} text="5 V net has no source. VSW is not this rail. GP9 NPN holds Hi-Z when off." />
+    <schematictext schSheetName="hct" schSectionName="hctSec" schX={0} schY={4.4} anchor="center" fontSize={0.16} text="VCC, DIR, and OE pull-up are assumed VSW 5 V. GP9 NPN holds Hi-Z when off." />
     <schematictext schSheetName="edge" schSectionName="edgeSec" schX={0} schY={6.3} anchor="center" color="#9b1c1c" fontSize={0.22} text="J400 LINE NUMBERS. GUIDE SAYS VERIFY. NOT PHOTO SILK ORDER." />
-    <schematictext schSheetName="edge" schSectionName="edgeSec" schX={0} schY={5.7} anchor="center" fontSize={0.16} text="VBAT is a nominal 10 V gel cell and is open. VSW is untrusted and open." />
+    <schematictext schSheetName="edge" schSectionName="edgeSec" schX={0} schY={5.7} anchor="center" fontSize={0.16} text="VSW assumed nominal 5 V. VBAT is not connected. Silk order is still unknown." />
     <schematictext schSheetName="notes" schSectionName="noteSec" schX={0} schY={3.6} anchor="center" color="#9b1c1c" fontSize={0.24} text="PRELIMINARY. NOT A POWER OR FAB RELEASE." />
     <schematictext schSheetName="notes" schSectionName="noteSec" schX={0} schY={2.8} anchor="center" fontSize={0.16} text="74HC245 is not used. LVC at 3.3 V accepts 5.5 V in and cannot drive a 5 V bus." />
     <schematictext schSheetName="notes" schSectionName="noteSec" schX={0} schY={2.1} anchor="center" fontSize={0.16} text="HCT at 4.5-5.5 V outputs a 5 V high. Those outputs stay on the J400 data pins." />
-    <schematictext schSheetName="notes" schSectionName="noteSec" schX={0} schY={1.4} anchor="center" fontSize={0.16} text="NO POWER SOURCE. VSW does not feed the HCT. VBAT does not feed a regulator." />
-    <schematictext schSheetName="notes" schSectionName="noteSec" schX={0} schY={0.7} anchor="center" fontSize={0.16} text="Nominal 10 V gel cell is not a measured min, max, charge, or spike envelope." />
+    <schematictext schSheetName="notes" schSectionName="noteSec" schX={0} schY={1.4} anchor="center" fontSize={0.16} text="ASSUMED VSW = 5 V. Verify 4.5-5.5 V for the HCT and <= 5.5 V at VSYS, spikes included, before power." />
+    <schematictext schSheetName="notes" schSectionName="noteSec" schX={0} schY={0.7} anchor="center" fontSize={0.16} text="1N5817 anode on VSW, cathode on VSYS. Do not short VSYS to VBUS. No 7805. VBAT open." />
     <schematictext schSheetName="notes" schSectionName="noteSec" schX={0} schY={0.0} anchor="center" fontSize={0.16} text="Audio, SA0-3, DOUT, DREQ, CT, ASTRB, F2, WEB, BIGSPACEB, MNMIB, RESETSYSB stay off the Pico." />
     <schematictext schSheetName="notes" schSectionName="noteSec" schX={0} schY={-0.7} anchor="center" fontSize={0.16} text="P28 sheet in this folder is a reference module, not this Pico board. Issues stay open." />
     <pcbnotetext pcbX={0} pcbY={68} text="PLACEHOLDER FOOTPRINTS. NOT A CARTRIDGE PCB." />
