@@ -33,7 +33,7 @@ Nothing in the source is a measurement made for this archive. Where a later ROM 
 | Light sensor | This chapter | Source headings are empty. |
 | Cartridge size and insertion text | This chapter and [J400 pinout](../../Cartridge/PicoROM/J400-PINOUT.md) | 44 contacts, 2.54 mm, 1.6 mm board, 12–18 mm barrier, about 4 inches long: guide text, not a caliper log. |
 | Dimensioned drawing | Assets below | Two PNGs. Printed callouts are listed. They are not new measurements. |
-| Pinout | Chosen schematic map in [J400-PINOUT.md](../../Cartridge/PicoROM/J400-PINOUT.md) and `Cartridge/PicoROM/J400-cartridge-port-pinout.csv` | Used to wire the Pico schematic. Explicitly not continuity-tested. |
+| Pinout | Chosen schematic map in [J400-PINOUT.md](../../Cartridge/PicoROM/J400-PINOUT.md) and `Cartridge/PicoROM/J400-cartridge-port-pinout.csv` | Used to wire the PicoROM-32 carrier. Explicitly not continuity-tested. |
 | Attaching Sound Memory, External Sound Source, External Memory, External I/O | This chapter | Source headings are empty. |
 | RF 27.095 MHz sticker, 1.55 ms, 29 ms, 21 ms, 4×6 matrix, Power/Stop interrupt | [Transmitter architecture](../../Transmitter/transmitter-architecture.md) already has the measured timing | Guide text kept. |
 | "internal crystal is 26.840 Hz" | This chapter and a pointer in the transmitter note | Quoted as written. The unit is Hz in the source. The same sentence says the sticker is 27.095 MHz. Not silently changed to MHz. |

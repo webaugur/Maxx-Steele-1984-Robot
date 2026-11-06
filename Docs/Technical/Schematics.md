@@ -44,8 +44,7 @@ COP411L (U1), 455 kHz clock, 27 MHz OOK stage.
 | Asset | Path | Status |
 |-------|------|--------|
 | KiCad (CBSDemo) | [`Cartridge/Examples/CBSDemo/KiCAD/CBSDemo.kicad_pro`](../../Cartridge/Examples/CBSDemo/KiCAD/CBSDemo.kicad_pro) | Reference evidence (rev 0.1). Factory EPROM card. |
-| tscircuit (Pico RP2040 + DIP 245) | [`Cartridge/PicoROM/`](../../Cartridge/PicoROM/) | Chosen reference wiring from the J400 CSV. Not continuity-tested. Not a PCB. |
-| tscircuit (PicoROM P28 carrier) | [`Cartridge/PicoROM/tscircuit/picorom-carrier.circuit.tsx`](../../Cartridge/PicoROM/tscircuit/picorom-carrier.circuit.tsx) | Reference module only. Edge nets stay open. |
+| tscircuit (PicoROM-32 carrier) | [`Cartridge/PicoROM/`](../../Cartridge/PicoROM/) | Upstream PicoROM-32 on the J400 CSV. A16 and A17 tied low. Not continuity-tested. Not a PCB. |
 | KiCad (UltraMaxx) | [`Cartridge/Examples/UltraMaxx/KiCAD/`](../../Cartridge/Examples/UltraMaxx/KiCAD/) (same PCB as CBSDemo) | Reference pointer |
 | PicoROM notes (socket-in-U1, historical) | [`Cartridge/Examples/UltraMaxx/PICOROM.md`](../../Cartridge/Examples/UltraMaxx/PICOROM.md) | Superseded as the primary path by `Cartridge/PicoROM/` |
 

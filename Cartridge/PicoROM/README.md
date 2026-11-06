@@ -1,74 +1,41 @@
-# Pico cartridge schematic (preliminary)
+# PicoROM-32 cartridge schematic (preliminary)
 
-The working schematic is a standard Raspberry Pi Pico (RP2040) plus through-hole DIP 245 buffers, wired to the J400 line numbers in [`J400-cartridge-port-pinout.csv`](J400-cartridge-port-pinout.csv). David confirmed that CSV as the map to use. It is the chosen reference mapping. It is not a continuity-tested pinout, and it is not a fabrication or power-up release.
+The working schematic is an upstream [PicoROM-32](https://github.com/wickerwaka/PicoROM) module on the J400 line numbers in [`J400-cartridge-port-pinout.csv`](J400-cartridge-port-pinout.csv). The circuit is [`tscircuit/picorom-p32-carrier.circuit.tsx`](tscircuit/picorom-p32-carrier.circuit.tsx). The picture below is generated from that source. It is the chosen reference mapping. It is not a continuity-tested pinout, and it is not a fabrication or power-up release.
 
-[`J400-PINOUT.md`](J400-PINOUT.md) is the readable form of that CSV, including the Notes conflicts. The circuit is [`tscircuit/pico-dip245.circuit.tsx`](tscircuit/pico-dip245.circuit.tsx).
+![PicoROM-32 wired to J400](render/picorom-p32-carrier-schematic.png)
 
-A second sheet, [`tscircuit/picorom-carrier.circuit.tsx`](tscircuit/picorom-carrier.circuit.tsx), is only a reference drawing of an upstream [PicoROM P28](https://github.com/wickerwaka/PicoROM) module. That module is a custom RP2040 board, not a Pi Pico. Its edge is still open. It is not the chosen hardware. Stock P28 firmware does not fit the Pico header and is not what the Pico sheet runs.
+A bare Raspberry Pi Pico is not this design. The previous PicoROM-28 carrier is not the current sheet. The supported part is the 32-pin module.
 
-The KiCad photo-trace of the factory CBS cartridge stays where it is, as reference evidence:
+Nothing here is fabrication-ready. There is no cartridge PCB layout. The DIP-32 and 44-pin header footprints are build scaffolding. `routingDisabled` is set.
 
-- [`../Examples/CBSDemo/KiCAD/`](../Examples/CBSDemo/KiCAD/)
-- [`../Examples/UltraMaxx/PICOROM.md`](../Examples/UltraMaxx/PICOROM.md) (older note about plugging a P28 into that factory board)
+Related open issues, not closed here: [#51](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/51), [#53](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/53) (stock `P32_27C020_70ns` is the firmware under test; robot timing is still unmeasured), [#54](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/54) (the module is the PicoROM-32; this change does not check store stock), [#46](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/46), [#25](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/25), [#26](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/26), [#27](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/27), [#50](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/50), [#49](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/49).
 
-Nothing here is fabrication-ready. There is no cartridge PCB layout. Placeholder footprints exist only so the tscircuit project can build. `routingDisabled` is set. Do not order boards from this project.
-
-Related open issues, not closed by this draft: [#51](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/51) (PicoROM cartridge), [#46](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/46) (J1 / U2 / U3 evidence), [#25](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/25) (PCB layout), [#26](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/26) (schematic evidence), [#27](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/27) (fab archive), [#50](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/50) (programming and bring-up), [#49](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/49) (mechanical fit), [#47](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/47) / [#48](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/48) (CAD and labels).
-
-## What was verified
-
-Upstream tree used for this pass:
+## Module
 
 - Repository: `wickerwaka/PicoROM`
-- Commit: `dddab41f9a47c7666115837b50b93eb78c221e33` (2026-10-25, "Gerbers")
-- Schematic: `hardware/PicoROM-28/PicoROM-28.kicad_sch` title **PicoROM-28 - ROM Emulator**, rev **1.10**, date **2026-10-24**
-- Firmware pin map: `firmware/system.h` `BOARD_28P`
-- Firmware targets in `firmware/CMakeLists.txt`: `P28_27C512_70ns` and `P28_27C512_100ns` (`BOARD_28P=1`). The 100 ns target also sets `FEATURE_STABLE_ADDRESS`. Version string in that file is **2.0**.
-- Toolchain notes: [`INSTALL.md`](https://github.com/wickerwaka/PicoROM/blob/main/INSTALL.md). Host tool is `picorom` 2.x.
+- Commit: `dddab41f9a47c7666115837b50b93eb78c221e33` (2026-10-25, "Gerbers"). That commit is still `main`.
+- Schematic title **PicoROM-32 - ROM Emulator**, rev **1.10**, date **2026-10-24**
+- Firmware target `P32_27C020_70ns` with `BOARD_32P=1`, version string **2.0**. `ROM_SIZE` is `0x40000` (256 KB, A0–A17). `P32_27C020_100ns` is the same board with `FEATURE_STABLE_ADDRESS`. `POG` and `BOARD_32P_TCA` are different hardware.
+- Pin map in `firmware/system.h`: address GPIO0–17, data GPIO18–25, the single sampled enable GPIO26, buffer `/OE` GPIO27. There is no `BUF_DIR` pin on `BOARD_32P`. `pio_programs.cpp` uses `route_output_enable` when `N_OE_PINS` is 1.
 
-tscircuit workflow used here is the published CLI (`tsci check`, `tsci export`), matching [tscircuit/skill](https://github.com/tscircuit/skill) `SKILL.md` / `CLI.md`. Package pinned in `tscircuit/package.json` (`tscircuit@0.0.3108` at the time of this change). The `tsci` launcher is a Bun script.
+On the rev 1.10 PCB, U7 (`74LVC1G32`) ORs DIP `/OE` and `/CE` into that one RP2040 enable. Both must be low for the output to be low. This carrier straps `/CE` to ground and connects J400 `OEB` to `/OE`, so the enable follows `OEB`.
 
-## Why the P28 sheet is not the Pico board
+A16 (pin 2) and A17 (pin 30) are tied to ground. The robot's A0–A15 then select the first 64 KB of the 256 KB image. There is no bank switch. Pin 1 (`VPP`) and pin 31 (`PGM` on a 27C020) have header pads and no copper net inside the module, so the carrier leaves them NC.
 
-The Pico sheet is the chosen design. The constraints below are why unmodified P28 firmware cannot be dropped onto it:
+## Why there is no external HCT245
 
-- P28 firmware requires a contiguous GPIO map: address GPIO0–GPIO15, data GPIO16–GPIO23, output-enables GPIO24–GPIO25, buffer OE GPIO26, buffer direction GPIO27, reset-enable GPIO28, LED GPIO29 (`firmware/system.h`, and the same nets on RP2040 pads in the rev 1.10 PCB).
-- A Raspberry Pi Pico uses GPIO23 as the SMPS mode pin, GPIO24 as VBUS sense, GPIO25 as the LED, and GPIO29 as VSYS sense (`src/boards/include/boards/pico.h` in `raspberrypi/pico-sdk`). Those pins are not free headers. Stock `P28_27C512_*` firmware does not fit that module.
-- The P28 schematic is a bare RP2040 plus W25Q16 flash, 3.3 V LDOs, and the bus buffers below. That is the integrated upstream design. A second integration would be a fork, not the supported ROM emulator.
-- This pass does not switch the design to RP2350 or Pico 2.
+Checked on the PicoROM-32 PCB, not copied from the 28-pin board:
 
-The reference sheet still shows one part, `U_P28`, and an unwired 44-pin header. No wire joins them. The Pico sheet is separate and does join J400 to the Pico through the DIP buffers in [`J400-PINOUT.md`](J400-PINOUT.md).
+- U4, U5, and U9 are `74LVC245` at `+3V3_SYS`. DIR is ground, so the DIP address pins are inputs.
+- U10 value text is `74LVC8245`, MPN `C548858` (Nexperia 74LVC8T245BQ,118), footprint DHVQFN-24. VCC(A) and DIR are both `+3V3_SYS`, so direction is fixed A toward B. VCC(B) is `+5V_SYS`, the DIP data pins. The KiCad symbol is still `SN74AVC8T245PW`.
+- TI SN74LVC8T245 lists VOH minimum 3.8 V at 4.5 V and −32 mA, and VOL maximum 0.55 V at 32 mA. The published NMOS 6502 limits are VIH minimum 2.0 V and VIL maximum 0.8 V. The repo's 6502 PDF is an image scan. Nexperia's own VOH table was not downloaded.
+- An external HCT245 would be a second tri-state driver on pins U10 already drives at 5 V.
 
-## Buffers on the P28 module (reference only)
-
-Upstream P28 already buffers its ROM socket. The reference sheet does **not** add another 7400-series driver. The Pico sheet's DIP parts are a different circuit and are not these SMD devices.
-
-| Upstream ref | What the rev 1.10 schematic/PCB actually says | Role seen on the PCB |
-|---|---|---|
-| U4, U5, U9 | Value `74LVC245`. Symbol library `74xx:74LS245` (same 245 pin names, not a claim that an LS part is fitted). Datasheet link `sn74lvc245a.pdf`. LCSC field `C294612`. VCC pad is `+3V3_SYS`. | Address and `/CE` `/OE` between RP2040 and the DIP pins. |
-| U10 | Value text `74LVC8245`. LCSC field `C548858`, which is Nexperia **74LVC8T245BQ,118** in DHVQFN-24, matching the footprint. Symbol library and datasheet URL still say SN74AVC8T245. | Data transceiver. A-side pads `D0`–`D7` on `+3V3_SYS`. B-side pads `PIN_D0`–`PIN_D7` on `+5V_SYS`. DIR = `BUF_DIR`. `/OE` = `~{BUF_OE}`. |
-| U7, U11 | `74AHCT1G126`, SOT-353, VCC `+5V_SYS`. | Reset pins. U7 input tied to `+3V3` (high). U11 input tied to GND (low). Both OE pins are `EXT_RESET_EN`. |
-
-74HC, 74HCT, 74LVC, 74LS, and 74AHCT are not interchangeable. In particular:
-
-- SN74LVC245A (the datasheet linked from U4/U5/U9) operates at 1.65 V to 3.6 V. Its inputs accept voltages to 5.5 V. Its outputs swing to its own VCC, which is 3.3 V on this board, not 5 V. ([TI SN74LVC245A](https://www.ti.com/product/SN74LVC245A))
-- 74LVC8T245 is a dual-supply translator. Nexperia specifies both rails from 1.2 V to 5.5 V. DIR high sends A to B. `/OE` high puts both ports in high-Z. Either rail at 0 V forces the high-Z suspend state. ([LCSC C548858](https://www.lcsc.com/product-detail/C548858.html))
-- 74AHCT1G126 is a 5 V TTL-threshold buffer. It is only the upstream reset path.
-- A 3.3 V supply does not make a part 5 V tolerant. 74HC powered at 3.3 V is not specified for 5 V inputs.
-
-`firmware/rom.cpp` drives `BUF_DIR` high and leaves it there (`gpio_put(BUF_DIR_PIN, true)`). With the 74LVC8T245 DIR polarity, that is A (RP2040) toward B (DIP data pins). The PIO program `or_output_enable` drives buffer `/OE` low only when both DIP `/CE` and `/OE` read low. Data-bus direction is not a second 245 that this carrier should duplicate.
-
-On-hand 7400 line drivers are a **candidate only**. Full markings are not in the repo yet. No family is approved, and none is drawn here. Adding a driver in series with U4/U5/U9/U10 would be a second tri-state stage on the same ROM pins, with its own OE and power-up behavior, and it is not justified by the upstream circuit.
-
-## Voltage
-
-- RP2040 datasheet absolute maximum for a GPIO is IOVDD + 0.5 V (IOVDD itself max 3.63 V). Design to that. Do not connect robot bus signals to RP2040 or Pi Pico pins.
-- Raspberry Pi forum comments describe a narrower, non-datasheet exception for some non-ADC GPIOs after IOVDD is up. That exception is not used here. GPIO26–GPIO29 are ADC pins; the P28 uses GPIO26–GPIO29 for buffer control, reset enable, and the LED, as outputs.
-- P28 DIP pin 28 is PCB net `+5V_SYS`. Upstream README also calls pin 28 the 5 V VCC input. The factory cartridge photo shows a 27C512, which is a 5 V EPROM family. The Maxx edge voltage and the finger that would carry it have **not** been measured (#46). `P28_VCC_PIN28_OPEN` and `P28_GND_OPEN` are therefore left open in this schematic.
+Power is in [`POWER.md`](POWER.md). The carrier bill of materials is the module plus the edge connector. No 7805.
 
 ## Build and edit
 
-From `Cartridge/PicoROM/tscircuit`, with [Bun](https://bun.sh) on `PATH` (the published `tsci` script starts with `#!/usr/bin/env bun`):
+From `Cartridge/PicoROM/tscircuit`, with [Bun](https://bun.sh) on `PATH`:
 
 ```bash
 npm ci
@@ -76,44 +43,23 @@ export PATH="$HOME/.bun/bin:$PATH"
 npm test
 npm run check
 npm run export
-node --input-type=module -e 'import { readFileSync, writeFileSync } from "node:fs"; import { Resvg } from "@resvg/resvg-js"; const svg = readFileSync("../render/picorom-carrier-schematic.svg"); const png = new Resvg(svg, { fitTo: { mode: "width", value: 1600 }, background: "white" }).render(); writeFileSync("../render/picorom-carrier-schematic.png", png.asPng())'
+node --input-type=module -e 'import { readFileSync, writeFileSync } from "node:fs"; import { Resvg } from "@resvg/resvg-js"; const svg = readFileSync("../render/picorom-p32-carrier-schematic.svg"); const png = new Resvg(svg, { fitTo: { mode: "width", value: 2000 }, background: "white" }).render(); writeFileSync("../render/picorom-p32-carrier-schematic.png", png.asPng())'
 ```
 
-`npm test` rebuilds both readable netlists. The Pico test checks `../render/pico-dip245.net.txt`. The carrier test checks `../render/picorom-carrier.net.txt`. `npm run check` runs source, netlist, pin specification, schematic placement, and placement on both circuits.
+Stock firmware, from a PicoROM checkout at `dddab41` with its `firmware/pico-sdk` submodule (`a1438dff`):
 
 ```bash
-npm run check
+cmake -S firmware -B build
+cmake --build build --target P32_27C020_70ns
 ```
 
-PNG render for the Pico sheet:
+That produced `PicoROM-P32_27C020_70ns-2_0.uf2` here. It was not flashed, and the 70 ns / 40 ns figures were not remeasured on the robot.
 
-```bash
-node --input-type=module -e 'import { readFileSync, writeFileSync } from "node:fs"; import { Resvg } from "@resvg/resvg-js"; const svg = readFileSync("../render/pico-dip245-schematic.svg"); const png = new Resvg(svg, { fitTo: { mode: "width", value: 1600 }, background: "white" }).render(); writeFileSync("../render/pico-dip245-schematic.png", png.asPng())'
-```
+`npm test` rebuilds [`render/picorom-p32-carrier.net.txt`](render/picorom-p32-carrier.net.txt) and checks `COMPONENT_PINS` endpoints and DIP pin numbers. Passing checks do not prove the robot can read the cartridge.
 
-The older carrier-only check was:
+Rendered files:
 
-```bash
-tsci check source picorom-carrier.circuit.tsx
-tsci check netlist picorom-carrier.circuit.tsx
-tsci check pin_specification picorom-carrier.circuit.tsx
-tsci check schematic-placement picorom-carrier.circuit.tsx
-tsci check placement picorom-carrier.circuit.tsx
-```
-
-Edit pin tables in `tscircuit/src/p28-pinout.ts` and `tscircuit/src/j1-unresolved.ts`. Do not connect a `P28_*_OPEN` net to an `UNRESOLVED_J1_*` net unless a continuity log or both-sides photo in #46 identifies that finger. After a real connection is added, change the net name so the test stops calling it open.
-
-Rendered review files:
-
-- [`render/pico-dip245-schematic.svg`](render/pico-dip245-schematic.svg)
-- [`render/pico-dip245-schematic.png`](render/pico-dip245-schematic.png)
-- [`render/pico-dip245.net.txt`](render/pico-dip245.net.txt)
-- [`render/picorom-carrier-schematic.svg`](render/picorom-carrier-schematic.svg)
-- [`render/picorom-carrier-schematic.png`](render/picorom-carrier-schematic.png)
-- [`render/picorom-carrier.net.txt`](render/picorom-carrier.net.txt)
-
-`tsci check schematic-placement` may still note that `U_P28`'s body is wider than its interior pin text. The width is intentional: at the default narrow body, the open-net labels collided with the pin names. The wide body keeps `P28_*_OPEN` outside the symbol.
-
-## What a passing test does not prove
-
-`tsci` checks and `npm test` prove that this source builds and that the open nets are disjoint. They do not prove the robot can read the cartridge, that `/CE` timing matches the 6502, that 5 V from the robot is safe or present, or that a P28 module fits the shell. Those remain #46, #49, and #50.
+- [`render/picorom-p32-carrier-schematic.svg`](render/picorom-p32-carrier-schematic.svg)
+- [`render/picorom-p32-carrier-schematic.png`](render/picorom-p32-carrier-schematic.png)
+- [`render/picorom-p32-carrier.net.txt`](render/picorom-p32-carrier.net.txt)
+- [`render/picorom-p32-carrier.circuit.json`](render/picorom-p32-carrier.circuit.json)

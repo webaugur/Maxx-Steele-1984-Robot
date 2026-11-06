@@ -1,6 +1,6 @@
 # UltraMaxx cartridge on PicoROM
 
-> **Primary hardware path is now [`../../PicoROM/`](../../PicoROM/).** That directory's working schematic is a Raspberry Pi Pico plus DIP 245 buffers on the chosen J400 reference map. The P28 carrier in the same directory is a reference module with an open edge. Stock P28 firmware is not the Pico firmware. The notes below describe an older idea: seat a P28 in the factory CBSDemo U1 socket. That idea stays as history ([#46](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/46)).
+> **Primary hardware path is [`../../PicoROM/`](../../PicoROM/).** That schematic is an upstream PicoROM-32 module wired to the J400 reference map. A 32-pin module does not fit the factory U1 socket. The notes below remain the older idea of seating a PicoROM-28 in that 28-pin socket ([#46](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/46)).
 
 Use a [PicoROM P28](https://github.com/wickerwaka/PicoROM) (28-pin DIP ROM emulator) instead of burning U1 on the **CBSDemo-class** cartridge PCB. UltraMaxx shares the same board layout and glue logic as [`../CBSDemo/`](../CBSDemo/); only the 4 KB ROM image (copyright string) differs.
 

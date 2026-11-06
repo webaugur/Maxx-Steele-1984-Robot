@@ -1,0 +1,217 @@
+COMPONENTS:
+ - U_P32: PicoROM-P32-rev1.10, dip32
+ - J1: J1, source_component
+
+NET: J400_A0
+  - J1 A0
+  - U_P32 A0
+
+NET: J400_A1
+  - J1 A1
+  - U_P32 A1
+
+NET: J400_A2
+  - J1 A2
+  - U_P32 A2
+
+NET: J400_A3
+  - J1 A3
+  - U_P32 A3
+
+NET: J400_A4
+  - J1 A4
+  - U_P32 A4
+
+NET: J400_A5
+  - J1 A5
+  - U_P32 A5
+
+NET: J400_A6
+  - J1 A6
+  - U_P32 A6
+
+NET: J400_A7
+  - J1 A7
+  - U_P32 A7
+
+NET: J400_A8
+  - J1 A8
+  - U_P32 A8
+
+NET: J400_A9
+  - J1 A9
+  - U_P32 A9
+
+NET: J400_A10
+  - J1 A10
+  - U_P32 A10
+
+NET: J400_A11
+  - J1 A11
+  - U_P32 A11
+
+NET: J400_A12
+  - J1 A12
+  - U_P32 A12
+
+NET: J400_A13
+  - J1 A13
+  - U_P32 A13
+
+NET: J400_A14
+  - J1 A14
+  - U_P32 A14
+
+NET: J400_A15
+  - J1 A15
+  - U_P32 A15
+
+NET: J400_D0
+  - J1 D0
+  - U_P32 D0
+
+NET: J400_D1
+  - J1 D1
+  - U_P32 D1
+
+NET: J400_D2
+  - J1 D2
+  - U_P32 D2
+
+NET: J400_D3
+  - J1 D3
+  - U_P32 D3
+
+NET: J400_D4
+  - J1 D4
+  - U_P32 D4
+
+NET: J400_D5
+  - J1 D5
+  - U_P32 D5
+
+NET: J400_D6
+  - J1 D6
+  - U_P32 D6
+
+NET: J400_D7
+  - J1 D7
+  - U_P32 D7
+
+NET: J400_OEB
+  - J1 OEB
+  - U_P32 nOE
+
+NET: GND
+  - J1 GND_43
+  - J1 GND_1
+  - U_P32 GND
+  - U_P32 A17
+  - U_P32 A16
+  - U_P32 nCE
+
+NET: VSW_ASSUMED_5V
+  - J1 VSW
+  - U_P32 VCC
+
+
+EMPTY NET PINS:
+  - U_P32 VPP
+  - U_P32 PGM
+  - J1 WRB
+  - J1 AUDIO_IN
+  - J1 F2
+  - J1 SA0
+  - J1 WEB
+  - J1 SA1
+  - J1 BIGSPACEB
+  - J1 SA2
+  - J1 MNMIB
+  - J1 SA3
+  - J1 RESETSYSB
+  - J1 CT
+  - J1 VBAT
+  - J1 DOUT
+  - J1 DREQ
+  - J1 ASTRB
+
+COMPONENT_PINS:
+U_P32 (PicoROM-P32-rev1.10)
+- pin1(VPP): NETS(NC_VPP)
+- pin2(A16): NETS(GND)
+- pin3(A15): NETS(J400_A15)
+- pin4(A12): NETS(J400_A12)
+- pin5(A7): NETS(J400_A7)
+- pin6(A6): NETS(J400_A6)
+- pin7(A5): NETS(J400_A5)
+- pin8(A4): NETS(J400_A4)
+- pin9(A3): NETS(J400_A3)
+- pin10(A2): NETS(J400_A2)
+- pin11(A1): NETS(J400_A1)
+- pin12(A0): NETS(J400_A0)
+- pin13(D0): NETS(J400_D0)
+- pin14(D1): NETS(J400_D1)
+- pin15(D2): NETS(J400_D2)
+- pin16(GND): NETS(GND)
+- pin17(D3): NETS(J400_D3)
+- pin18(D4): NETS(J400_D4)
+- pin19(D5): NETS(J400_D5)
+- pin20(D6): NETS(J400_D6)
+- pin21(D7): NETS(J400_D7)
+- pin22(nCE): NETS(GND)
+- pin23(A10): NETS(J400_A10)
+- pin24(nOE): NETS(J400_OEB)
+- pin25(A11): NETS(J400_A11)
+- pin26(A9): NETS(J400_A9)
+- pin27(A8): NETS(J400_A8)
+- pin28(A13): NETS(J400_A13)
+- pin29(A14): NETS(J400_A14)
+- pin30(A17): NETS(GND)
+- pin31(PGM): NETS(NC_PGM)
+- pin32(VCC): NETS(VSW_ASSUMED_5V)
+
+J1
+- pin1(GND_1): NETS(GND)
+- pin2(A15): NETS(J400_A15)
+- pin3(A14): NETS(J400_A14)
+- pin4(A13): NETS(J400_A13)
+- pin5(A12): NETS(J400_A12)
+- pin6(A11): NETS(J400_A11)
+- pin7(A7): NETS(J400_A7)
+- pin8(A8): NETS(J400_A8)
+- pin9(A6): NETS(J400_A6)
+- pin10(A9): NETS(J400_A9)
+- pin11(A5): NETS(J400_A5)
+- pin12(OEB): NETS(J400_OEB)
+- pin13(A4): NETS(J400_A4)
+- pin14(WRB): NETS(NC_WRB)
+- pin15(A3): NETS(J400_A3)
+- pin16(A10): NETS(J400_A10)
+- pin17(A2): NETS(J400_A2)
+- pin18(A1): NETS(J400_A1)
+- pin19(D7): NETS(J400_D7)
+- pin20(A0): NETS(J400_A0)
+- pin21(D6): NETS(J400_D6)
+- pin22(D0): NETS(J400_D0)
+- pin23(D5): NETS(J400_D5)
+- pin24(D1): NETS(J400_D1)
+- pin25(D4): NETS(J400_D4)
+- pin26(D2): NETS(J400_D2)
+- pin27(AUDIO_IN): NETS(NC_AUDIO_IN)
+- pin28(D3): NETS(J400_D3)
+- pin29(F2): NETS(NC_F2)
+- pin30(SA0): NETS(NC_SA0)
+- pin31(WEB): NETS(NC_WEB)
+- pin32(SA1): NETS(NC_SA1)
+- pin33(BIGSPACEB): NETS(NC_BIGSPACEB)
+- pin34(SA2): NETS(NC_SA2)
+- pin35(MNMIB): NETS(NC_MNMIB)
+- pin36(SA3): NETS(NC_SA3)
+- pin37(RESETSYSB): NETS(NC_RESETSYSB)
+- pin38(CT): NETS(NC_CT)
+- pin39(VBAT): NETS(J400_VBAT_NOT_LOGIC)
+- pin40(DOUT): NETS(NC_DOUT)
+- pin41(VSW): NETS(VSW_ASSUMED_5V)
+- pin42(DREQ): NETS(NC_DREQ)
+- pin43(GND_43): NETS(GND)
+- pin44(ASTRB): NETS(NC_ASTRB)
