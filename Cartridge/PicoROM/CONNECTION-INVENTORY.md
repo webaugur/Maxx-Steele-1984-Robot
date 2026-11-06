@@ -1,6 +1,10 @@
-# Connection inventory — PicoROM carrier
+# Connection inventory
 
-Status of every net in [`tscircuit/picorom-carrier.circuit.tsx`](tscircuit/picorom-carrier.circuit.tsx). Confidence is about the **P28 module pin**, not about the Maxx robot.
+The wired cartridge is [`tscircuit/pico-dip245.circuit.tsx`](tscircuit/pico-dip245.circuit.tsx). Its J400 names come from [`J400-cartridge-port-pinout.csv`](J400-cartridge-port-pinout.csv), the chosen reference mapping. `npm test` checks that A0–A15, D0–D7, and OEB meet the Pico only through the DIP 245s, that WRB stops on `WRB_NO_FREE_GPIO`, that VBAT is a single pin, that VSW is not Pico VSYS, and that OEB is not the HCT output-enable net. That test is a netlist check of the chosen map. It is not a continuity test.
+
+## P28 reference carrier
+
+Status of every net in [`tscircuit/picorom-carrier.circuit.tsx`](tscircuit/picorom-carrier.circuit.tsx). This sheet is not the chosen board. Confidence below is about the **P28 module pin**, not about the Maxx robot.
 
 Tooling that rebuilds this list: `npm test` in `tscircuit/`. That test fails if any P28 net is tied to any J1 net.
 

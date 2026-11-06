@@ -2,11 +2,11 @@
   "name": "maxx-picorom-carrier",
   "private": true,
   "type": "module",
-  "description": "Preliminary tscircuit schematic for a Maxx Steele cartridge that carries an upstream PicoROM P28 module. Not a fabrication package.",
+  "description": "Preliminary tscircuit schematics for a Maxx Steele cartridge: Raspberry Pi Pico plus DIP 245 buffers, and a reference-only PicoROM P28 carrier.",
   "scripts": {
-    "check": "tsci check source picorom-carrier.circuit.tsx && tsci check netlist picorom-carrier.circuit.tsx && tsci check pin_specification picorom-carrier.circuit.tsx && tsci check schematic-placement picorom-carrier.circuit.tsx && tsci check placement picorom-carrier.circuit.tsx",
-    "export": "tsci export picorom-carrier.circuit.tsx -f circuit-json -o ../render/picorom-carrier.circuit.json && tsci export picorom-carrier.circuit.tsx -f readable-netlist -o ../render/picorom-carrier.net.txt && tsci export picorom-carrier.circuit.tsx -f schematic-svg -o ../render/picorom-carrier-schematic.svg",
-    "test": "node --test tests/netlist.test.mjs"
+    "check": "tsci check source pico-dip245.circuit.tsx && tsci check netlist pico-dip245.circuit.tsx && tsci check pin_specification pico-dip245.circuit.tsx && tsci check schematic-placement pico-dip245.circuit.tsx && tsci check placement pico-dip245.circuit.tsx && tsci check source picorom-carrier.circuit.tsx && tsci check netlist picorom-carrier.circuit.tsx && tsci check pin_specification picorom-carrier.circuit.tsx && tsci check schematic-placement picorom-carrier.circuit.tsx && tsci check placement picorom-carrier.circuit.tsx",
+    "export": "tsci export pico-dip245.circuit.tsx -f circuit-json -o ../render/pico-dip245.circuit.json && tsci export pico-dip245.circuit.tsx -f readable-netlist -o ../render/pico-dip245.net.txt && tsci export pico-dip245.circuit.tsx -f schematic-svg -o ../render/pico-dip245-schematic.svg && tsci export picorom-carrier.circuit.tsx -f circuit-json -o ../render/picorom-carrier.circuit.json && tsci export picorom-carrier.circuit.tsx -f readable-netlist -o ../render/picorom-carrier.net.txt && tsci export picorom-carrier.circuit.tsx -f schematic-svg -o ../render/picorom-carrier-schematic.svg",
+    "test": "node --test tests/netlist.test.mjs tests/pico-dip245.test.mjs"
   },
   "dependencies": {
     "tscircuit": "^0.0.3108"

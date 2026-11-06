@@ -38,6 +38,7 @@ Primary sources: R. Wind disassemblies ([`maxx_internal_ROM.dsm`](../../Mainboar
 **If you are reverse engineering hardware**, use:
 
 - [Chapter 6 — Input/output guide](06-Input-Output-Guide.md)
+- [Chapter 8 — Community reference guide](08-Community-Reference-Guide.md) (source transcription and coverage map; does not replace Chapters 2, 4, or 6)
 - [Schematics](Schematics.md)
 - Annotated `.dsm` listings under [`Mainboard/Firmware/`](../../Mainboard/Firmware/) and [`Cartridge/Examples/`](../../Cartridge/Examples/)
 

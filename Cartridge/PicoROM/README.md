@@ -1,6 +1,10 @@
-# PicoROM cartridge carrier (preliminary)
+# Pico cartridge schematic (preliminary)
 
-This directory is the active schematic for a Maxx Steele program cartridge whose ROM engine is an upstream [PicoROM P28](https://github.com/wickerwaka/PicoROM) module. The module is a custom RP2040 board in a DIP-28 outline. It is not a Raspberry Pi Pico, and this repository does not re-draw the P28 internals as a new board.
+The working schematic is a standard Raspberry Pi Pico (RP2040) plus through-hole DIP 245 buffers, wired to the J400 line numbers in [`J400-cartridge-port-pinout.csv`](J400-cartridge-port-pinout.csv). David confirmed that CSV as the map to use. It is the chosen reference mapping. It is not a continuity-tested pinout, and it is not a fabrication or power-up release.
+
+[`J400-PINOUT.md`](J400-PINOUT.md) is the readable form of that CSV, including the Notes conflicts. The circuit is [`tscircuit/pico-dip245.circuit.tsx`](tscircuit/pico-dip245.circuit.tsx).
+
+A second sheet, [`tscircuit/picorom-carrier.circuit.tsx`](tscircuit/picorom-carrier.circuit.tsx), is only a reference drawing of an upstream [PicoROM P28](https://github.com/wickerwaka/PicoROM) module. That module is a custom RP2040 board, not a Pi Pico. Its edge is still open. It is not the chosen hardware. Stock P28 firmware does not fit the Pico header and is not what the Pico sheet runs.
 
 The KiCad photo-trace of the factory CBS cartridge stays where it is, as reference evidence:
 
@@ -24,22 +28,20 @@ Upstream tree used for this pass:
 
 tscircuit workflow used here is the published CLI (`tsci check`, `tsci export`), matching [tscircuit/skill](https://github.com/tscircuit/skill) `SKILL.md` / `CLI.md`. Package pinned in `tscircuit/package.json` (`tscircuit@0.0.3108` at the time of this change). The `tsci` launcher is a Bun script.
 
-## Supported hardware choice
+## Why the P28 sheet is not the Pico board
 
-**Use a finished PicoROM P28 module as the ROM, on a carrier that still has to be designed.** Do not build this cartridge by wiring a Raspberry Pi Pico to the robot bus, and do not copy the P28's RP2040, flash, regulators, and buffers onto a new PCB in this pass.
-
-Reason, from upstream sources rather than from issue labels:
+The Pico sheet is the chosen design. The constraints below are why unmodified P28 firmware cannot be dropped onto it:
 
 - P28 firmware requires a contiguous GPIO map: address GPIO0–GPIO15, data GPIO16–GPIO23, output-enables GPIO24–GPIO25, buffer OE GPIO26, buffer direction GPIO27, reset-enable GPIO28, LED GPIO29 (`firmware/system.h`, and the same nets on RP2040 pads in the rev 1.10 PCB).
 - A Raspberry Pi Pico uses GPIO23 as the SMPS mode pin, GPIO24 as VBUS sense, GPIO25 as the LED, and GPIO29 as VSYS sense (`src/boards/include/boards/pico.h` in `raspberrypi/pico-sdk`). Those pins are not free headers. Stock `P28_27C512_*` firmware does not fit that module.
 - The P28 schematic is a bare RP2040 plus W25Q16 flash, 3.3 V LDOs, and the bus buffers below. That is the integrated upstream design. A second integration would be a fork, not the supported ROM emulator.
 - This pass does not switch the design to RP2350 or Pico 2.
 
-The carrier schematic therefore shows one part, `U_P28`, with the DIP-28 pin functions taken from the P28 PCB, and the Maxx edge `J1` with 44 unresolved indexes. No wire joins them.
+The reference sheet still shows one part, `U_P28`, and an unwired 44-pin header. No wire joins them. The Pico sheet is separate and does join J400 to the Pico through the DIP buffers in [`J400-PINOUT.md`](J400-PINOUT.md).
 
-## Buffers
+## Buffers on the P28 module (reference only)
 
-Upstream P28 already buffers the ROM socket. This schematic does **not** add another 7400-series driver.
+Upstream P28 already buffers its ROM socket. The reference sheet does **not** add another 7400-series driver. The Pico sheet's DIP parts are a different circuit and are not these SMD devices.
 
 | Upstream ref | What the rev 1.10 schematic/PCB actually says | Role seen on the PCB |
 |---|---|---|
@@ -77,7 +79,19 @@ npm run export
 node --input-type=module -e 'import { readFileSync, writeFileSync } from "node:fs"; import { Resvg } from "@resvg/resvg-js"; const svg = readFileSync("../render/picorom-carrier-schematic.svg"); const png = new Resvg(svg, { fitTo: { mode: "width", value: 1600 }, background: "white" }).render(); writeFileSync("../render/picorom-carrier-schematic.png", png.asPng())'
 ```
 
-`npm test` rebuilds the readable netlist and checks it against `../render/picorom-carrier.net.txt`. `npm run check` is:
+`npm test` rebuilds both readable netlists. The Pico test checks `../render/pico-dip245.net.txt`. The carrier test checks `../render/picorom-carrier.net.txt`. `npm run check` runs source, netlist, pin specification, schematic placement, and placement on both circuits.
+
+```bash
+npm run check
+```
+
+PNG render for the Pico sheet:
+
+```bash
+node --input-type=module -e 'import { readFileSync, writeFileSync } from "node:fs"; import { Resvg } from "@resvg/resvg-js"; const svg = readFileSync("../render/pico-dip245-schematic.svg"); const png = new Resvg(svg, { fitTo: { mode: "width", value: 1600 }, background: "white" }).render(); writeFileSync("../render/pico-dip245-schematic.png", png.asPng())'
+```
+
+The older carrier-only check was:
 
 ```bash
 tsci check source picorom-carrier.circuit.tsx
@@ -91,6 +105,9 @@ Edit pin tables in `tscircuit/src/p28-pinout.ts` and `tscircuit/src/j1-unresolve
 
 Rendered review files:
 
+- [`render/pico-dip245-schematic.svg`](render/pico-dip245-schematic.svg)
+- [`render/pico-dip245-schematic.png`](render/pico-dip245-schematic.png)
+- [`render/pico-dip245.net.txt`](render/pico-dip245.net.txt)
 - [`render/picorom-carrier-schematic.svg`](render/picorom-carrier-schematic.svg)
 - [`render/picorom-carrier-schematic.png`](render/picorom-carrier-schematic.png)
 - [`render/picorom-carrier.net.txt`](render/picorom-carrier.net.txt)

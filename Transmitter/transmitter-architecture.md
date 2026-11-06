@@ -51,6 +51,8 @@ That keeps the transmitted envelope **phase-coherent** with the demodulated IF w
 
 **DataOut** on J2 is the logic-level OOK stream fed to the RF stage (also available on the 3.5 mm programming jack for external injection).
 
+The community guide adds claims that are not in the capture notes: the jack contacts are +9 V, Data In, and Ground; the jack is reported to disconnect the controller and to bypass sleep. It also prints "the internal crystal is 26.840 Hz" next to a 27.095 MHz sticker. The unit is Hz in that sentence and was not rewritten. Its 25 binary button tokens, the receiver Molex order (1) Data Out, (2) VSW, (3) GND, the wire colors, and the DigiKey URLs that literally contain `/.../` are in [Chapter 8](../Docs/Technical/08-Community-Reference-Guide.md). The guide's RF I/O line is still "Unknown as of Feb 10, 2021".
+
 ## Related files
 
 | Path | Contents |

@@ -8,7 +8,7 @@ Reverse the disassembly sequence. **Do not rely on screws to pull the case halve
 
 1. Place Maxx on his **front** and carefully position the **back shell**, aligning all screw holes.
 2. Press gently on Maxx's **"armpits"** so they clear the **"shoulders"**. Press the case halves together **before** installing screws.
-3. Reinstall the **fourteen screws** holding the case back to the front using the **thread-engagement technique**:
+3. Reinstall the **fourteen screws** holding the case back to the front using the **thread-engagement technique**. The disassembly text says twelve screws come out. Both numbers are the community source's numbers. See [Chapter 8](../Technical/08-Community-Reference-Guide.md).
    - Insert one screw into its hole.
    - Turn it **counterclockwise** until the threads engage (you will feel the screw move out, then suddenly drop in with a slight thump).
    - Repeat the counterclockwise start until you are confident the threads are engaged.
