@@ -1,6 +1,6 @@
 # UltraMaxx cartridge on PicoROM
 
-> **Primary hardware path is [`../../PicoROM/`](../../PicoROM/).** That schematic is an upstream PicoROM-28 module wired to the J400 reference map, without the factory glue and without an external HCT. The notes below are the older idea of seating a P28 in the factory CBSDemo U1 socket ([#46](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/46)).
+> **Primary hardware path is [`../../PicoROM/`](../../PicoROM/).** That schematic is an upstream PicoROM-32 module wired to the J400 reference map. A 32-pin module does not fit the factory U1 socket. The notes below remain the older idea of seating a PicoROM-28 in that 28-pin socket ([#46](https://github.com/webaugur/Maxx-Steele-1984-Robot/issues/46)).
 
 Use a [PicoROM P28](https://github.com/wickerwaka/PicoROM) (28-pin DIP ROM emulator) instead of burning U1 on the **CBSDemo-class** cartridge PCB. UltraMaxx shares the same board layout and glue logic as [`../CBSDemo/`](../CBSDemo/); only the 4 KB ROM image (copyright string) differs.
 

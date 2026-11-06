@@ -1,41 +1,35 @@
 # Connection inventory
 
-The cartridge schematic is [`tscircuit/picorom-carrier.circuit.tsx`](tscircuit/picorom-carrier.circuit.tsx). J400 names come from [`J400-cartridge-port-pinout.csv`](J400-cartridge-port-pinout.csv). `npm test` checks that each address and data bit is one net between `J1` and `U_P28`, that `OEB` is `nOE`, that `nCE` is ground, that `VSW` is pin 28, and that the netlist has no external 74-series part. That is a netlist check. It is not a continuity test and it is not a timing measurement.
+The cartridge schematic is [`tscircuit/picorom-p32-carrier.circuit.tsx`](tscircuit/picorom-p32-carrier.circuit.tsx). J400 names come from [`J400-cartridge-port-pinout.csv`](J400-cartridge-port-pinout.csv). `npm test` checks `COMPONENT_PINS`: each of A0–A15 and D0–D7 is one net between `J1` and `U_P32`, `OEB` is `nOE`, `/CE` plus A16 and A17 are ground, `VSW` is pin 32, and VPP and PGM are single-pin nets. That is a netlist check. It is not a continuity test and it is not a timing measurement.
 
 ## Module
 
-`U_P28` is one part: PicoROM-28 rev 1.10, `wickerwaka/PicoROM` commit `dddab41f9a47c7666115837b50b93eb78c221e33`. DIP pin numbers are the PCB headers `J3` pin 1 = DIP pin 1 and `J4` pin 1 = DIP pin 28. They match a 27C512, which is the `BOARD_28P` image (`ROM_SIZE` `0x10000`).
+`U_P32` is PicoROM-32 rev 1.10, `wickerwaka/PicoROM` commit `dddab41f9a47c7666115837b50b93eb78c221e33`. `J3` pin 1 is DIP pin 1. `J4` pin 1 is DIP pin 32, then the DIP number counts down. The connected pins match a 27C020, which is firmware target `P32_27C020_70ns` (`ROM_SIZE` `0x40000`).
 
-The module's own buffers stay inside the module:
-
-| Ref | Fitted value | What the PCB nets do |
+| DIP | PCB net | Carrier |
 |---|---|---|
-| U4, U5, U9 | `74LVC245`, VCC `+3V3_SYS`, DIR pad grounded, `/OE` pad grounded | Robot address, `/CE`, and `/OE` into the RP2040. DIR low makes the DIP side the input. |
-| U10 | Value text `74LVC8245`, MPN `C548858` (Nexperia 74LVC8T245BQ,118), footprint DHVQFN-24. Symbol library still says `SN74AVC8T245PW`. | A side `D0`–`D7` on `+3V3_SYS`. B side `PIN_D0`–`PIN_D7` on `+5V_SYS`. |
-| U7, U11 | `74AHCT1G126` on `+5V_SYS` | Reset drivers for `J2`, which is not a DIP pin and is not on this carrier. |
+| 1 | header pad, no copper net | `NC_VPP` |
+| 2 | `PIN_A16` | `GND` (fixed) |
+| 3–12, 23, 25–29 | `PIN_A15` … `PIN_A0`, `PIN_A10`, `PIN_A11`, `PIN_A9`, `PIN_A8`, `PIN_A13`, `PIN_A14` | same J400 address names |
+| 13–15, 17–21 | `PIN_D0`–`PIN_D7` | J400 `D0`–`D7` |
+| 16 | `GND` | J400 GND lines 1 and 43 |
+| 22 | `~{PIN_CE}` | `GND` |
+| 24 | `~{PIN_OE}` | J400 `OEB` |
+| 30 | `PIN_A17` | `GND` (fixed) |
+| 31 | header pad, no copper net | `NC_PGM` |
+| 32 | `+5V_SYS` | `VSW_ASSUMED_5V` |
 
-`firmware/rom.cpp` sets `BUF_DIR` high. On the 74LVC8T245 that is A toward B, so the RP2040 drives the 5 V data pins. `data_bus.pio` program `or_output_enable` drives the buffer `/OE` only when both DIP `/CE` and `/OE` read low.
+Buffers stay inside the module. U4/U5/U9 are `74LVC245` inputs from the DIP address pins. U10 is the 5 V data driver (MPN `C548858`) with DIR tied high. U7 (`74LVC1G32`) ORs `/CE` and `/OE` into the one enable the firmware samples. U11/U12 are the reset drivers for `J2`, which is not a DIP pin and is not on this carrier.
 
-## Carrier nets
+## Banking
 
-| P28 pin | J400 line | Net |
-|---|---|---|
-| A0–A15 | same names | `J400_A0`–`J400_A15` |
-| D0–D7 | same names | `J400_D0`–`J400_D7` |
-| nOE (pin 22) | 12 `OEB` | `J400_OEB` |
-| nCE (pin 20) | none | `GND`. The reference map has no chip-select finger. |
-| VCC (pin 28) | 41 `VSW` | `VSW_ASSUMED_5V` |
-| GND (pin 14) | 1 and 43 `GND` | `GND` |
-| — | 39 `VBAT` | `J400_VBAT_NOT_LOGIC` |
-| — | `WRB` and the sound, audio, and CPU straps | `NC_*` |
-
-`WRB` is not a 27C512 pin on this module. Pin 27 is A14.
+A16 and A17 are tied low. Stock firmware still reads those GPIOs. With both low, A0–A15 select bytes `0x00000`–`0x0FFFF` of the 256 KB image. Nothing on this sheet switches banks.
 
 ## Still unknown
 
 - Continuity from each J400 line to the mainboard, and which face is line 1 versus the photo silk.
-- Whether `OEB` really is the only enable the robot uses. Strapping `/CE` low follows the reference map. It is not a trace of the factory U2/U3 decode.
-- Which 4 KB of the 64 KB image the robot addresses. The wires include A12–A15 because those fingers are on the map.
+- Whether `OEB` is the robot's only enable. `/CE` strapped low follows the reference map. It is not a trace of factory U2/U3.
+- Which part of the low 64 KB the robot's cartridge window actually uses. The edge wires include A12–A15 because those fingers are on the map.
 - Measured VSW, including spikes.
 - Robot-side timing. Upstream's 70 ns and 40 ns figures are its own measurements.
-- Whether a P28 and its USB-C plug fit the shell (#49). Reset header `J2` is unused.
+- Whether a P32 and its USB-C plug fit the shell (#49).

@@ -2,10 +2,10 @@
   "name": "maxx-picorom-carrier",
   "private": true,
   "type": "module",
-  "description": "Preliminary tscircuit schematic for a Maxx Steele cartridge built around an upstream PicoROM-28 module.",
+  "description": "Preliminary tscircuit schematic for a Maxx Steele cartridge built around an upstream PicoROM-32 module.",
   "scripts": {
-    "check": "tsci check source picorom-carrier.circuit.tsx && tsci check netlist picorom-carrier.circuit.tsx && tsci check pin_specification picorom-carrier.circuit.tsx && tsci check schematic-placement picorom-carrier.circuit.tsx && tsci check placement picorom-carrier.circuit.tsx",
-    "export": "tsci export picorom-carrier.circuit.tsx -f circuit-json -o ../render/picorom-carrier.circuit.json && tsci export picorom-carrier.circuit.tsx -f readable-netlist -o ../render/picorom-carrier.net.txt && tsci export picorom-carrier.circuit.tsx -f schematic-svg -o ../render/picorom-carrier-schematic.svg",
+    "check": "tsci check source picorom-p32-carrier.circuit.tsx && tsci check netlist picorom-p32-carrier.circuit.tsx && tsci check pin_specification picorom-p32-carrier.circuit.tsx && tsci check schematic-placement picorom-p32-carrier.circuit.tsx && tsci check placement picorom-p32-carrier.circuit.tsx",
+    "export": "tsci export picorom-p32-carrier.circuit.tsx -f circuit-json -o ../render/picorom-p32-carrier.circuit.json && tsci export picorom-p32-carrier.circuit.tsx -f readable-netlist -o ../render/picorom-p32-carrier.net.txt && tsci export picorom-p32-carrier.circuit.tsx -f schematic-svg -o ../render/picorom-p32-carrier-schematic.svg",
     "test": "node --test tests/netlist.test.mjs"
   },
   "dependencies": {

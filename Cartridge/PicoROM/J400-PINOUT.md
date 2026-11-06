@@ -1,6 +1,6 @@
 # J400 expansion-port labels (unverified)
 
-Chosen reference mapping for the cartridge edge in [`tscircuit/picorom-carrier.circuit.tsx`](tscircuit/picorom-carrier.circuit.tsx). The same rows are in [`J400-cartridge-port-pinout.csv`](J400-cartridge-port-pinout.csv) and in [`../../Mainboard/Schematic/J400-cartridge-port-pinout.csv`](../../Mainboard/Schematic/J400-cartridge-port-pinout.csv).
+Chosen reference mapping for the cartridge edge in [`tscircuit/picorom-p32-carrier.circuit.tsx`](tscircuit/picorom-p32-carrier.circuit.tsx). The same rows are in [`J400-cartridge-port-pinout.csv`](J400-cartridge-port-pinout.csv) and in [`../../Mainboard/Schematic/J400-cartridge-port-pinout.csv`](../../Mainboard/Schematic/J400-cartridge-port-pinout.csv).
 
 This is a schematic assignment taken from the community guide and the CSV Notes column. It is not a continuity-tested pinout. No contact has been buzzed from the cartridge finger to a mainboard net, and the photo silk `1`–`22` has not been matched to these line numbers.
 
@@ -59,7 +59,7 @@ The description of line 16 is copied as printed: "Address Line 100". The name on
 | 43 | GND | Ground Line |
 | 44 | ASTRB | Strobe Line for Sound ROM Addressing |
 
-The sheet uses VSW as an assumed nominal 5 V rail into PicoROM-28 pin 28. Confirm it stays inside 4.5–5.5 V, including transients, before powering. VBAT is not connected. See [POWER.md](POWER.md).
+The sheet uses VSW as an assumed nominal 5 V rail into PicoROM-32 pin 32. Confirm it stays inside 4.5–5.5 V, including transients, before powering. VBAT is not connected. See [POWER.md](POWER.md).
 
 ## Conflicts kept on purpose
 
@@ -93,20 +93,22 @@ The CPU table also repeats pin 54 (`F244 Hz` and `MoDataClk`) and leaves pins 20
 
 ## What this schematic does with each line
 
-The only active part is a PicoROM-28 module. There is no external HCT or LVC.
+The only active part is a PicoROM-32 module. There is no external HCT or LVC.
 
-| J400 | Net | PicoROM-28 pin |
+| J400 | Net | PicoROM-32 pin |
 |---|---|---|
 | A0–A15 | `J400_A0`–`J400_A15` | A0–A15 |
 | D0–D7 | `J400_D0`–`J400_D7` | D0–D7 |
-| OEB | `J400_OEB` | nOE (pin 22) |
-| no chip-select finger | `GND` | nCE (pin 20), strapped low |
-| GND lines 1 and 43 | `GND` | pin 14 |
-| VSW | `VSW_ASSUMED_5V` | pin 28 |
+| OEB | `J400_OEB` | nOE (pin 24) |
+| no chip-select finger | `GND` | nCE (pin 22), strapped low |
+| no A16 / A17 finger | `GND` | A16 pin 2 and A17 pin 30, tied low |
+| GND lines 1 and 43 | `GND` | pin 16 |
+| VSW | `VSW_ASSUMED_5V` | pin 32 |
 | VBAT | `J400_VBAT_NOT_LOGIC` | none |
 | WRB, Audio Input, F2, SA0–SA3, WEB, BIGSPACEB, MNMIB, RESETSYSB, CT, DOUT, DREQ, ASTRB | `NC_*` | none |
+| — | `NC_VPP`, `NC_PGM` | pins 1 and 31, open on the module |
 
-The bare-Pico split GPIO map is not this design. A Pico header does not expose the consecutive `BOARD_28P` pins, and this sheet does not use that header.
+The bare-Pico split GPIO map is not this design. This sheet uses stock `BOARD_32P`, not a Pico header.
 
 ## Still required before this is an electrical release
 
