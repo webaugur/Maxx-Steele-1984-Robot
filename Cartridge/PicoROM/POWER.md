@@ -1,15 +1,20 @@
-# Cartridge power
+# Power on the PicoROM-28 carrier
 
-The sheet assumes J400 `VSW` is nominal 5 V. That is a design assumption, not a measurement. Before applying power, confirm VSW stays inside **4.5–5.5 V** for the HCT and that the voltage at Pico VSYS stays at or below **5.5 V**, including transients. Pico VSYS minimum is 1.8 V. No 7805 is fitted. VBAT is not connected.
+The carrier connects J400 `VSW` to PicoROM-28 pin 28 and leaves `VBAT` open. There is no 7805 and no external buffer supply.
 
-| Net | Connection |
+`VSW` is the assumed nominal 5 V rail. Confirm it stays inside 4.5–5.5 V, including transients, before power. That window is the 74LVC8T245 5 V JEDEC range (JESD36) and the range already accepted for this robot rail. It is not a measurement.
+
+Inside the module (rev 1.10, not redrawn here):
+
+| Onboard part | Connection |
 |---|---|
-| `VSW_ASSUMED_5V` | J400 VSW, HCT VCC, HCT DIR, HCT 100 nF, HCT `/OE` pull-up, anode of `D_VSYS` |
-| `PICO_VSYS` | Cathode of `D_VSYS` (1N5817) and Pico VSYS |
-| `PICO_3V3` | Pico 3V3 pin and the three SN74LVC245AN supplies |
-| `PICO_VBUS_USB_ONLY` | Pico VBUS only |
-| `J400_VBAT_NOT_LOGIC` | J400 VBAT only |
+| D5 `NSR0320MW2T1G` | Anode `+5V_SYS` (pin 28), cathode `+5V` |
+| D4 `NSR0320MW2T1G` | Anode USB VBUS, cathode `+5V` |
+| U8 `NCP114AMX330TCG` | 3.3 V LDO from the diode-OR node `+5V` |
+| U1 `NCP114AMX330TCG` | 3.3 V LDO from `+5V_SYS` for the bus buffers |
+| U10 VCC(B) | `+5V_SYS`, the data pins toward the robot |
+| U10 VCC(A) | `+3V3_SYS`, the RP2040 side |
 
-LVC buffers stay on Pico 3V3 (datasheet VCC 1.65–3.6 V). HCT stays on the assumed 5 V rail (recommended VCC 4.5–5.5 V).
+The two Schottkys are the module's USB and host OR. This carrier does not tie USB to `VSW`. With the robot off, USB does not feed pin 28. With USB unplugged, pin 28 still feeds the MCU rail through D5.
 
-USB and the robot supply are diode-ORed the way the Pico datasheet shows in Figure 16 (section 4.5). The Pico already has Schottky D1 from VBUS to VSYS. `D_VSYS` is a second Schottky from VSW to VSYS, anode toward the robot. Each source can power the Pico, and neither feeds the other. Do not short VSYS to VBUS; the datasheet allows that only when USB is the only source, and it would defeat the isolation.
+`VBAT` stays the unused nominal 10 V contact.

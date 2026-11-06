@@ -1,92 +1,41 @@
 # Connection inventory
 
-The wired cartridge is [`tscircuit/pico-dip245.circuit.tsx`](tscircuit/pico-dip245.circuit.tsx). Its J400 names come from [`J400-cartridge-port-pinout.csv`](J400-cartridge-port-pinout.csv), the chosen reference mapping. `npm test` checks that A0–A15, D0–D7, and OEB meet the Pico only through the DIP 245s, that WRB stops on `WRB_NO_FREE_GPIO`, that VBAT is a single pin, that VSW feeds the HCT and only the anode of the VSYS Schottky, and that OEB is not the HCT output-enable net. That test is a netlist check of the chosen map. It is not a continuity test.
+The cartridge schematic is [`tscircuit/picorom-carrier.circuit.tsx`](tscircuit/picorom-carrier.circuit.tsx). J400 names come from [`J400-cartridge-port-pinout.csv`](J400-cartridge-port-pinout.csv). `npm test` checks that each address and data bit is one net between `J1` and `U_P28`, that `OEB` is `nOE`, that `nCE` is ground, that `VSW` is pin 28, and that the netlist has no external 74-series part. That is a netlist check. It is not a continuity test and it is not a timing measurement.
 
-## P28 reference carrier
+## Module
 
-Status of every net in [`tscircuit/picorom-carrier.circuit.tsx`](tscircuit/picorom-carrier.circuit.tsx). This sheet is not the chosen board. Confidence below is about the **P28 module pin**, not about the Maxx robot.
+`U_P28` is one part: PicoROM-28 rev 1.10, `wickerwaka/PicoROM` commit `dddab41f9a47c7666115837b50b93eb78c221e33`. DIP pin numbers are the PCB headers `J3` pin 1 = DIP pin 1 and `J4` pin 1 = DIP pin 28. They match a 27C512, which is the `BOARD_28P` image (`ROM_SIZE` `0x10000`).
 
-Tooling that rebuilds this list: `npm test` in `tscircuit/`. That test fails if any P28 net is tied to any J1 net.
+The module's own buffers stay inside the module:
 
-## Known: P28 DIP-28 pin functions
-
-Source: pad nets on `J3` and `J4` in `hardware/PicoROM-28/PicoROM-28.kicad_pcb` at commit `dddab41f9a47c7666115837b50b93eb78c221e33`. `J3` pin 1 is DIP pin 1. `J4` pin 1 is DIP pin 28, then the DIP number counts down. The order matches the 27C512 pin names used by firmware targets `P28_27C512_70ns` and `P28_27C512_100ns`. This table is **not** a Maxx edge map.
-
-| DIP pin | PCB net | Carrier net | In this schematic |
-|---|---|---|---|
-| 1 | `PIN_A15` | `P28_A15_OPEN` | open |
-| 2 | `PIN_A12` | `P28_A12_OPEN` | open |
-| 3 | `PIN_A7` | `P28_A7_OPEN` | open |
-| 4 | `PIN_A6` | `P28_A6_OPEN` | open |
-| 5 | `PIN_A5` | `P28_A5_OPEN` | open |
-| 6 | `PIN_A4` | `P28_A4_OPEN` | open |
-| 7 | `PIN_A3` | `P28_A3_OPEN` | open |
-| 8 | `PIN_A2` | `P28_A2_OPEN` | open |
-| 9 | `PIN_A1` | `P28_A1_OPEN` | open |
-| 10 | `PIN_A0` | `P28_A0_OPEN` | open |
-| 11 | `PIN_D0` | `P28_D0_OPEN` | open |
-| 12 | `PIN_D1` | `P28_D1_OPEN` | open |
-| 13 | `PIN_D2` | `P28_D2_OPEN` | open |
-| 14 | `GND` | `P28_GND_OPEN` | open. Ground finger on J1 is unknown. |
-| 15 | `PIN_D3` | `P28_D3_OPEN` | open |
-| 16 | `PIN_D4` | `P28_D4_OPEN` | open |
-| 17 | `PIN_D5` | `P28_D5_OPEN` | open |
-| 18 | `PIN_D6` | `P28_D6_OPEN` | open |
-| 19 | `PIN_D7` | `P28_D7_OPEN` | open |
-| 20 | `~{PIN_CE}` | `P28_nCE_OPEN` | open. Active-low chip enable into the module. |
-| 21 | `PIN_A10` | `P28_A10_OPEN` | open |
-| 22 | `~{PIN_OE}` | `P28_nOE_OPEN` | open. Active-low output enable into the module. |
-| 23 | `PIN_A11` | `P28_A11_OPEN` | open |
-| 24 | `PIN_A9` | `P28_A9_OPEN` | open |
-| 25 | `PIN_A8` | `P28_A8_OPEN` | open |
-| 26 | `PIN_A13` | `P28_A13_OPEN` | open |
-| 27 | `PIN_A14` | `P28_A14_OPEN` | open |
-| 28 | `+5V_SYS` | `P28_VCC_PIN28_OPEN` | open. Upstream treats this pad as the 5 V host supply for the buffers. |
-
-Inside the module (not redrawn as carrier parts), those ROM-side nets meet the buffers described in the README. RP2040 pad nets at the same commit, lined up with `BOARD_28P` GPIO numbers:
-
-| GPIO | PCB net on the RP2040 | Function in firmware |
+| Ref | Fitted value | What the PCB nets do |
 |---|---|---|
-| 0–15 | `A0`–`A15` | address in |
-| 16–23 | `D0`–`D7` | data out |
-| 24 | `~{OE}` | DIP `/OE`, active low |
-| 25 | `~{CE}` | DIP `/CE`, active low |
-| 26 | `~{BUF_OE}` | data-buffer output enable |
-| 27 | `BUF_DIR` | held high in `rom.cpp` |
-| 28 | `EXT_RESET_EN` | enable for the two reset buffers |
-| 29 | `INFO_LED1` | activity LED |
+| U4, U5, U9 | `74LVC245`, VCC `+3V3_SYS`, DIR pad grounded, `/OE` pad grounded | Robot address, `/CE`, and `/OE` into the RP2040. DIR low makes the DIP side the input. |
+| U10 | Value text `74LVC8245`, MPN `C548858` (Nexperia 74LVC8T245BQ,118), footprint DHVQFN-24. Symbol library still says `SN74AVC8T245PW`. | A side `D0`–`D7` on `+3V3_SYS`. B side `PIN_D0`–`PIN_D7` on `+5V_SYS`. |
+| U7, U11 | `74AHCT1G126` on `+5V_SYS` | Reset drivers for `J2`, which is not a DIP pin and is not on this carrier. |
 
-## Known: mechanical edge only
+`firmware/rom.cpp` sets `BUF_DIR` high. On the 74LVC8T245 that is A toward B, so the RP2040 drives the 5 V data pins. `data_bus.pio` program `or_output_enable` drives the buffer `/OE` only when both DIP `/CE` and `/OE` read low.
 
-The cartridge STEP model has an edge connector of **44 contacts, 2.54 mm pitch, 22 per face**. `J1` in the schematic has 44 pins for that count. Indexes `IDX01`–`IDX44` are drawing labels. They are not silk numbers from `Cartridge/Photos/maxxcard.jpg`, and they are not a row A / row B physical order.
+## Carrier nets
 
-## Unresolved: every J1 finger
-
-| Drawing index | Carrier net | Signal |
+| P28 pin | J400 line | Net |
 |---|---|---|
-| IDX01–IDX44 | `UNRESOLVED_J1_01`–`UNRESOLVED_J1_44` | Unknown. Do not assign D0–D7, A0–A15, `/CE`, `/OE`, VCC, or GND. |
+| A0–A15 | same names | `J400_A0`–`J400_A15` |
+| D0–D7 | same names | `J400_D0`–`J400_D7` |
+| nOE (pin 22) | 12 `OEB` | `J400_OEB` |
+| nCE (pin 20) | none | `GND`. The reference map has no chip-select finger. |
+| VCC (pin 28) | 41 `VSW` | `VSW_ASSUMED_5V` |
+| GND (pin 14) | 1 and 43 `GND` | `GND` |
+| — | 39 `VBAT` | `J400_VBAT_NOT_LOGIC` |
+| — | `WRB` and the sound, audio, and CPU straps | `J400_*_UNUSED` |
 
-The factory photo shows silk **1–22 on one face**. The other face is not in that photo. The trace worksheet's bus guess (D0–D7 on fingers 1–8, and so on) is explicitly low confidence and is **not** copied into this schematic.
+`WRB` is not a 27C512 pin on this module. Pin 27 is A14.
 
-Also still unknown, so not wired:
+## Still unknown
 
-- Which finger is 5 V, and the measured voltage on it.
-- Which finger is ground.
-- Whether `/CE` is a decode of `$A000`, a raw 6502 select, or something else. Factory U3 is still the unidentified 24-pin part marked `5085`. U2's part number is still illegible. Both stay in the KiCad reference only.
-- Which address bits the robot drives into a 64 KB P28 image. Firmware `ROM_SIZE` for `BOARD_28P` is `0x10000` (64 KB). The robot's cartridge window documented in firmware is 4 KB. Both can be true; the address wiring that would select the window is not known. Do not pick the `4kb` versus `27c512` PicoROM upload token from this schematic.
-- Reset. P28's two reset pads are `EXT_RESET_HIGH` and `EXT_RESET_LOW` on `J2`. `peripherals.cpp` drives the single `RESET_PIN` high for both the "high" and "low" software settings, and low for `z`. The two 74AHCT1G126 outputs are opposite levels and share one enable, with a 1 kΩ pull-up (`R29`) from that enable to `+3V3`. Whether the Maxx cartridge needs either pad is unverified. They are not on the DIP-28 and are not in the carrier netlist.
-- DIR and `/OE` strap pins of U4/U5/U9. They do not appear as named signal nets on the extracted pads (VCC is `+3V3_SYS`; several pads are GND or unnamed unconnected pads). Do not invent which pad is DIR.
-
-## Assumed, and marked as such
-
-- Drawing a DIP-28 symbol for the P28 module assumes the two 1×14 headers in the upstream PCB are the two sides of that DIP. The net order above is what makes that assumption checkable.
-- Placeholder `dip28` and 44-pin header footprints, and their `pcbX` / `pcbY` values, are build scaffolding. They are not a cartridge outline, a card-edge footprint, or a placement proposal.
-- No electrical assumption is made that the robot bus is 5 V TTL beyond the two facts already cited (27C512 on the factory card, `+5V_SYS` on P28 pin 28). Slot voltage is unmeasured.
-
-## Still required before any finger is connected
-
-1. Bottom copper photo and/or a continuity log from all 44 edge contacts to the factory ROM socket, with the method and date (#46).
-2. A decision, after that log, whether the carrier replaces the factory glue (U2/U3) or still depends on it.
-3. Confirmation that P28 `/CE` and `/OE` timing is acceptable. Upstream quotes 70 ns address-to-data and 40 ns OE-to-data as its own measurements. This repo has no scope capture on the robot.
-4. Part markings for any extra line driver. Until those exist, do not add a 74-series part "because it is 3.3 V compatible."
-5. Mechanical check that a P28 module and its USB-C plug fit the shell (#49). USB is how `picorom` 2.x loads an image; this schematic does not route USB.
+- Continuity from each J400 line to the mainboard, and which face is line 1 versus the photo silk.
+- Whether `OEB` really is the only enable the robot uses. Strapping `/CE` low follows the reference map. It is not a trace of the factory U2/U3 decode.
+- Which 4 KB of the 64 KB image the robot addresses. The wires include A12–A15 because those fingers are on the map.
+- Measured VSW, including spikes.
+- Robot-side timing. Upstream's 70 ns and 40 ns figures are its own measurements.
+- Whether a P28 and its USB-C plug fit the shell (#49). Reset header `J2` is unused.

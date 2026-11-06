@@ -1,6 +1,6 @@
 # J400 expansion-port labels (unverified)
 
-Chosen reference mapping for the cartridge edge in [`tscircuit/pico-dip245.circuit.tsx`](tscircuit/pico-dip245.circuit.tsx). The same rows are in [`J400-cartridge-port-pinout.csv`](J400-cartridge-port-pinout.csv), the copy confirmed for this design. That file is the content saved under Tower5810 `Mainboard/Schematic`; this pull request does not edit that path.
+Chosen reference mapping for the cartridge edge in [`tscircuit/picorom-carrier.circuit.tsx`](tscircuit/picorom-carrier.circuit.tsx). The same rows are in [`J400-cartridge-port-pinout.csv`](J400-cartridge-port-pinout.csv) and in [`../../Mainboard/Schematic/J400-cartridge-port-pinout.csv`](../../Mainboard/Schematic/J400-cartridge-port-pinout.csv).
 
 This is a schematic assignment taken from the community guide and the CSV Notes column. It is not a continuity-tested pinout. No contact has been buzzed from the cartridge finger to a mainboard net, and the photo silk `1`–`22` has not been matched to these line numbers.
 
@@ -59,7 +59,7 @@ The description of line 16 is copied as printed: "Address Line 100". The name on
 | 43 | GND | Ground Line |
 | 44 | ASTRB | Strobe Line for Sound ROM Addressing |
 
-The sheet uses VSW as an assumed nominal 5 V rail. Confirm it stays inside 4.5–5.5 V, and that Pico VSYS stays at or below 5.5 V, including transients, before powering. VBAT is not connected. See [POWER.md](POWER.md).
+The sheet uses VSW as an assumed nominal 5 V rail into PicoROM-28 pin 28. Confirm it stays inside 4.5–5.5 V, including transients, before powering. VBAT is not connected. See [POWER.md](POWER.md).
 
 ## Conflicts kept on purpose
 
@@ -89,34 +89,28 @@ The same guide's CPU pin table disagrees with two of its own J400 notes:
 
 The CPU table also repeats pin 54 (`F244 Hz` and `MoDataClk`) and leaves pins 20 and 58 blank. The compiler wrote "Yes, I know there are errors here." None of those rows were corrected here.
 
-`B` in `OEB` and `WRB` is the guide's spelling. It is not a measured active-low proof, and `OEB` is not wired to the data-buffer output enable.
+`B` in `OEB` and `WRB` is the guide's spelling. It is not a measured active-low proof. On this sheet `OEB` is the PicoROM `/OE` pin. `WRB` is unused.
 
-## What the Pico schematic does with each line
+## What this schematic does with each line
 
-Candidates, stock unconfirmed: three `SN74LVC245AN` (PDIP-20, VCC = Pico 3V3, DIR low so the B side is the J400 side) and one `SN74HCT245N` (PDIP-20). 74HC245 is not in the netlist. Datasheet limits used for the split: SN74LVC245A VCC 1.65–3.6 V, inputs to 5.5 V, outputs only to VCC; SN74HCT245 VCC 4.5–5.5 V, VIH min 2.0 V, outputs swing to VCC. HCT VCC, DIR, the 100 nF, and the `/OE` pull-up sit on `VSW_ASSUMED_5V`. A 1N5817 takes that net to Pico VSYS. VBUS is not tied to VSYS. VBAT is open. No 7805.
+The only active part is a PicoROM-28 module. There is no external HCT or LVC.
 
-| J400 | Net | Buffer | Pico |
-|---|---|---|---|
-| A0–A7 | `J400_A0`–`J400_A7` | `U_ADDR` B1–B8 | GP10–GP17 |
-| A8–A12 | `J400_A8`–`J400_A12` | `U_AHI` B1–B5 | GP18–GP22 |
-| A13–A15 | `J400_A13`–`J400_A15` | `U_AHI` B6–B8 | GP26–GP28 |
-| OEB | `J400_OEB` | `U_CTL` B1 → A1 | GP8 |
-| WRB | `J400_WRB` | `U_CTL` B2 → A2 | none. Net `WRB_NO_FREE_GPIO` |
-| D0–D7 | `J400_D0`–`J400_D7` | `U_DATA` B side | GP0–GP7 on the A side |
-| data OE | `HCT_nOE` | `U_DATA` pin 19, 10 kΩ to VSW, NPN collector | GP9 through 10 kΩ into the NPN base. 100 kΩ base pulldown. |
-| GND lines 1 and 43 | `GND` | all 245 GND pins | Pico GND and AGND |
-| VSW | `VSW_ASSUMED_5V` | HCT VCC, HCT DIR, 100 nF, `/OE` pull-up, `D_VSYS` anode | Pico VSYS is the diode cathode |
-| VBAT | `J400_VBAT_NOT_LOGIC` | none | none |
-| Audio Input, F2, SA0–SA3, WEB, BIGSPACEB, MNMIB, RESETSYSB, CT, DOUT, DREQ, ASTRB | `J400_*_UNUSED` | none | none |
+| J400 | Net | PicoROM-28 pin |
+|---|---|---|
+| A0–A15 | `J400_A0`–`J400_A15` | A0–A15 |
+| D0–D7 | `J400_D0`–`J400_D7` | D0–D7 |
+| OEB | `J400_OEB` | nOE (pin 22) |
+| no chip-select finger | `GND` | nCE (pin 20), strapped low |
+| GND lines 1 and 43 | `GND` | pin 14 |
+| VSW | `VSW_ASSUMED_5V` | pin 28 |
+| VBAT | `J400_VBAT_NOT_LOGIC` | none |
+| WRB, Audio Input, F2, SA0–SA3, WEB, BIGSPACEB, MNMIB, RESETSYSB, CT, DOUT, DREQ, ASTRB | `J400_*_UNUSED` | none |
 
-HCT `/OE` is pulled up to assumed VSW. With the NPN off, `/OE` is high and the HCT outputs are Hi-Z. GP9 high turns the NPN on. GP9 is not tied to VSW.
-
-A stock Pico breaks out GP0–GP22 and GP26–GP28 (26 pins). GP23 (SMPS), GP24 (VBUS), GP25 (LED), and GP29 (VSYS sense) are not free headers. Address plus data plus OEB is 25 pins, so WRB is buffered and then stops. Upstream PicoROM P28 firmware (`BOARD_28P`, address on GPIO0–15, data on GPIO16–23) does not match this map. The P28 sheet in this folder stays a reference module with its edge left open. No firmware for the split map has been compiled or flashed.
+The bare-Pico split GPIO map is not this design. A Pico header does not expose the consecutive `BOARD_28P` pins, and this sheet does not use that header.
 
 ## Still required before this is an electrical release
 
 - Continuity from each J400 line to a known mainboard net, including which cartridge face and which end is line 1 versus the photo silk.
-- Confirm assumed VSW is inside 4.5–5.5 V, and Pico VSYS stays at or below 5.5 V, including transients, before powering. See [POWER.md](POWER.md).
-- Whether OEB and WRB are active low, and whether OEB is the ROM output enable the firmware should sample.
-- Markings on the DIP 245 parts actually on hand. DIR polarity above is the TI SN74LVC245A / SN74HCT245 polarity, not a substitute for those markings. A 74HC245 is not a substitute: at 5 V its outputs are about 5 V into a Pico pin, and a 3.3 V high is a marginal high into an HC input at 5 V.
-- A firmware build that samples the split address and drives data from GP0–GP7. That build does not exist in this change.
+- Confirm assumed VSW is inside 4.5–5.5 V, including transients, before powering. See [POWER.md](POWER.md).
+- Whether OEB is the only enable, given that `/CE` is strapped low.
+- A scope capture on the robot. Upstream's 70 ns and 40 ns numbers are not that capture.

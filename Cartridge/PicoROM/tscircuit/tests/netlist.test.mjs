@@ -25,24 +25,37 @@ const exportNetlist = () => {
   return readFileSync(out, "utf8")
 }
 
-const parsePins = (netlist) => {
+const pinRecords = (netlist) => {
   const pins = []
+  let ref = null
+  let inPins = false
   for (const line of netlist.split("\n")) {
-    const match = line.match(
-      /^- pin(\d+)\(([^)]+)\): NETS\(([^)]*)\)$/,
-    )
-    if (match) {
-      pins.push({
-        number: Number(match[1]),
-        name: match[2],
-        nets: match[3].split(",").map((net) => net.trim()).filter(Boolean),
-      })
+    if (line.startsWith("COMPONENT_PINS:")) {
+      inPins = true
+      continue
     }
+    if (!inPins) continue
+    const pin = line.match(/^- pin(\d+)\(([^)]+)\): NETS\(([^)]*)\)$/)
+    if (pin) {
+      pins.push({
+        ref,
+        number: Number(pin[1]),
+        name: pin[2],
+        nets: pin[3].split(",").map((net) => net.trim()).filter(Boolean),
+      })
+      continue
+    }
+    if (line.trim()) ref = line.split(" ")[0]
   }
   return pins
 }
 
-test("carrier netlist keeps every J1 finger off the P28 module", () => {
+const members = (pins, net) =>
+  pins
+    .filter((pin) => pin.nets.includes(net))
+    .map((pin) => `${pin.ref}.${pin.name}`)
+
+test("P28 carrier uses the module pins and no external buffer", () => {
   const netlist = exportNetlist()
   const committed = readFileSync(
     join(root, "..", "render", "picorom-carrier.net.txt"),
@@ -51,38 +64,41 @@ test("carrier netlist keeps every J1 finger off the P28 module", () => {
   assert.equal(netlist.trim(), committed.trim())
 
   assert.match(netlist, /U_P28: PicoROM-P28-rev1\.10/)
-  assert.doesNotMatch(netlist, /74HC|74HCT|74LVC|74LS|74AHCT|RP2040|Pico\b/)
+  assert.doesNotMatch(netlist, /74HC|74HCT|74LVC|74LS|74AHCT|SN74|7805|LM340|Pico\b|RP2040/)
 
-  const pins = parsePins(netlist)
-  const p28 = pins.filter((pin) => pin.nets.some((net) => net.startsWith("P28_")))
-  const j1 = pins.filter((pin) =>
-    pin.nets.some((net) => net.startsWith("UNRESOLVED_J1_")),
-  )
-  assert.equal(p28.length, 28)
-  assert.equal(j1.length, 44)
+  const pins = pinRecords(netlist)
+  const on = (net) => members(pins, net).sort()
 
-  const seen = new Map()
-  for (const pin of [...p28, ...j1]) {
-    assert.equal(pin.nets.length, 1, `${pin.name} must have one net`)
-    const net = pin.nets[0]
-    assert.equal(seen.has(net), false, `net ${net} is shared`)
-    seen.set(net, pin.name)
+  for (let bit = 0; bit < 16; bit++) {
+    assert.deepEqual(on(`J400_A${bit}`), [`J1.A${bit}`, `U_P28.A${bit}`].sort())
+  }
+  for (let bit = 0; bit < 8; bit++) {
+    assert.deepEqual(on(`J400_D${bit}`), [`J1.D${bit}`, `U_P28.D${bit}`].sort())
   }
 
-  for (const pin of j1) {
-    assert.match(pin.nets[0], /^UNRESOLVED_J1_\d{2}$/)
-    assert.equal(pin.name, `IDX${pin.nets[0].slice(-2)}`)
-  }
+  assert.deepEqual(on("J400_OEB"), ["J1.OEB", "U_P28.nOE"].sort())
+  assert.ok(on("GND").includes("U_P28.nCE"))
+  assert.ok(on("GND").includes("U_P28.GND"))
+  assert.ok(on("GND").includes("J1.GND_1"))
+  assert.ok(on("GND").includes("J1.GND_43"))
+  assert.deepEqual(on("VSW_ASSUMED_5V"), ["J1.VSW", "U_P28.VCC"].sort())
+  assert.deepEqual(on("J400_VBAT_NOT_LOGIC"), ["J1.VBAT"])
+  assert.deepEqual(on("J400_WRB_UNUSED"), ["J1.WRB"])
 
-  const byName = Object.fromEntries(p28.map((pin) => [pin.name, pin]))
-  assert.equal(byName.VCC.number, 28)
-  assert.equal(byName.GND.number, 14)
-  assert.equal(byName.A15.number, 1)
-  assert.equal(byName.A0.number, 10)
-  assert.equal(byName.D0.number, 11)
-  assert.equal(byName.D7.number, 19)
-  assert.equal(byName.nCE.number, 20)
-  assert.equal(byName.nOE.number, 22)
-  assert.equal(byName.A14.number, 27)
-  for (const pin of p28) assert.match(pin.nets[0], /_OPEN$/)
+  const numberOf = (ref, name) => {
+    const pin = pins.find((item) => item.ref === ref && item.name === name)
+    assert.ok(pin, `${ref} ${name}`)
+    return pin.number
+  }
+  assert.equal(numberOf("U_P28", "A15"), 1)
+  assert.equal(numberOf("U_P28", "A0"), 10)
+  assert.equal(numberOf("U_P28", "D0"), 11)
+  assert.equal(numberOf("U_P28", "GND"), 14)
+  assert.equal(numberOf("U_P28", "nCE"), 20)
+  assert.equal(numberOf("U_P28", "nOE"), 22)
+  assert.equal(numberOf("U_P28", "A14"), 27)
+  assert.equal(numberOf("U_P28", "VCC"), 28)
+  assert.equal(numberOf("J1", "OEB"), 12)
+  assert.equal(numberOf("J1", "VSW"), 41)
+  assert.equal(numberOf("J1", "VBAT"), 39)
 })
