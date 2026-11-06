@@ -1817,7 +1817,7 @@
     ],
     "source_component_id": "source_component_4",
     "subcircuit_id": "subcircuit_source_group_0",
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net67"
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net68"
   },
   {
     "type": "source_port",
@@ -1859,7 +1859,7 @@
     ],
     "source_component_id": "source_component_5",
     "subcircuit_id": "subcircuit_source_group_0",
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net67"
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net68"
   },
   {
     "type": "source_port",
@@ -1920,7 +1920,7 @@
     ],
     "source_component_id": "source_component_6",
     "subcircuit_id": "subcircuit_source_group_0",
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net68"
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net69"
   },
   {
     "type": "source_component",
@@ -1949,7 +1949,7 @@
     ],
     "source_component_id": "source_component_7",
     "subcircuit_id": "subcircuit_source_group_0",
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net68"
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net69"
   },
   {
     "type": "source_port",
@@ -1993,7 +1993,7 @@
     ],
     "source_component_id": "source_component_8",
     "subcircuit_id": "subcircuit_source_group_0",
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net67"
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net68"
   },
   {
     "type": "source_port",
@@ -2023,7 +2023,7 @@
     ],
     "source_component_id": "source_component_8",
     "subcircuit_id": "subcircuit_source_group_0",
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net68"
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net69"
   },
   {
     "type": "source_component",
@@ -2584,7 +2584,7 @@
     ],
     "source_component_id": "source_component_13",
     "subcircuit_id": "subcircuit_source_group_0",
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net70"
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net71"
   },
   {
     "type": "source_port",
@@ -2612,7 +2612,7 @@
     ],
     "source_component_id": "source_component_13",
     "subcircuit_id": "subcircuit_source_group_0",
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net71"
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net72"
   },
   {
     "type": "source_port",
@@ -2626,7 +2626,7 @@
     ],
     "source_component_id": "source_component_13",
     "subcircuit_id": "subcircuit_source_group_0",
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net72"
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net73"
   },
   {
     "type": "source_port",
@@ -2640,7 +2640,7 @@
     ],
     "source_component_id": "source_component_13",
     "subcircuit_id": "subcircuit_source_group_0",
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net73"
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net74"
   },
   {
     "type": "source_port",
@@ -2654,7 +2654,7 @@
     ],
     "source_component_id": "source_component_13",
     "subcircuit_id": "subcircuit_source_group_0",
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net74"
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net75"
   },
   {
     "type": "source_port",
@@ -2668,7 +2668,7 @@
     ],
     "source_component_id": "source_component_13",
     "subcircuit_id": "subcircuit_source_group_0",
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net75"
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net76"
   },
   {
     "type": "source_port",
@@ -2682,7 +2682,7 @@
     ],
     "source_component_id": "source_component_13",
     "subcircuit_id": "subcircuit_source_group_0",
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net76"
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net77"
   },
   {
     "type": "source_port",
@@ -2696,7 +2696,7 @@
     ],
     "source_component_id": "source_component_13",
     "subcircuit_id": "subcircuit_source_group_0",
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net77"
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net78"
   },
   {
     "type": "source_port",
@@ -2710,7 +2710,7 @@
     ],
     "source_component_id": "source_component_13",
     "subcircuit_id": "subcircuit_source_group_0",
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net78"
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net79"
   },
   {
     "type": "source_port",
@@ -2724,7 +2724,7 @@
     ],
     "source_component_id": "source_component_13",
     "subcircuit_id": "subcircuit_source_group_0",
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net79"
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net80"
   },
   {
     "type": "source_port",
@@ -2738,7 +2738,7 @@
     ],
     "source_component_id": "source_component_13",
     "subcircuit_id": "subcircuit_source_group_0",
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net80"
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net81"
   },
   {
     "type": "source_port",
@@ -2752,7 +2752,7 @@
     ],
     "source_component_id": "source_component_13",
     "subcircuit_id": "subcircuit_source_group_0",
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net69"
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net70"
   },
   {
     "type": "source_port",
@@ -2766,7 +2766,7 @@
     ],
     "source_component_id": "source_component_13",
     "subcircuit_id": "subcircuit_source_group_0",
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net81"
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net82"
   },
   {
     "type": "source_port",
@@ -2780,7 +2780,7 @@
     ],
     "source_component_id": "source_component_13",
     "subcircuit_id": "subcircuit_source_group_0",
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net66"
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net67"
   },
   {
     "type": "source_port",
@@ -2794,7 +2794,7 @@
     ],
     "source_component_id": "source_component_13",
     "subcircuit_id": "subcircuit_source_group_0",
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net82"
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net83"
   },
   {
     "type": "source_port",
@@ -2822,7 +2822,7 @@
     ],
     "source_component_id": "source_component_13",
     "subcircuit_id": "subcircuit_source_group_0",
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net83"
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net84"
   },
   {
     "type": "source_component",
@@ -3570,7 +3570,7 @@
   {
     "type": "source_net",
     "source_net_id": "source_net_66",
-    "name": "J400_VSW_UNMEASURED",
+    "name": "HCT_5V_UNSOURCED",
     "member_source_group_ids": [],
     "is_ground": false,
     "is_power": true,
@@ -3581,18 +3581,18 @@
   {
     "type": "source_net",
     "source_net_id": "source_net_67",
-    "name": "HCT_nOE",
+    "name": "J400_VSW_UNTRUSTED",
     "member_source_group_ids": [],
     "is_ground": false,
-    "is_power": false,
-    "is_positive_voltage_source": false,
+    "is_power": true,
+    "is_positive_voltage_source": true,
     "subcircuit_id": "subcircuit_source_group_0",
     "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net67"
   },
   {
     "type": "source_net",
     "source_net_id": "source_net_68",
-    "name": "Q_OE_BASE",
+    "name": "HCT_nOE",
     "member_source_group_ids": [],
     "is_ground": false,
     "is_power": false,
@@ -3603,29 +3603,29 @@
   {
     "type": "source_net",
     "source_net_id": "source_net_69",
-    "name": "J400_VBAT_NOT_LOGIC",
+    "name": "Q_OE_BASE",
     "member_source_group_ids": [],
     "is_ground": false,
-    "is_power": true,
-    "is_positive_voltage_source": true,
+    "is_power": false,
+    "is_positive_voltage_source": false,
     "subcircuit_id": "subcircuit_source_group_0",
     "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net69"
   },
   {
     "type": "source_net",
     "source_net_id": "source_net_70",
-    "name": "J400_AUDIO_IN_UNUSED",
+    "name": "J400_VBAT_NOT_LOGIC",
     "member_source_group_ids": [],
     "is_ground": false,
-    "is_power": false,
-    "is_positive_voltage_source": false,
+    "is_power": true,
+    "is_positive_voltage_source": true,
     "subcircuit_id": "subcircuit_source_group_0",
     "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net70"
   },
   {
     "type": "source_net",
     "source_net_id": "source_net_71",
-    "name": "J400_F2_UNUSED",
+    "name": "J400_AUDIO_IN_UNUSED",
     "member_source_group_ids": [],
     "is_ground": false,
     "is_power": false,
@@ -3636,7 +3636,7 @@
   {
     "type": "source_net",
     "source_net_id": "source_net_72",
-    "name": "J400_SA0_UNUSED",
+    "name": "J400_F2_UNUSED",
     "member_source_group_ids": [],
     "is_ground": false,
     "is_power": false,
@@ -3647,7 +3647,7 @@
   {
     "type": "source_net",
     "source_net_id": "source_net_73",
-    "name": "J400_WEB_UNUSED",
+    "name": "J400_SA0_UNUSED",
     "member_source_group_ids": [],
     "is_ground": false,
     "is_power": false,
@@ -3658,7 +3658,7 @@
   {
     "type": "source_net",
     "source_net_id": "source_net_74",
-    "name": "J400_SA1_UNUSED",
+    "name": "J400_WEB_UNUSED",
     "member_source_group_ids": [],
     "is_ground": false,
     "is_power": false,
@@ -3669,7 +3669,7 @@
   {
     "type": "source_net",
     "source_net_id": "source_net_75",
-    "name": "J400_BIGSPACEB_UNUSED",
+    "name": "J400_SA1_UNUSED",
     "member_source_group_ids": [],
     "is_ground": false,
     "is_power": false,
@@ -3680,7 +3680,7 @@
   {
     "type": "source_net",
     "source_net_id": "source_net_76",
-    "name": "J400_SA2_UNUSED",
+    "name": "J400_BIGSPACEB_UNUSED",
     "member_source_group_ids": [],
     "is_ground": false,
     "is_power": false,
@@ -3691,7 +3691,7 @@
   {
     "type": "source_net",
     "source_net_id": "source_net_77",
-    "name": "J400_MNMIB_UNUSED",
+    "name": "J400_SA2_UNUSED",
     "member_source_group_ids": [],
     "is_ground": false,
     "is_power": false,
@@ -3702,7 +3702,7 @@
   {
     "type": "source_net",
     "source_net_id": "source_net_78",
-    "name": "J400_SA3_UNUSED",
+    "name": "J400_MNMIB_UNUSED",
     "member_source_group_ids": [],
     "is_ground": false,
     "is_power": false,
@@ -3713,7 +3713,7 @@
   {
     "type": "source_net",
     "source_net_id": "source_net_79",
-    "name": "J400_RESETSYSB_UNUSED",
+    "name": "J400_SA3_UNUSED",
     "member_source_group_ids": [],
     "is_ground": false,
     "is_power": false,
@@ -3724,7 +3724,7 @@
   {
     "type": "source_net",
     "source_net_id": "source_net_80",
-    "name": "J400_CT_UNUSED",
+    "name": "J400_RESETSYSB_UNUSED",
     "member_source_group_ids": [],
     "is_ground": false,
     "is_power": false,
@@ -3735,7 +3735,7 @@
   {
     "type": "source_net",
     "source_net_id": "source_net_81",
-    "name": "J400_DOUT_UNUSED",
+    "name": "J400_CT_UNUSED",
     "member_source_group_ids": [],
     "is_ground": false,
     "is_power": false,
@@ -3746,7 +3746,7 @@
   {
     "type": "source_net",
     "source_net_id": "source_net_82",
-    "name": "J400_DREQ_UNUSED",
+    "name": "J400_DOUT_UNUSED",
     "member_source_group_ids": [],
     "is_ground": false,
     "is_power": false,
@@ -3757,13 +3757,24 @@
   {
     "type": "source_net",
     "source_net_id": "source_net_83",
-    "name": "J400_ASTRB_UNUSED",
+    "name": "J400_DREQ_UNUSED",
     "member_source_group_ids": [],
     "is_ground": false,
     "is_power": false,
     "is_positive_voltage_source": false,
     "subcircuit_id": "subcircuit_source_group_0",
     "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net83"
+  },
+  {
+    "type": "source_net",
+    "source_net_id": "source_net_84",
+    "name": "J400_ASTRB_UNUSED",
+    "member_source_group_ids": [],
+    "is_ground": false,
+    "is_power": false,
+    "is_positive_voltage_source": false,
+    "subcircuit_id": "subcircuit_source_group_0",
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net84"
   },
   {
     "type": "source_board",
@@ -5705,7 +5716,7 @@
       "source_net_66"
     ],
     "subcircuit_id": "subcircuit_source_group_0",
-    "display_name": "U_DATA.DIR to net.J400_VSW_UNMEASURED",
+    "display_name": "U_DATA.DIR to net.HCT_5V_UNSOURCED",
     "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net66"
   },
   {
@@ -5718,7 +5729,7 @@
       "source_net_66"
     ],
     "subcircuit_id": "subcircuit_source_group_0",
-    "display_name": "U_DATA.VCC to net.J400_VSW_UNMEASURED",
+    "display_name": "U_DATA.VCC to net.HCT_5V_UNSOURCED",
     "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net66"
   },
   {
@@ -5728,11 +5739,11 @@
       "source_port_177"
     ],
     "connected_source_net_ids": [
-      "source_net_66"
+      "source_net_67"
     ],
     "subcircuit_id": "subcircuit_source_group_0",
-    "display_name": "J1.VSW to net.J400_VSW_UNMEASURED",
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net66"
+    "display_name": "J1.VSW to net.J400_VSW_UNTRUSTED",
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net67"
   },
   {
     "type": "source_trace",
@@ -5744,7 +5755,7 @@
       "source_net_66"
     ],
     "subcircuit_id": "subcircuit_source_group_0",
-    "display_name": "C_DATA.pin1 to net.J400_VSW_UNMEASURED",
+    "display_name": "C_DATA.pin1 to net.HCT_5V_UNSOURCED",
     "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net66"
   },
   {
@@ -5767,11 +5778,11 @@
       "source_port_118"
     ],
     "connected_source_net_ids": [
-      "source_net_67"
+      "source_net_68"
     ],
     "subcircuit_id": "subcircuit_source_group_0",
     "display_name": "U_DATA.nOE to net.HCT_nOE",
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net67"
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net68"
   },
   {
     "type": "source_trace",
@@ -5780,11 +5791,11 @@
       "source_port_120"
     ],
     "connected_source_net_ids": [
-      "source_net_67"
+      "source_net_68"
     ],
     "subcircuit_id": "subcircuit_source_group_0",
     "display_name": "R_OE.pin1 to net.HCT_nOE",
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net67"
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net68"
   },
   {
     "type": "source_trace",
@@ -5796,7 +5807,7 @@
       "source_net_66"
     ],
     "subcircuit_id": "subcircuit_source_group_0",
-    "display_name": "R_OE.pin2 to net.J400_VSW_UNMEASURED",
+    "display_name": "R_OE.pin2 to net.HCT_5V_UNSOURCED",
     "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net66"
   },
   {
@@ -5806,11 +5817,11 @@
       "source_port_126"
     ],
     "connected_source_net_ids": [
-      "source_net_67"
+      "source_net_68"
     ],
     "subcircuit_id": "subcircuit_source_group_0",
     "display_name": "Q_OE.collector to net.HCT_nOE",
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net67"
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net68"
   },
   {
     "type": "source_trace",
@@ -5832,11 +5843,11 @@
       "source_port_128"
     ],
     "connected_source_net_ids": [
-      "source_net_68"
+      "source_net_69"
     ],
     "subcircuit_id": "subcircuit_source_group_0",
     "display_name": "Q_OE.base to net.Q_OE_BASE",
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net68"
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net69"
   },
   {
     "type": "source_trace",
@@ -5845,11 +5856,11 @@
       "source_port_123"
     ],
     "connected_source_net_ids": [
-      "source_net_68"
+      "source_net_69"
     ],
     "subcircuit_id": "subcircuit_source_group_0",
     "display_name": "R_BASE.pin2 to net.Q_OE_BASE",
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net68"
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net69"
   },
   {
     "type": "source_trace",
@@ -5871,11 +5882,11 @@
       "source_port_124"
     ],
     "connected_source_net_ids": [
-      "source_net_68"
+      "source_net_69"
     ],
     "subcircuit_id": "subcircuit_source_group_0",
     "display_name": "R_BASE_PD.pin1 to net.Q_OE_BASE",
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net68"
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net69"
   },
   {
     "type": "source_trace",
@@ -5936,11 +5947,11 @@
       "source_port_175"
     ],
     "connected_source_net_ids": [
-      "source_net_69"
+      "source_net_70"
     ],
     "subcircuit_id": "subcircuit_source_group_0",
     "display_name": "J1.VBAT to net.J400_VBAT_NOT_LOGIC",
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net69"
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net70"
   },
   {
     "type": "source_trace",
@@ -5949,11 +5960,11 @@
       "source_port_163"
     ],
     "connected_source_net_ids": [
-      "source_net_70"
+      "source_net_71"
     ],
     "subcircuit_id": "subcircuit_source_group_0",
     "display_name": "J1.AUDIO_IN to net.J400_AUDIO_IN_UNUSED",
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net70"
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net71"
   },
   {
     "type": "source_trace",
@@ -5962,11 +5973,11 @@
       "source_port_165"
     ],
     "connected_source_net_ids": [
-      "source_net_71"
+      "source_net_72"
     ],
     "subcircuit_id": "subcircuit_source_group_0",
     "display_name": "J1.F2 to net.J400_F2_UNUSED",
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net71"
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net72"
   },
   {
     "type": "source_trace",
@@ -5975,11 +5986,11 @@
       "source_port_166"
     ],
     "connected_source_net_ids": [
-      "source_net_72"
+      "source_net_73"
     ],
     "subcircuit_id": "subcircuit_source_group_0",
     "display_name": "J1.SA0 to net.J400_SA0_UNUSED",
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net72"
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net73"
   },
   {
     "type": "source_trace",
@@ -5988,11 +5999,11 @@
       "source_port_167"
     ],
     "connected_source_net_ids": [
-      "source_net_73"
+      "source_net_74"
     ],
     "subcircuit_id": "subcircuit_source_group_0",
     "display_name": "J1.WEB to net.J400_WEB_UNUSED",
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net73"
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net74"
   },
   {
     "type": "source_trace",
@@ -6001,11 +6012,11 @@
       "source_port_168"
     ],
     "connected_source_net_ids": [
-      "source_net_74"
+      "source_net_75"
     ],
     "subcircuit_id": "subcircuit_source_group_0",
     "display_name": "J1.SA1 to net.J400_SA1_UNUSED",
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net74"
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net75"
   },
   {
     "type": "source_trace",
@@ -6014,11 +6025,11 @@
       "source_port_169"
     ],
     "connected_source_net_ids": [
-      "source_net_75"
+      "source_net_76"
     ],
     "subcircuit_id": "subcircuit_source_group_0",
     "display_name": "J1.BIGSPACEB to net.J400_BIGSPACEB_UNUSED",
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net75"
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net76"
   },
   {
     "type": "source_trace",
@@ -6027,11 +6038,11 @@
       "source_port_170"
     ],
     "connected_source_net_ids": [
-      "source_net_76"
+      "source_net_77"
     ],
     "subcircuit_id": "subcircuit_source_group_0",
     "display_name": "J1.SA2 to net.J400_SA2_UNUSED",
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net76"
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net77"
   },
   {
     "type": "source_trace",
@@ -6040,11 +6051,11 @@
       "source_port_171"
     ],
     "connected_source_net_ids": [
-      "source_net_77"
+      "source_net_78"
     ],
     "subcircuit_id": "subcircuit_source_group_0",
     "display_name": "J1.MNMIB to net.J400_MNMIB_UNUSED",
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net77"
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net78"
   },
   {
     "type": "source_trace",
@@ -6053,11 +6064,11 @@
       "source_port_172"
     ],
     "connected_source_net_ids": [
-      "source_net_78"
+      "source_net_79"
     ],
     "subcircuit_id": "subcircuit_source_group_0",
     "display_name": "J1.SA3 to net.J400_SA3_UNUSED",
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net78"
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net79"
   },
   {
     "type": "source_trace",
@@ -6066,11 +6077,11 @@
       "source_port_173"
     ],
     "connected_source_net_ids": [
-      "source_net_79"
+      "source_net_80"
     ],
     "subcircuit_id": "subcircuit_source_group_0",
     "display_name": "J1.RESETSYSB to net.J400_RESETSYSB_UNUSED",
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net79"
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net80"
   },
   {
     "type": "source_trace",
@@ -6079,11 +6090,11 @@
       "source_port_174"
     ],
     "connected_source_net_ids": [
-      "source_net_80"
+      "source_net_81"
     ],
     "subcircuit_id": "subcircuit_source_group_0",
     "display_name": "J1.CT to net.J400_CT_UNUSED",
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net80"
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net81"
   },
   {
     "type": "source_trace",
@@ -6092,11 +6103,11 @@
       "source_port_176"
     ],
     "connected_source_net_ids": [
-      "source_net_81"
+      "source_net_82"
     ],
     "subcircuit_id": "subcircuit_source_group_0",
     "display_name": "J1.DOUT to net.J400_DOUT_UNUSED",
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net81"
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net82"
   },
   {
     "type": "source_trace",
@@ -6105,11 +6116,11 @@
       "source_port_178"
     ],
     "connected_source_net_ids": [
-      "source_net_82"
+      "source_net_83"
     ],
     "subcircuit_id": "subcircuit_source_group_0",
     "display_name": "J1.DREQ to net.J400_DREQ_UNUSED",
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net82"
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net83"
   },
   {
     "type": "source_trace",
@@ -6118,11 +6129,11 @@
       "source_port_180"
     ],
     "connected_source_net_ids": [
-      "source_net_83"
+      "source_net_84"
     ],
     "subcircuit_id": "subcircuit_source_group_0",
     "display_name": "J1.ASTRB to net.J400_ASTRB_UNUSED",
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net83"
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net84"
   },
   {
     "type": "schematic_component",
@@ -10256,7 +10267,7 @@
     "type": "schematic_text",
     "schematic_text_id": "schematic_text_16",
     "anchor": "center",
-    "text": "OE pull-up is on VSW. GP9 drives an NPN. Pico off holds Hi-Z. OEB is not this net.",
+    "text": "5 V net has no source. VSW is not this rail. GP9 NPN holds Hi-Z when off.",
     "font_size": 0.16,
     "color": "#000000",
     "position": {
@@ -10284,7 +10295,7 @@
     "type": "schematic_text",
     "schematic_text_id": "schematic_text_18",
     "anchor": "center",
-    "text": "VBAT is not connected to Pico or to a 245 supply. VSW voltage is not measured.",
+    "text": "VBAT is a nominal 10 V gel cell and is open. VSW is untrusted and open.",
     "font_size": 0.16,
     "color": "#000000",
     "position": {
@@ -10340,7 +10351,7 @@
     "type": "schematic_text",
     "schematic_text_id": "schematic_text_22",
     "anchor": "center",
-    "text": "Guide: VSW is regulator +5 V and VBAT is battery +10 V. Neither voltage was measured here.",
+    "text": "NO POWER SOURCE. VSW does not feed the HCT. VBAT does not feed a regulator.",
     "font_size": 0.16,
     "color": "#000000",
     "position": {
@@ -10354,7 +10365,7 @@
     "type": "schematic_text",
     "schematic_text_id": "schematic_text_23",
     "anchor": "center",
-    "text": "Do not apply VSW to HCT or Pico VSYS until it measures inside the part limits.",
+    "text": "Nominal 10 V gel cell is not a measured min, max, charge, or spike envelope.",
     "font_size": 0.16,
     "color": "#000000",
     "position": {
@@ -14040,7 +14051,7 @@
       }
     ],
     "junctions": [],
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net67",
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net68",
     "schematic_sheet_id": "schematic_sheet_2"
   },
   {
@@ -14115,7 +14126,7 @@
         "y": 1.2
       }
     ],
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net68",
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net69",
     "schematic_sheet_id": "schematic_sheet_2"
   },
   {
@@ -14190,7 +14201,7 @@
         "y": 1.2
       }
     ],
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net68",
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net69",
     "schematic_sheet_id": "schematic_sheet_2"
   },
   {
@@ -14426,7 +14437,7 @@
   {
     "type": "schematic_trace",
     "schematic_trace_id": "schematic_trace_90",
-    "source_trace_id": "available-net-orientation-1-J400_VSW_UNMEASURED",
+    "source_trace_id": "available-net-orientation-1-HCT_5V_UNSOURCED",
     "edges": [
       {
         "from": {
@@ -14434,17 +14445,17 @@
           "y": 2.6
         },
         "to": {
-          "x": 5.501,
+          "x": 5.321000000000001,
           "y": 2.6
         }
       },
       {
         "from": {
-          "x": 5.501,
+          "x": 5.321000000000001,
           "y": 2.6
         },
         "to": {
-          "x": 5.501,
+          "x": 5.321000000000001,
           "y": 2.951
         }
       }
@@ -14456,14 +14467,14 @@
   {
     "type": "schematic_net_label",
     "schematic_net_label_id": "schematic_net_label_35",
-    "text": "J400_VSW_UNMEASURED",
+    "text": "HCT_5V_UNSOURCED",
     "source_net_id": "source_net_66",
     "anchor_position": {
-      "x": 1.864999999999999,
+      "x": 2.124999999999999,
       "y": 3.3657142857142857
     },
     "center": {
-      "x": 1.864999999999999,
+      "x": 2.124999999999999,
       "y": 3.4557142857142855
     },
     "anchor_side": "bottom",
@@ -14473,14 +14484,14 @@
   {
     "type": "schematic_net_label",
     "schematic_net_label_id": "schematic_net_label_36",
-    "text": "J400_VSW_UNMEASURED",
+    "text": "HCT_5V_UNSOURCED",
     "source_net_id": "source_net_66",
     "anchor_position": {
-      "x": 5.501,
+      "x": 5.321000000000001,
       "y": 2.951
     },
     "center": {
-      "x": 5.501,
+      "x": 5.321000000000001,
       "y": 3.041
     },
     "anchor_side": "bottom",
@@ -15113,7 +15124,7 @@
       }
     ],
     "junctions": [],
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net67",
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net68",
     "schematic_sheet_id": "schematic_sheet_2"
   },
   {
@@ -15278,13 +15289,13 @@
       }
     ],
     "junctions": [],
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net69",
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net70",
     "schematic_sheet_id": "schematic_sheet_3"
   },
   {
     "type": "schematic_trace",
     "schematic_trace_id": "schematic_trace_112",
-    "source_trace_id": "available-net-orientation-41-J400_VSW_UNMEASURED",
+    "source_trace_id": "available-net-orientation-41-J400_VSW_UNTRUSTED",
     "edges": [
       {
         "from": {
@@ -15292,23 +15303,23 @@
           "y": -3.7000000000000006
         },
         "to": {
-          "x": 5.6009999999999955,
+          "x": 5.540999999999995,
           "y": -3.7000000000000006
         }
       },
       {
         "from": {
-          "x": 5.6009999999999955,
+          "x": 5.540999999999995,
           "y": -3.7000000000000006
         },
         "to": {
-          "x": 5.6009999999999955,
+          "x": 5.540999999999995,
           "y": -3.649000000000001
         }
       }
     ],
     "junctions": [],
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net66",
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net67",
     "schematic_sheet_id": "schematic_sheet_3"
   },
   {
@@ -15349,7 +15360,7 @@
     "type": "schematic_net_label",
     "schematic_net_label_id": "schematic_net_label_41",
     "text": "J400_VBAT_NOT_LOGIC",
-    "source_net_id": "source_net_69",
+    "source_net_id": "source_net_70",
     "anchor_position": {
       "x": 4.401,
       "y": -2.799000000000001
@@ -15365,14 +15376,14 @@
   {
     "type": "schematic_net_label",
     "schematic_net_label_id": "schematic_net_label_42",
-    "text": "J400_VSW_UNMEASURED",
-    "source_net_id": "source_net_66",
+    "text": "J400_VSW_UNTRUSTED",
+    "source_net_id": "source_net_67",
     "anchor_position": {
-      "x": 5.6009999999999955,
+      "x": 5.540999999999995,
       "y": -3.649000000000001
     },
     "center": {
-      "x": 5.6009999999999955,
+      "x": 5.540999999999995,
       "y": -3.559000000000001
     },
     "anchor_side": "bottom",
@@ -16271,7 +16282,7 @@
       }
     ],
     "junctions": [],
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net70",
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net71",
     "schematic_sheet_id": "schematic_sheet_3"
   },
   {
@@ -16341,7 +16352,7 @@
       }
     ],
     "junctions": [],
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net71",
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net72",
     "schematic_sheet_id": "schematic_sheet_3"
   },
   {
@@ -16376,7 +16387,7 @@
       }
     ],
     "junctions": [],
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net72",
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net73",
     "schematic_sheet_id": "schematic_sheet_3"
   },
   {
@@ -16411,7 +16422,7 @@
       }
     ],
     "junctions": [],
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net73",
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net74",
     "schematic_sheet_id": "schematic_sheet_3"
   },
   {
@@ -16446,7 +16457,7 @@
       }
     ],
     "junctions": [],
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net74",
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net75",
     "schematic_sheet_id": "schematic_sheet_3"
   },
   {
@@ -16481,7 +16492,7 @@
       }
     ],
     "junctions": [],
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net75",
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net76",
     "schematic_sheet_id": "schematic_sheet_3"
   },
   {
@@ -16516,7 +16527,7 @@
       }
     ],
     "junctions": [],
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net76",
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net77",
     "schematic_sheet_id": "schematic_sheet_3"
   },
   {
@@ -16551,7 +16562,7 @@
       }
     ],
     "junctions": [],
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net77",
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net78",
     "schematic_sheet_id": "schematic_sheet_3"
   },
   {
@@ -16586,7 +16597,7 @@
       }
     ],
     "junctions": [],
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net78",
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net79",
     "schematic_sheet_id": "schematic_sheet_3"
   },
   {
@@ -16621,7 +16632,7 @@
       }
     ],
     "junctions": [],
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net79",
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net80",
     "schematic_sheet_id": "schematic_sheet_3"
   },
   {
@@ -16656,7 +16667,7 @@
       }
     ],
     "junctions": [],
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net80",
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net81",
     "schematic_sheet_id": "schematic_sheet_3"
   },
   {
@@ -16691,7 +16702,7 @@
       }
     ],
     "junctions": [],
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net81",
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net82",
     "schematic_sheet_id": "schematic_sheet_3"
   },
   {
@@ -16726,7 +16737,7 @@
       }
     ],
     "junctions": [],
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net82",
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net83",
     "schematic_sheet_id": "schematic_sheet_3"
   },
   {
@@ -16761,7 +16772,7 @@
       }
     ],
     "junctions": [],
-    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net83",
+    "subcircuit_connectivity_map_key": "unnamedsubcircuitsubcircuit_source_group_0_connectivity_net84",
     "schematic_sheet_id": "schematic_sheet_3"
   },
   {
@@ -26451,6 +26462,6 @@
   },
   {
     "type": "source_project_metadata",
-    "source_filesystem_md5_hash": "4b4254e2cb9e06996fc3e321bee9fe15"
+    "source_filesystem_md5_hash": "7390028a7e64e73ff80d99a0c5409b54"
   }
 ]

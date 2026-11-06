@@ -3,7 +3,8 @@
  * wired to J400 line numbers from the community reference-guide pinout.
  *
  * That pinout is explicitly unverified. OEB is not tied to the HCT output
- * enable. VBAT is not a logic supply. VSW is not tied to Pico VSYS.
+ * enable. VBAT is a nominal 10 V gel cell and is not wired. VSW is
+ * untrusted and is not an HCT or Pico supply. The HCT 5 V net has no source.
  * Stock PicoROM P28 firmware does not use this GPIO map. The map is a
  * proposal and has not been compiled or flashed.
  */
@@ -247,14 +248,14 @@ export default () => (
     {ties(lo.map((bit) => [`U_DATA.B${bit + 1}`, `net.J400_D${bit}`] as const))}
     {ties(lo.map((bit) => [`J1.D${bit}`, `net.J400_D${bit}`] as const))}
     {ties([
-      ["U_DATA.DIR", "net.J400_VSW_UNMEASURED"],
-      ["U_DATA.VCC", "net.J400_VSW_UNMEASURED"],
-      ["J1.VSW", "net.J400_VSW_UNMEASURED"],
-      ["C_DATA.pin1", "net.J400_VSW_UNMEASURED"],
+      ["U_DATA.DIR", "net.HCT_5V_UNSOURCED"],
+      ["U_DATA.VCC", "net.HCT_5V_UNSOURCED"],
+      ["J1.VSW", "net.J400_VSW_UNTRUSTED"],
+      ["C_DATA.pin1", "net.HCT_5V_UNSOURCED"],
       ["C_DATA.pin2", "net.GND"],
       ["U_DATA.nOE", "net.HCT_nOE"],
       ["R_OE.pin1", "net.HCT_nOE"],
-      ["R_OE.pin2", "net.J400_VSW_UNMEASURED"],
+      ["R_OE.pin2", "net.HCT_5V_UNSOURCED"],
       ["Q_OE.collector", "net.HCT_nOE"],
       ["Q_OE.emitter", "net.GND"],
       ["Q_OE.base", "net.Q_OE_BASE"],
@@ -276,14 +277,14 @@ export default () => (
     <schematictext schSheetName="lvc" schSectionName="lvcSec" schX={0} schY={4.4} anchor="center" color="#9b1c1c" fontSize={0.22} text="CANDIDATE SN74LVC245AN PDIP. STOCK UNCONFIRMED. VCC IS PICO 3V3." />
     <schematictext schSheetName="lvc" schSectionName="lvcSec" schX={0} schY={3.8} anchor="center" fontSize={0.16} text="DIR low: J400 B side toward Pico. WRB is buffered and stops. It has no free GPIO." />
     <schematictext schSheetName="hct" schSectionName="hctSec" schX={0} schY={3.5} anchor="center" color="#9b1c1c" fontSize={0.22} text="CANDIDATE SN74HCT245N PDIP. STOCK UNCONFIRMED." />
-    <schematictext schSheetName="hct" schSectionName="hctSec" schX={0} schY={4.4} anchor="center" fontSize={0.16} text="OE pull-up is on VSW. GP9 drives an NPN. Pico off holds Hi-Z. OEB is not this net." />
+    <schematictext schSheetName="hct" schSectionName="hctSec" schX={0} schY={4.4} anchor="center" fontSize={0.16} text="5 V net has no source. VSW is not this rail. GP9 NPN holds Hi-Z when off." />
     <schematictext schSheetName="edge" schSectionName="edgeSec" schX={0} schY={6.3} anchor="center" color="#9b1c1c" fontSize={0.22} text="J400 LINE NUMBERS. GUIDE SAYS VERIFY. NOT PHOTO SILK ORDER." />
-    <schematictext schSheetName="edge" schSectionName="edgeSec" schX={0} schY={5.7} anchor="center" fontSize={0.16} text="VBAT is not connected to Pico or to a 245 supply. VSW voltage is not measured." />
+    <schematictext schSheetName="edge" schSectionName="edgeSec" schX={0} schY={5.7} anchor="center" fontSize={0.16} text="VBAT is a nominal 10 V gel cell and is open. VSW is untrusted and open." />
     <schematictext schSheetName="notes" schSectionName="noteSec" schX={0} schY={3.6} anchor="center" color="#9b1c1c" fontSize={0.24} text="PRELIMINARY. NOT A POWER OR FAB RELEASE." />
     <schematictext schSheetName="notes" schSectionName="noteSec" schX={0} schY={2.8} anchor="center" fontSize={0.16} text="74HC245 is not used. LVC at 3.3 V accepts 5.5 V in and cannot drive a 5 V bus." />
     <schematictext schSheetName="notes" schSectionName="noteSec" schX={0} schY={2.1} anchor="center" fontSize={0.16} text="HCT at 4.5-5.5 V outputs a 5 V high. Those outputs stay on the J400 data pins." />
-    <schematictext schSheetName="notes" schSectionName="noteSec" schX={0} schY={1.4} anchor="center" fontSize={0.16} text="Guide: VSW is regulator +5 V and VBAT is battery +10 V. Neither voltage was measured here." />
-    <schematictext schSheetName="notes" schSectionName="noteSec" schX={0} schY={0.7} anchor="center" fontSize={0.16} text="Do not apply VSW to HCT or Pico VSYS until it measures inside the part limits." />
+    <schematictext schSheetName="notes" schSectionName="noteSec" schX={0} schY={1.4} anchor="center" fontSize={0.16} text="NO POWER SOURCE. VSW does not feed the HCT. VBAT does not feed a regulator." />
+    <schematictext schSheetName="notes" schSectionName="noteSec" schX={0} schY={0.7} anchor="center" fontSize={0.16} text="Nominal 10 V gel cell is not a measured min, max, charge, or spike envelope." />
     <schematictext schSheetName="notes" schSectionName="noteSec" schX={0} schY={0.0} anchor="center" fontSize={0.16} text="Audio, SA0-3, DOUT, DREQ, CT, ASTRB, F2, WEB, BIGSPACEB, MNMIB, RESETSYSB stay off the Pico." />
     <schematictext schSheetName="notes" schSectionName="noteSec" schX={0} schY={-0.7} anchor="center" fontSize={0.16} text="P28 sheet in this folder is a reference module, not this Pico board. Issues stay open." />
     <pcbnotetext pcbX={0} pcbY={68} text="PLACEHOLDER FOOTPRINTS. NOT A CARTRIDGE PCB." />

@@ -227,10 +227,9 @@ NET: J400_D7
   - J1 D7
   - U_DATA B8
 
-NET: J400_VSW_UNMEASURED
+NET: HCT_5V_UNSOURCED
   - R_OE pin2
   - C_DATA pin1 (+)
-  - J1 VSW
   - U_DATA VCC
   - U_DATA DIR
 
@@ -296,6 +295,7 @@ EMPTY NET PINS:
   - U_CTL A6
   - U_CTL A7
   - U_CTL A8
+  - J1 VSW
   - J1 VBAT
   - J1 AUDIO_IN
   - J1 F2
@@ -422,7 +422,7 @@ U_CTL (SN74LVC245AN)
 - pin20(VCC): NETS(PICO_3V3)
 
 U_DATA (SN74HCT245N)
-- pin1(DIR): NETS(J400_VSW_UNMEASURED)
+- pin1(DIR): NETS(HCT_5V_UNSOURCED)
 - pin2(A1): NETS(PICO_D0)
 - pin3(A2): NETS(PICO_D1)
 - pin4(A3): NETS(PICO_D2)
@@ -441,11 +441,11 @@ U_DATA (SN74HCT245N)
 - pin17(B2): NETS(J400_D1)
 - pin18(B1): NETS(J400_D0)
 - pin19(nOE): NETS(HCT_nOE)
-- pin20(VCC): NETS(J400_VSW_UNMEASURED)
+- pin20(VCC): NETS(HCT_5V_UNSOURCED)
 
 R_OE (10kΩ axial)
 - pin1(anode, pos, left): NETS(HCT_nOE)
-- pin2(cathode, neg, right): NETS(J400_VSW_UNMEASURED)
+- pin2(cathode, neg, right): NETS(HCT_5V_UNSOURCED)
 
 R_BASE (10kΩ axial)
 - pin1(anode, pos, left): NETS(PICO_DATA_nOE)
@@ -473,7 +473,7 @@ C_CTL (100nF axial_nonpolarized)
 - pin2(neg, cathode): NETS(GND)
 
 C_DATA (100nF axial_nonpolarized)
-- pin1(pos, anode): NETS(J400_VSW_UNMEASURED)
+- pin1(pos, anode): NETS(HCT_5V_UNSOURCED)
 - pin2(neg, cathode): NETS(GND)
 
 J1
@@ -517,7 +517,7 @@ J1
 - pin38(CT): NETS(J400_CT_UNUSED)
 - pin39(VBAT): NETS(J400_VBAT_NOT_LOGIC)
 - pin40(DOUT): NETS(J400_DOUT_UNUSED)
-- pin41(VSW): NETS(J400_VSW_UNMEASURED)
+- pin41(VSW): NETS(J400_VSW_UNTRUSTED)
 - pin42(DREQ): NETS(J400_DREQ_UNUSED)
 - pin43(GND_43): NETS(GND)
 - pin44(ASTRB): NETS(J400_ASTRB_UNUSED)

@@ -59,7 +59,7 @@ The description of line 16 is copied as printed: "Address Line 100". The name on
 | 43 | GND | Ground Line |
 | 44 | ASTRB | Strobe Line for Sound ROM Addressing |
 
-`+10 V` and `+5 V` are the guide's claims. They were not measured for this schematic. `VBAT` and `VSW` stay on different nets. `VBAT` does not connect to the Pico or to either 245 supply.
+The guide prints VBAT as +10 V and VSW as +5 V. Neither was measured here. VBAT is also a stated nominal 10 V gel cell. That nominal is not a measured minimum, maximum, charge voltage, or spike envelope. `VBAT` and `VSW` are separate single-pin nets. Neither feeds a 245, the Pico, or a regulator. See [POWER.md](POWER.md).
 
 ## Conflicts kept on purpose
 
@@ -93,7 +93,7 @@ The CPU table also repeats pin 54 (`F244 Hz` and `MoDataClk`) and leaves pins 20
 
 ## What the Pico schematic does with each line
 
-Candidates, stock unconfirmed: three `SN74LVC245AN` (PDIP-20, VCC = Pico 3V3, DIR low so the B side is the J400 side) and one `SN74HCT245N` (PDIP-20, VCC and DIR on `J400_VSW_UNMEASURED`). 74HC245 is not in the netlist. Datasheet limits used for the split: SN74LVC245A VCC 1.65–3.6 V, inputs to 5.5 V, outputs only to VCC; SN74HCT245 VCC 4.5–5.5 V, VIH min 2.0 V, outputs swing to VCC. Do not power the HCT or Pico VSYS from `VSW` until that pin measures inside 4.5–5.5 V. A 5 V pull-up is not tied to a Pico GPIO. HCT `/OE` is pulled to the VSW net through 10 kΩ and is pulled down only by the NPN. Pico VSYS stays open.
+Candidates, stock unconfirmed: three `SN74LVC245AN` (PDIP-20, VCC = Pico 3V3, DIR low so the B side is the J400 side) and one `SN74HCT245N` (PDIP-20). 74HC245 is not in the netlist. Datasheet limits used for the split: SN74LVC245A VCC 1.65–3.6 V, inputs to 5.5 V, outputs only to VCC; SN74HCT245 VCC 4.5–5.5 V, VIH min 2.0 V, outputs swing to VCC. HCT VCC, DIR, the 100 nF, and the `/OE` pull-up sit on `HCT_5V_UNSOURCED`. That net has no regulator and no connection to VSW or VBAT. A 5 V pull-up is not tied to a Pico GPIO. Pico VSYS stays open.
 
 | J400 | Net | Buffer | Pico |
 |---|---|---|---|
@@ -103,20 +103,21 @@ Candidates, stock unconfirmed: three `SN74LVC245AN` (PDIP-20, VCC = Pico 3V3, DI
 | OEB | `J400_OEB` | `U_CTL` B1 → A1 | GP8 |
 | WRB | `J400_WRB` | `U_CTL` B2 → A2 | none. Net `WRB_NO_FREE_GPIO` |
 | D0–D7 | `J400_D0`–`J400_D7` | `U_DATA` B side | GP0–GP7 on the A side |
-| data OE | `HCT_nOE` | `U_DATA` pin 19, 10 kΩ to VSW, NPN collector | GP9 through 10 kΩ into the NPN base. 100 kΩ base pulldown. |
+| data OE | `HCT_nOE` | `U_DATA` pin 19, 10 kΩ to `HCT_5V_UNSOURCED`, NPN collector | GP9 through 10 kΩ into the NPN base. 100 kΩ base pulldown. |
 | GND lines 1 and 43 | `GND` | all 245 GND pins | Pico GND and AGND |
-| VSW | `J400_VSW_UNMEASURED` | HCT VCC, HCT DIR, 100 nF | not VSYS |
-| VBAT | `J400_VBAT_NOT_LOGIC` | none | none |
+| VSW | `J400_VSW_UNTRUSTED` | none. Untrusted robot rail. | not VSYS, not HCT |
+| VBAT | `J400_VBAT_NOT_LOGIC` | none. Nominal 10 V gel cell, not wired. | none |
+| HCT 5 V | `HCT_5V_UNSOURCED` | HCT VCC, HCT DIR, 100 nF, `/OE` pull-up | no source |
 | Audio Input, F2, SA0–SA3, WEB, BIGSPACEB, MNMIB, RESETSYSB, CT, DOUT, DREQ, ASTRB | `J400_*_UNUSED` | none | none |
 
-HCT `/OE` is pulled up to the unmeasured VSW net, so the buffer output is high-Z when the NPN is off. GP9 high turns the NPN on and drives `/OE` low. GP9 low, or a Pico that is unpowered, leaves the base pulldown holding the NPN off, so `/OE` is not a Pico pin and is not pulled up into a Pico GPIO. That is a startup proposal from the SN74HCT245 `/OE`-high = Hi-Z specification. It is not a measurement of VSW, and it is not permission to apply VSW.
+HCT `/OE` is pulled up to `HCT_5V_UNSOURCED`. While that rail is absent, the pull-up does not define `/OE`. When a regulated 5 V source exists there, the NPN being off leaves `/OE` high and the buffer in high-Z. GP9 high turns the NPN on and drives `/OE` low. GP9 does not connect to VSW or to the 5 V rail. This is the SN74HCT245 `/OE`-high = Hi-Z behavior. It is not permission to apply VSW or VBAT.
 
 A stock Pico breaks out GP0–GP22 and GP26–GP28 (26 pins). GP23 (SMPS), GP24 (VBUS), GP25 (LED), and GP29 (VSYS sense) are not free headers. Address plus data plus OEB is 25 pins, so WRB is buffered and then stops. Upstream PicoROM P28 firmware (`BOARD_28P`, address on GPIO0–15, data on GPIO16–23) does not match this map. The P28 sheet in this folder stays a reference module with its edge left open. No firmware for the split map has been compiled or flashed.
 
 ## Still required before this is an electrical release
 
 - Continuity from each J400 line to a known mainboard net, including which cartridge face and which end is line 1 versus the photo silk.
-- Voltage on VSW and VBAT with the robot on, before HCT power or any Pico supply connection.
+- Pack label, charger voltage, VBAT minimum under motor load, and the spike envelope, before any regulator is added. VSW is logged only as an untrusted rail. See [POWER.md](POWER.md).
 - Whether OEB and WRB are active low, and whether OEB is the ROM output enable the firmware should sample.
 - Markings on the DIP 245 parts actually on hand. DIR polarity above is the TI SN74LVC245A / SN74HCT245 polarity, not a substitute for those markings. A 74HC245 is not a substitute: at 5 V its outputs are about 5 V into a Pico pin, and a 3.3 V high is a marginal high into an HC input at 5 V.
 - A firmware build that samples the split address and drives data from GP0–GP7. That build does not exist in this change.
